@@ -5,13 +5,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class XMLParser {
@@ -49,34 +46,28 @@ public class XMLParser {
     int nDepartments = Integer.parseInt(
         descriptor.getElementsByTagName("Departments").item(0).getTextContent()
     );
-    scheduler.setNumberOfDepartments(nDepartments);
     int nRooms = Integer.parseInt(
         descriptor.getElementsByTagName("Rooms").item(0).getTextContent()
     );
-    scheduler.setNumberOfRooms(nRooms);
     int nFeatures = Integer.parseInt(
         descriptor.getElementsByTagName("Features").item(0).getTextContent()
     );
-    scheduler.setNumberOfFeatures(nFeatures);
     int nPatients = Integer.parseInt(
         descriptor.getElementsByTagName("Patients").item(0).getTextContent()
     );
-    scheduler.setNumberOfPatients(nPatients);
     int nSpecialisms = Integer.parseInt(
         descriptor.getElementsByTagName("Specialisms").item(0).getTextContent()
     );
-    scheduler.setNumberOfSpecialisms(nSpecialisms);
     int nTreatments = Integer.parseInt(
         descriptor.getElementsByTagName("Treatments").item(0).getTextContent()
     );
-    scheduler.setNumberOfTreatments(nTreatments);
     Node horizon = descriptor.getElementsByTagName("Horizon").item(0);
     int nDays = Integer.parseInt(
         horizon.getAttributes().getNamedItem("num_days").getTextContent()
     );
-    scheduler.setNumberOfDays(nDays);
     String startDay = horizon.getAttributes().getNamedItem("start_day").getTextContent();
-    scheduler.setStartDay(startDay);
+    scheduler.setDescription(nDepartments, nRooms, nFeatures, nPatients, nSpecialisms,
+        nTreatments, nDays, startDay);
   }
 
   public void readSpecialisms(Scheduler scheduler) {
@@ -90,7 +81,6 @@ public class XMLParser {
         specialisms.add(element.getTextContent());
       }
     }
-    scheduler.setSpecialisms(specialisms);
   }
 
   public void readFeatures(Scheduler scheduler) {
@@ -103,7 +93,6 @@ public class XMLParser {
         roomFeatures.add(node.getTextContent());
       }
     }
-    scheduler.setRoomFeatures(roomFeatures);
   }
 
   public void readDepartments(Scheduler scheduler) {
@@ -179,16 +168,15 @@ public class XMLParser {
   public void readTreatments(Scheduler scheduler) {
     Node treatmentsNode = document.getElementsByTagName("treatments").item(0);
     NodeList treatmentsNodeList = treatmentsNode.getChildNodes();
-    List<Treatment> treatments = new ArrayList<>();
+    HashMap<String, String> treatments = new HashMap<>();
     for (int i = 0; i < treatmentsNodeList.getLength(); i++) {
       Node treatmentNode = treatmentsNodeList.item(i);
       if (treatmentNode.getNodeType() == Node.ELEMENT_NODE) {
         Element treatmentElement = (Element) treatmentNode;
-        Treatment treatment = new Treatment(
+        treatments.put(
             treatmentElement.getAttribute("name"),
             treatmentElement.getAttribute("specialism")
         );
-        treatments.add(treatment);
       }
     }
     scheduler.setTreatments(treatments);
@@ -211,11 +199,9 @@ public class XMLParser {
             patientElement.getAttribute("discharge"),
             Integer.parseInt(patientElement.getAttribute("variability")),
             patientElement.getAttribute("max_admission"),
-            patientElement.getAttribute("preferred_capacity")
-        );
-        patient.setTreatment(scheduler.getTreatment(
+            patientElement.getAttribute("preferred_capacity"),
             patientElement.getAttribute("treatment")
-        ));
+        );
 
         Set<String> preferredProperties = new HashSet<>();
         Set<String> neededProperties = new HashSet<>();

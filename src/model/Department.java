@@ -24,4 +24,12 @@ public class Department {
   public String getName(){
     return name;
   }
+
+  public boolean hasMainSpecialism(String specialism){
+    return mainSpecialisms.contains(specialism);
+  }
+
+  public boolean hasAuxSpecialism(String specialism){
+    return auxSpecialisms.contains(specialism);
+  }
 }

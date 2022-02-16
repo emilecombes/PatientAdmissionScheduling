@@ -1,61 +1,33 @@
 package model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 public class Scheduler {
-  private int numberOfDepartments, numberOfRooms, numberOfFeatures,
-      numberOfPatients, numberOfSpecialisms, numberOfTreatments, numberOfDays;
+  private int nDepartments, nRooms, nFeatures, nPatients, nSpecialisms, nTreatments, nDays;
   private String startDay;
-  private List<String> specialisms;
-  private List<String> roomFeatures;
+  private HashMap<String, String> treatments;
   private List<Department> departments;
   private List<Room> rooms;
-  private List<Treatment> treatments;
   private List<Patient> patients;
 
-  private Set<Patient>[][] schedule;
+  private Solution solution;
+  private int[][] penaltyMatrix;
 
-  public Scheduler(){}
-
-  public void setNumberOfDepartments(int numberOfDepartments) {
-    this.numberOfDepartments = numberOfDepartments;
+  public Scheduler() {
   }
 
-  public void setNumberOfRooms(int numberOfRooms) {
-    this.numberOfRooms = numberOfRooms;
-  }
-
-  public void setNumberOfFeatures(int numberOfFeatures) {
-    this.numberOfFeatures = numberOfFeatures;
-  }
-
-  public void setNumberOfPatients(int numberOfPatients) {
-    this.numberOfPatients = numberOfPatients;
-  }
-
-  public void setNumberOfSpecialisms(int numberOfSpecialisms) {
-    this.numberOfSpecialisms = numberOfSpecialisms;
-  }
-
-  public void setNumberOfTreatments(int numberOfTreatments) {
-    this.numberOfTreatments = numberOfTreatments;
-  }
-
-  public void setNumberOfDays(int numberOfDays) {
-    this.numberOfDays = numberOfDays;
-  }
-
-  public void setStartDay(String startDay) {
+  public void setDescription(int nDepartments, int nRooms, int nFeatures, int nPatients,
+                             int nSpecialisms, int nTreatments, int nDays, String startDay) {
+    this.nDepartments = nDepartments;
+    this.nRooms = nRooms;
+    this.nFeatures = nFeatures;
+    this.nPatients = nPatients;
+    this.nSpecialisms = nSpecialisms;
+    this.nTreatments = nTreatments;
+    this.nDays = nDays;
     this.startDay = startDay;
-  }
-
-  public void setSpecialisms(List<String> specialisms) {
-    this.specialisms = specialisms;
-  }
-
-  public void setRoomFeatures(List<String> roomFeatures) {
-    this.roomFeatures = roomFeatures;
   }
 
   public void setDepartments(List<Department> departments) {
@@ -66,7 +38,7 @@ public class Scheduler {
     this.rooms = rooms;
   }
 
-  public void setTreatments(List<Treatment> treatments) {
+  public void setTreatments(HashMap<String, String> treatments) {
     this.treatments = treatments;
   }
 
@@ -74,21 +46,34 @@ public class Scheduler {
     this.patients = patients;
   }
 
-  public Department getDepartment(String name){
-    for(Department d : departments){
-      if(d.getName().equals(name)) return d;
+  public Department getDepartment(String name) {
+    for (Department d : departments) {
+      if (d.getName().equals(name)) return d;
     }
     return null;
   }
 
-  public Treatment getTreatment(String name){
-    for(Treatment t : treatments){
-      if(t.getName().equals(name)) return t;
+  public void buildPenaltyMatrix() {
+    penaltyMatrix = new int[nPatients][nRooms];
+    for (int i = 0; i < nPatients; i++) {
+      Patient patient = patients.get(i);
+      for (int j = 0; j < nRooms; j++) {
+        Room room = rooms.get(j);
+        // gender constraints
+        penaltyMatrix[i][j] += room.getGenderPenalty(patient.getGender());
+        // preferred capacity
+        penaltyMatrix[i][j] += room.getCapacityPenalty(patient.getPreferredCapacity());
+        // preferred properties
+        penaltyMatrix[i][j] += room.getPreferredPropertiesPenalty(patient.getPreferredProperties());
+        // needed properties
+        penaltyMatrix[i][j] += room.getNeededPropertiesPenalty(patient.getNeededProperties());
+        // specialisms for treatment
+        penaltyMatrix[i][j] += room.getTreatmentPenalty(treatments.get(patient.getTreatment()));
+      }
     }
-    return null;
   }
 
-  public void makeInitialPlanning(){
+  public void makeInitialPlanning() {
     System.out.println("Hello");
   }
 }

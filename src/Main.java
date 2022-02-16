@@ -8,6 +8,7 @@ public class Main {
     Scheduler scheduler = xmlParser.buildScheduler();
 
     System.out.println(scheduler);
+    scheduler.buildPenaltyMatrix();
     scheduler.makeInitialPlanning();
   }
 }
