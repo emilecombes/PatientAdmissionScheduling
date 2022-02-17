@@ -52,4 +52,15 @@ public class Patient {
   public String getTreatment() {
     return treatment;
   }
+
+  @Override
+  public String toString() {
+    return "Patient{" +
+        "preferredCapacity=" + preferredCapacity +
+        ", gender='" + gender + '\'' +
+        ", treatment='" + treatment + '\'' +
+        ", preferredRoomProperties=" + preferredRoomProperties +
+        ", neededRoomProperties=" + neededRoomProperties +
+        '}';
+  }
 }

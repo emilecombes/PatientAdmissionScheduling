@@ -9,6 +9,7 @@ public class Main {
 
     System.out.println(scheduler);
     scheduler.buildPenaltyMatrix();
+    scheduler.printPenaltyMatrix();
     scheduler.makeInitialPlanning();
   }
 }

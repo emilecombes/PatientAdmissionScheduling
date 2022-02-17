@@ -55,4 +55,21 @@ public class Room {
     if(department.hasAuxSpecialism(specialism)) return 1;
     return -1;
   }
+
+  public boolean canHost(Patient patient, String specialism){
+    return getGenderPenalty(patient.getGender()) != -1
+        && getNeededPropertiesPenalty(patient.getNeededProperties()) != -1
+        && getTreatmentPenalty(specialism) != -1;
+  }
+
+  @Override
+  public String toString() {
+    return "Room{" +
+        "capacity=" + capacity +
+        ", name='" + name + '\'' +
+        ", genderPolicy='" + genderPolicy + '\'' +
+        ", roomFeatures=" + roomFeatures +
+        ", department=" + department +
+        '}';
+  }
 }

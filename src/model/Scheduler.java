@@ -59,17 +59,21 @@ public class Scheduler {
       Patient patient = patients.get(i);
       for (int j = 0; j < nRooms; j++) {
         Room room = rooms.get(j);
-        // gender constraints
-        penaltyMatrix[i][j] += room.getGenderPenalty(patient.getGender());
-        // preferred capacity
-        penaltyMatrix[i][j] += room.getCapacityPenalty(patient.getPreferredCapacity());
-        // preferred properties
-        penaltyMatrix[i][j] += room.getPreferredPropertiesPenalty(patient.getPreferredProperties());
-        // needed properties
-        penaltyMatrix[i][j] += room.getNeededPropertiesPenalty(patient.getNeededProperties());
-        // specialisms for treatment
-        penaltyMatrix[i][j] += room.getTreatmentPenalty(treatments.get(patient.getTreatment()));
+        if (room.canHost(patient, treatments.get(patient.getTreatment()))) {
+          penaltyMatrix[i][j] = room.getCapacityPenalty(patient.getPreferredCapacity())
+              + room.getPreferredPropertiesPenalty(patient.getPreferredProperties())
+              + room.getTreatmentPenalty(treatments.get(patient.getTreatment()));
+        } else penaltyMatrix[i][j] = -1;
       }
+    }
+  }
+
+  public void printPenaltyMatrix(){
+    for(int i = 0; i < nPatients; i++){
+      for(int j = 0; j < nRooms; j++){
+        System.out.print(penaltyMatrix[i][j] + ",\t");
+      }
+      System.out.println();
     }
   }
 

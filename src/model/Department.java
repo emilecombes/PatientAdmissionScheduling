@@ -32,4 +32,13 @@ public class Department {
   public boolean hasAuxSpecialism(String specialism){
     return auxSpecialisms.contains(specialism);
   }
+
+  @Override
+  public String toString() {
+    return "Department{" +
+        "name='" + name + '\'' +
+        ", mainSpecialisms=" + mainSpecialisms +
+        ", auxSpecialisms=" + auxSpecialisms +
+        '}';
+  }
 }
