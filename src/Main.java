@@ -7,7 +7,6 @@ public class Main {
     XMLParser xmlParser = new XMLParser(instance);
     Scheduler scheduler = xmlParser.buildScheduler();
 
-    System.out.println(scheduler);
     scheduler.buildPenaltyMatrix();
     scheduler.printPenaltyMatrix();
     scheduler.makeInitialPlanning();

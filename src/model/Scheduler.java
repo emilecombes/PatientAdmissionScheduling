@@ -1,18 +1,17 @@
 package model;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Scheduler {
   private int nDepartments, nRooms, nFeatures, nPatients, nSpecialisms, nTreatments, nDays;
-  private String startDay;
+  private GregorianCalendar startDay;
   private HashMap<String, String> treatments;
   private List<Department> departments;
   private List<Room> rooms;
   private List<Patient> patients;
-
-  private Solution solution;
+  Set<Patient>[][] schedule;
+  Map<String, Integer> roomIndices;
+  Map<GregorianCalendar, Integer> dayIndices;
   private int[][] penaltyMatrix;
 
   public Scheduler() {
@@ -27,7 +26,11 @@ public class Scheduler {
     this.nSpecialisms = nSpecialisms;
     this.nTreatments = nTreatments;
     this.nDays = nDays;
-    this.startDay = startDay;
+    String[] date = startDay.split("-");
+    this.startDay = new GregorianCalendar(
+        Integer.parseInt(date[0]),
+        Integer.parseInt(date[1]),
+        Integer.parseInt(date[2]));
   }
 
   public void setDepartments(List<Department> departments) {
@@ -53,6 +56,13 @@ public class Scheduler {
     return null;
   }
 
+  public int getRoomIndex(String name) {
+    for (int i = 0; i < nRooms; i++) {
+      if (rooms.get(i).getName().equals(name)) return i;
+    }
+    return -1;
+  }
+
   public void buildPenaltyMatrix() {
     penaltyMatrix = new int[nPatients][nRooms];
     for (int i = 0; i < nPatients; i++) {
@@ -68,9 +78,9 @@ public class Scheduler {
     }
   }
 
-  public void printPenaltyMatrix(){
-    for(int i = 0; i < nPatients; i++){
-      for(int j = 0; j < nRooms; j++){
+  public void printPenaltyMatrix() {
+    for (int i = 0; i < nPatients; i++) {
+      for (int j = 0; j < nRooms; j++) {
         System.out.print(penaltyMatrix[i][j] + ",\t");
       }
       System.out.println();
@@ -78,6 +88,49 @@ public class Scheduler {
   }
 
   public void makeInitialPlanning() {
-    System.out.println("Hello");
+    writeRoomIndices();
+    writeDateIndices();
+    assignInitialPatients();
+    // Assign patients to a random, but suitable, room
+  }
+
+  public void writeRoomIndices() {
+    roomIndices = new HashMap<>();
+    for (int i = 0; i < nRooms; i++) {
+      Room r = rooms.get(i);
+      roomIndices.put(r.getName(), i);
+    }
+  }
+
+  public void writeDateIndices() {
+    dayIndices = new HashMap<>();
+    for (int i = 0; i <= nDays; i++) {
+      GregorianCalendar date = startDay;
+      System.out.println(date.get(Calendar.DATE) + "-" +
+          date.get(Calendar.MONTH) + "-" +
+          date.get(Calendar.YEAR)
+      );
+      dayIndices.put(date, i);
+      date.add(Calendar.DAY_OF_YEAR, 1);
+    }
+    startDay.add(Calendar.DAY_OF_YEAR, -nDays - 1);
+    for (int i = 0; i <= nDays; i++) {
+      GregorianCalendar date = startDay;
+      System.out.println(date.get(Calendar.DATE) + "-" +
+          date.get(Calendar.MONTH) + "-" +
+          date.get(Calendar.YEAR) + ": " +
+          dayIndices.get(date)
+      );
+      date.add(Calendar.DAY_OF_YEAR, 1);
+    }
+    startDay.add(Calendar.DAY_OF_YEAR, -nDays - 1);
+  }
+
+  public void assignInitialPatients() {
+    for (Patient patient : patients) {
+      if (patient.getRoom() != null) {
+//        System.out.println(patient.getName() + " is initial patient in room " + patient.getRoom());
+      }
+    }
   }
 }

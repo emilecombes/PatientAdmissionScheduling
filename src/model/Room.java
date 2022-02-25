@@ -35,6 +35,10 @@ public class Room {
     return (preference == capacity) ? 0 : 1;
   }
 
+  public String getName(){
+    return name;
+  }
+
   public int getPreferredPropertiesPenalty(Set<String> properties) {
     int penalty = 0;
     for (String p : properties)

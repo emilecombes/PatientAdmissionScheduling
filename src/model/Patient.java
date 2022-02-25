@@ -1,13 +1,14 @@
 package model;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Set;
 
 public class Patient {
-  private int age, preferredCapacity, variability;
-  private String name, gender;
-  private Date registrationDate, admissionDate, dischargeDate, maxAdmission;
-  private String treatment;
+  private final int age, preferredCapacity, variability;
+  private final String name, gender, treatment;
+  private GregorianCalendar registrationDate, admissionDate, dischargeDate, maxAdmission;
+  private String room;
   private Set<String> preferredRoomProperties;
   private Set<String> neededRoomProperties;
 
@@ -23,6 +24,22 @@ public class Patient {
     if(!cap.isEmpty()) preferredCapacity = Integer.parseInt(cap);
     else preferredCapacity = -1;
     treatment = t;
+    registrationDate = readDate(reg);
+    admissionDate = readDate(adm);
+    dischargeDate = readDate(dis);
+  }
+
+  public GregorianCalendar readDate(String d){
+    String[] date = d.split("-");
+    return new GregorianCalendar(
+        Integer.parseInt(date[0]),
+        Integer.parseInt(date[1]),
+        Integer.parseInt(date[2])
+    );
+  }
+
+  public void setRoom(String r){
+    room = r;
   }
 
   public void setPreferredRoomProperties(Set<String> preferredRoomProperties) {
@@ -53,10 +70,19 @@ public class Patient {
     return treatment;
   }
 
+  public String getRoom(){
+    return room;
+  }
+
+  public String getName(){
+    return name;
+  }
+
   @Override
   public String toString() {
     return "Patient{" +
-        "preferredCapacity=" + preferredCapacity +
+        "name=" + name +
+        ", preferredCapacity=" + preferredCapacity +
         ", gender='" + gender + '\'' +
         ", treatment='" + treatment + '\'' +
         ", preferredRoomProperties=" + preferredRoomProperties +

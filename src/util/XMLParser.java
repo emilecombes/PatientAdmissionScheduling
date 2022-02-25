@@ -186,9 +186,9 @@ public class XMLParser {
     Node patientsNode = document.getElementsByTagName("patients").item(0);
     NodeList patientsNodeList = patientsNode.getChildNodes();
     List<Patient> patients = new ArrayList<>();
-    for (int i = 0; i < patientsNodeList.getLength(); i++){
+    for (int i = 0; i < patientsNodeList.getLength(); i++) {
       Node patientNode = patientsNodeList.item(i);
-      if(patientNode.getNodeType() == Node.ELEMENT_NODE){
+      if (patientNode.getNodeType() == Node.ELEMENT_NODE) {
         Element patientElement = (Element) patientNode;
         Patient patient = new Patient(
             patientElement.getAttribute("name"),
@@ -202,22 +202,25 @@ public class XMLParser {
             patientElement.getAttribute("preferred_capacity"),
             patientElement.getAttribute("treatment")
         );
+        if (!patientElement.getAttribute("room").isEmpty()) {
+          patient.setRoom(patientElement.getAttribute("room"));
+        }
 
         Set<String> preferredProperties = new HashSet<>();
         Set<String> neededProperties = new HashSet<>();
         NodeList propertyNodeList = patientElement.getElementsByTagName(
             "room_property");
-        for(int j = 0; j < propertyNodeList.getLength(); j++){
+        for (int j = 0; j < propertyNodeList.getLength(); j++) {
           Node propertyNode = propertyNodeList.item(j);
-          if(propertyNode.getNodeType() == Node.ELEMENT_NODE){
+          if (propertyNode.getNodeType() == Node.ELEMENT_NODE) {
             Element propertyElement = (Element) propertyNode;
             String name = propertyElement.getAttribute("name");
             String type = propertyElement.getAttribute("type");
-            if(type.equals("preferred")) preferredProperties.add(name);
+            if (type.equals("preferred")) preferredProperties.add(name);
             else neededProperties.add(name);
           }
-          patients.add(patient);
         }
+        patients.add(patient);
         patient.setPreferredRoomProperties(preferredProperties);
         patient.setNeededRoomProperties(neededProperties);
       }

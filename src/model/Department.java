@@ -3,10 +3,9 @@ package model;
 import java.util.Set;
 
 public class Department {
-  private String name;
+  private final String name;
   private Set<String> mainSpecialisms;
   private Set<String> auxSpecialisms;
-
   private Set<Room> rooms;
 
   public Department(String n){
