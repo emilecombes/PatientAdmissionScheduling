@@ -11,7 +11,7 @@ public class Scheduler {
   private List<Patient> patients;
   Set<Patient>[][] schedule;
   Map<String, Integer> roomIndices;
-  Map<GregorianCalendar, Integer> dayIndices;
+  Map<String, Integer> dayIndices;
   private int[][] penaltyMatrix;
 
   public Scheduler() {
@@ -56,13 +56,6 @@ public class Scheduler {
     return null;
   }
 
-  public int getRoomIndex(String name) {
-    for (int i = 0; i < nRooms; i++) {
-      if (rooms.get(i).getName().equals(name)) return i;
-    }
-    return -1;
-  }
-
   public void buildPenaltyMatrix() {
     penaltyMatrix = new int[nPatients][nRooms];
     for (int i = 0; i < nPatients; i++) {
@@ -90,6 +83,7 @@ public class Scheduler {
   public void makeInitialPlanning() {
     writeRoomIndices();
     writeDateIndices();
+    schedule = new HashSet[nRooms][nDays];
     assignInitialPatients();
     // Assign patients to a random, but suitable, room
   }
@@ -106,31 +100,31 @@ public class Scheduler {
     dayIndices = new HashMap<>();
     for (int i = 0; i <= nDays; i++) {
       GregorianCalendar date = startDay;
-      System.out.println(date.get(Calendar.DATE) + "-" +
-          date.get(Calendar.MONTH) + "-" +
-          date.get(Calendar.YEAR)
-      );
-      dayIndices.put(date, i);
-      date.add(Calendar.DAY_OF_YEAR, 1);
-    }
-    startDay.add(Calendar.DAY_OF_YEAR, -nDays - 1);
-    for (int i = 0; i <= nDays; i++) {
-      GregorianCalendar date = startDay;
-      System.out.println(date.get(Calendar.DATE) + "-" +
-          date.get(Calendar.MONTH) + "-" +
-          date.get(Calendar.YEAR) + ": " +
-          dayIndices.get(date)
-      );
+      dayIndices.put(getDateString(date), i);
       date.add(Calendar.DAY_OF_YEAR, 1);
     }
     startDay.add(Calendar.DAY_OF_YEAR, -nDays - 1);
   }
 
   public void assignInitialPatients() {
-    for (Patient patient : patients) {
-      if (patient.getRoom() != null) {
-//        System.out.println(patient.getName() + " is initial patient in room " + patient.getRoom());
+    for (int i = 0; i < nRooms; i++) {
+      for (int j = 0; j < nDays; j++) {
+        schedule[i][j] = new HashSet<>();
       }
     }
+
+    for (Patient patient : patients) {
+      if (patient.getRoom() != null) {
+        for (int i = 0; i < dayIndices.get(patient.getDischargeDate()); i++){
+          schedule[roomIndices.get(patient.getRoom())][i].add(patient);
+        }
+      }
+    }
+  }
+
+  public String getDateString(GregorianCalendar date){
+    return date.get(Calendar.DATE) + "-" +
+        date.get(Calendar.MONTH) + "-" +
+        date.get(Calendar.YEAR);
   }
 }

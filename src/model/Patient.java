@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Set;
@@ -7,7 +8,7 @@ import java.util.Set;
 public class Patient {
   private final int age, preferredCapacity, variability;
   private final String name, gender, treatment;
-  private GregorianCalendar registrationDate, admissionDate, dischargeDate, maxAdmission;
+  private String registrationDate, admissionDate, dischargeDate, maxAdmission;
   private String room;
   private Set<String> preferredRoomProperties;
   private Set<String> neededRoomProperties;
@@ -24,9 +25,9 @@ public class Patient {
     if(!cap.isEmpty()) preferredCapacity = Integer.parseInt(cap);
     else preferredCapacity = -1;
     treatment = t;
-    registrationDate = readDate(reg);
-    admissionDate = readDate(adm);
-    dischargeDate = readDate(dis);
+    registrationDate = getDateString(readDate(reg));
+    admissionDate = getDateString(readDate(adm));
+    dischargeDate = getDateString(readDate(dis));
   }
 
   public GregorianCalendar readDate(String d){
@@ -36,6 +37,12 @@ public class Patient {
         Integer.parseInt(date[1]),
         Integer.parseInt(date[2])
     );
+  }
+
+  public String getDateString(GregorianCalendar date){
+    return date.get(Calendar.DATE) + "-" +
+        date.get(Calendar.MONTH) + "-" +
+        date.get(Calendar.YEAR);
   }
 
   public void setRoom(String r){
@@ -76,6 +83,14 @@ public class Patient {
 
   public String getName(){
     return name;
+  }
+
+  public String getAdmissionDate() {
+    return admissionDate;
+  }
+
+  public String getDischargeDate() {
+    return dischargeDate;
   }
 
   @Override
