@@ -5,7 +5,7 @@ import java.util.*;
 public class Scheduler {
   private int nDepartments, nRooms, nFeatures, nPatients, nSpecialisms, nTreatments, nDays;
   private GregorianCalendar startDay;
-  private HashMap<String, String> treatments;
+  private HashMap<String, String> treatmentSpecialismMap;
   private List<Department> departments;
   private List<Room> rooms;
   private List<Patient> patients;
@@ -41,8 +41,8 @@ public class Scheduler {
     this.rooms = rooms;
   }
 
-  public void setTreatments(HashMap<String, String> treatments) {
-    this.treatments = treatments;
+  public void setTreatmentSpecialismMap(HashMap<String, String> treatmentSpecialismMap) {
+    this.treatmentSpecialismMap = treatmentSpecialismMap;
   }
 
   public void setPatients(List<Patient> patients) {
@@ -62,10 +62,10 @@ public class Scheduler {
       Patient patient = patients.get(i);
       for (int j = 0; j < nRooms; j++) {
         Room room = rooms.get(j);
-        if (room.canHost(patient, treatments.get(patient.getTreatment()))) {
+        if (room.canHost(patient, treatmentSpecialismMap.get(patient.getTreatment()))) {
           penaltyMatrix[i][j] = room.getCapacityPenalty(patient.getPreferredCapacity())
               + room.getPreferredPropertiesPenalty(patient.getPreferredProperties())
-              + room.getTreatmentPenalty(treatments.get(patient.getTreatment()));
+              + room.getTreatmentPenalty(treatmentSpecialismMap.get(patient.getTreatment()));
         } else penaltyMatrix[i][j] = -1;
       }
     }
@@ -85,7 +85,15 @@ public class Scheduler {
     writeDateIndices();
     schedule = new HashSet[nRooms][nDays];
     assignInitialPatients();
-    // Assign patients to a random, but suitable, room
+    for (Patient patient : patients) {
+      if (!patient.isInPatient()) {
+        Set<Integer> bestRoomIndices = new HashSet<>();
+        for (int i = dayIndices.get(patient.getAdmissionDate()) + 1;
+             i < dayIndices.get(patient.getDischargeDate()); i++) {
+
+        }
+      }
+    }
   }
 
   public void writeRoomIndices() {
@@ -115,14 +123,43 @@ public class Scheduler {
 
     for (Patient patient : patients) {
       if (patient.getRoom() != null) {
-        for (int i = 0; i < dayIndices.get(patient.getDischargeDate()); i++){
-          schedule[roomIndices.get(patient.getRoom())][i].add(patient);
+        for (int i = 0; i < dayIndices.get(patient.getDischargeDate()); i++) {
+          if (!patient.getRoom().isEmpty()) {
+            schedule[roomIndices.get(patient.getRoom())][i].add(patient);
+          }
         }
       }
     }
   }
 
-  public String getDateString(GregorianCalendar date){
+  public Set<Room> getMainSpecialityRooms(Patient patient){
+    // TODO return a set of feasible (free space & needed features) rooms
+    Set<Room> mainRooms = new HashSet<>();
+    for(Department department : departments){
+      if(department.hasMainSpecialism(treatmentSpecialismMap.get(patient.getTreatment()))){
+        mainRooms.addAll(department.getRooms());
+      }
+    }
+    // Remove fully occupied rooms & rooms w/ lacking features
+    Set<Room> badRooms = new HashSet<>();
+    for(Room room : mainRooms){
+      for(int i = dayIndices.get(patient.getAdmissionDate()); i < dayIndices.get(patient.getDischargeDate()); i++){
+        if(schedule[roomIndices.get(room.getName())][i].size() == room.getCapacity()){
+          badRooms.add(room);
+        } else if (!room.canHost(patient, treatmentSpecialismMap.get(patient.getTreatment()))){
+          badRooms.add(room);
+        }
+      }
+    }
+    return null;
+  }
+
+  public Set<Room> getAuxSpecialismRooms(Patient patient){
+    // TODO return a set of feasible (free space & needed features) rooms
+    return null;
+  }
+
+  public String getDateString(GregorianCalendar date) {
     return date.get(Calendar.DATE) + "-" +
         date.get(Calendar.MONTH) + "-" +
         date.get(Calendar.YEAR);

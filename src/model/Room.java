@@ -17,10 +17,19 @@ public class Room {
 
   public void setDepartment(Department department) {
     this.department = department;
+    department.addRoom(this);
   }
 
   public void setRoomFeatures(Set<String> roomFeatures) {
     this.roomFeatures = roomFeatures;
+  }
+
+  public String getName(){
+    return name;
+  }
+
+  public int getCapacity(){
+    return capacity;
   }
 
   public int getGenderPenalty(String g) {
@@ -33,10 +42,6 @@ public class Room {
 
   public int getCapacityPenalty(int preference) {
     return (preference == capacity) ? 0 : 1;
-  }
-
-  public String getName(){
-    return name;
   }
 
   public int getPreferredPropertiesPenalty(Set<String> properties) {

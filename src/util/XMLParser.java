@@ -179,7 +179,7 @@ public class XMLParser {
         );
       }
     }
-    scheduler.setTreatments(treatments);
+    scheduler.setTreatmentSpecialismMap(treatments);
   }
 
   public void readPatients(Scheduler scheduler) {
@@ -200,11 +200,9 @@ public class XMLParser {
             Integer.parseInt(patientElement.getAttribute("variability")),
             patientElement.getAttribute("max_admission"),
             patientElement.getAttribute("preferred_capacity"),
-            patientElement.getAttribute("treatment")
+            patientElement.getAttribute("treatment"),
+            patientElement.getAttribute("room")
         );
-        if (!patientElement.getAttribute("room").isEmpty()) {
-          patient.setRoom(patientElement.getAttribute("room"));
-        }
 
         Set<String> preferredProperties = new HashSet<>();
         Set<String> neededProperties = new HashSet<>();

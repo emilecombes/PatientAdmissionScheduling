@@ -12,22 +12,30 @@ public class Patient {
   private String room;
   private Set<String> preferredRoomProperties;
   private Set<String> neededRoomProperties;
+  private boolean inPatient;
 
   private int penalty;
   private Room assignedRoom;
 
   public Patient(String n, int a, String g, String reg, String adm, String dis, int var,
-                 String max, String cap, String t) {
+                 String max, String cap, String t, String r) {
     name = n;
     age = a;
     gender = g;
     variability = var;
     if(!cap.isEmpty()) preferredCapacity = Integer.parseInt(cap);
     else preferredCapacity = -1;
+    room = r;
+    inPatient = !room.isEmpty();
     treatment = t;
     registrationDate = getDateString(readDate(reg));
     admissionDate = getDateString(readDate(adm));
     dischargeDate = getDateString(readDate(dis));
+    maxAdmission = getDateString(readDate(max));
+  }
+
+  public boolean isInPatient(){
+    return inPatient;
   }
 
   public GregorianCalendar readDate(String d){
@@ -43,10 +51,6 @@ public class Patient {
     return date.get(Calendar.DATE) + "-" +
         date.get(Calendar.MONTH) + "-" +
         date.get(Calendar.YEAR);
-  }
-
-  public void setRoom(String r){
-    room = r;
   }
 
   public void setPreferredRoomProperties(Set<String> preferredRoomProperties) {

@@ -20,8 +20,16 @@ public class Department {
     this.auxSpecialisms = auxSpecialisms;
   }
 
+  public void addRoom(Room r){
+    rooms.add(r);
+  }
+
   public String getName(){
     return name;
+  }
+
+  public Set<Room> getRooms(){
+    return rooms;
   }
 
   public boolean hasMainSpecialism(String specialism){
