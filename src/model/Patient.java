@@ -71,6 +71,10 @@ public class Patient {
     return discharge;
   }
 
+  public int getDelay(){
+    return 0;
+  }
+
   public void assignRoom(int day, int room){
     assignedRooms.put(day, room);
   }

@@ -1,6 +1,5 @@
 package model;
 
-import java.awt.color.ICC_ColorSpace;
 import java.util.Set;
 
 public class Room {
@@ -9,7 +8,6 @@ public class Room {
   private final String genderPolicy;
   private Set<String> roomFeatures;
   private Department department;
-  private String currentPolicy;
 
   public Room(String n, int cap, String gender) {
     capacity = cap;
@@ -26,18 +24,6 @@ public class Room {
     this.roomFeatures = roomFeatures;
   }
 
-  public void setCurrentPolicy(String pol){
-    currentPolicy = pol;
-  }
-
-  public String getCurrentPolicy(){
-    if(genderPolicy.equals("SameGender"))
-      return (currentPolicy == null) ? "Any" : currentPolicy;
-    if(genderPolicy.equals("MaleOnly")) return "Male";
-    if(genderPolicy.equals("FemaleOnly")) return "Female";
-    return "Any";
-  }
-
   public String getName(){
     return name;
   }
@@ -46,17 +32,12 @@ public class Room {
     return capacity;
   }
 
-  public String getGenderPolicy(){
-    return genderPolicy;
-  }
-
   public int getGenderPenalty(String g) {
-    if (getCurrentPolicy().equals("Any") || getCurrentPolicy().equals(g))
-      return 0;
-    else if(genderPolicy.equals("SameGender"))
-      return 1;
-    else
-      return -1;
+    return (genderPolicy.equals("Any") ||
+        genderPolicy.equals("SameGender") ||
+        genderPolicy.equals("MaleOnly") && g.equals("Male") ||
+        genderPolicy.equals("FemaleOnly") && g.equals("Female")
+    ) ? 0 : 1;
   }
 
   public int getCapacityPenalty(int preference) {
@@ -85,9 +66,17 @@ public class Room {
   }
 
   public boolean canHost(Patient patient){
-    return getGenderPenalty(patient.getGender()) != -1
-        && getNeededPropertiesPenalty(patient.getNeededProperties()) != -1
+   return getNeededPropertiesPenalty(patient.getNeededProperties()) != -1
         && getTreatmentPenalty(patient.getNeededSpecialism()) != -1;
+  }
+
+  public int getRoomPenalty(Patient patient){
+    if(canHost(patient)){
+      return 20 * getPreferredPropertiesPenalty(patient.getPreferredProperties())
+          + 10 * getCapacityPenalty(patient.getPreferredCapacity())
+          + 20 * getTreatmentPenalty(patient.getNeededSpecialism())
+          + 50 * getGenderPenalty(patient.getGender());
+    } else return -1;
   }
 
   @Override

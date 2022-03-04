@@ -110,72 +110,69 @@ public class Scheduler {
 
   public void dynamicSolve() {
     schedule = new Set[nRooms][nDays * 3];
-
     for (int i = 0; i < nRooms; i++)
       for (int j = 0; j < schedule[0].length; j++)
         schedule[i][j] = new HashSet<>();
 
+    assignInitialPatients();
+
     int i = 0;
     while (i < 1) {
-      assignInitialPatients(i);
       buildPenaltyMatrix(i);
+      insertPatients(i);
       i++;
     }
   }
 
-  public void assignInitialPatients(int day) {
-    for (int i = 0; i < patients.get(day).size(); i++) {
-      Patient patient = patients.get(day).get(i);
-      if (patient.getAssignedRoom(day) != -1) {
-        assignRoom(i, patient.getAssignedRoom(day), day);
-        System.out.println("Assigned patient " + i + " to room " + patient.getAssignedRoom(day));
-      }
+  public void assignInitialPatients() {
+    for (int i = 0; i < patients.get(0).size(); i++) {
+      Patient patient = patients.get(0).get(i);
+      if (patient.getAssignedRoom(0) != -1)
+        assignRoom(i, patient.getAssignedRoom(0), 0);
     }
   }
 
   public void assignRoom(int p, int r, int day) {
     Patient patient = patients.get(day).get(p);
-    Room room = rooms.get(r);
     schedule[r][day].add(patient);
     patient.assignRoom(day, r);
-
-    // Reset gender policy
-    if(room.getGenderPolicy().equals("SameGender")){
-      int male = 0;
-      int female = 0;
-      for(Patient pat : schedule[r][day]){
-        if(pat.getGender().equals("Male")) male++;
-        else female++;
-      }
-      if(male > female) room.setCurrentPolicy("Male");
-      else if(female > male) room.setCurrentPolicy("Female");
-    }
   }
 
   public void buildPenaltyMatrix(int day) {
-    // TODO add 100 for all initial patients
-
+    // What will not be in this matrix:
+    //   1. delay costs,
+    //   2. D gender policy cost (may be different policy over a period)
+    //   3. Capacity violations (weight 10 000 -- per extra patient, per day)
 
     List<Patient> regPatients = patients.get(day);
     penaltyMatrix = new int[regPatients.size()][nRooms];
     for (int i = 0; i < regPatients.size(); i++) {
       Patient patient = regPatients.get(i);
-
-      // Patient - Room costs
       for (int j = 0; j < nRooms; j++) {
         Room room = rooms.get(j);
-        if (room.canHost(patient)) {
-          int roomEq = 20 * room.getPreferredPropertiesPenalty(patient.getPreferredProperties());
-          int roomCap = 10 * room.getCapacityPenalty(patient.getPreferredCapacity());
-          int partSpec = 20 * room.getTreatmentPenalty(patient.getNeededSpecialism());
-          int genPol = 50 * room.getGenderPenalty(patient.getGender());
-          penaltyMatrix[i][j] = roomEq + roomCap + partSpec + genPol;
-        } else {
-          penaltyMatrix[i][j] = -1;
-        }
+        int length = patient.getDelay() + patient.getDischargeDate() - day;
+        int penalty = room.getRoomPenalty(patient);
+        penaltyMatrix[i][j] = (penalty == -1) ? -1 : length * penalty;
       }
     }
+
+    for(int i = 0; i < regPatients.size(); i++){
+      Patient patient = regPatients.get(i);
+      if(patient.getAssignedRoom(day) != -1)
+        for(int j = 0; j < nRooms; j++)
+          if(j != patient.getAssignedRoom(day) && penaltyMatrix[i][j] != -1)
+            penaltyMatrix[i][j] += 100;
+    }
+    System.out.println("aids");
   }
+
+  public void insertPatients(int day){
+
+  }
+
+
+
+
 
   public Set<Room> getMainSpecialityRooms(Patient patient) {
     // TODO return a set of feasible (free space & needed features) rooms
