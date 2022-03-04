@@ -116,7 +116,7 @@ public class Scheduler {
         schedule[i][j] = new HashSet<>();
 
     int i = 0;
-    while (i < nDays) {
+    while (i < 1) {
       assignInitialPatients(i);
       buildPenaltyMatrix(i);
       i++;
@@ -128,6 +128,7 @@ public class Scheduler {
       Patient patient = patients.get(day).get(i);
       if (patient.getAssignedRoom(day) != -1) {
         assignRoom(i, patient.getAssignedRoom(day), day);
+        System.out.println("Assigned patient " + i + " to room " + patient.getAssignedRoom(day));
       }
     }
   }

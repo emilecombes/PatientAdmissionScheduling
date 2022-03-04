@@ -31,7 +31,11 @@ public class Room {
   }
 
   public String getCurrentPolicy(){
-    return currentPolicy;
+    if(genderPolicy.equals("SameGender"))
+      return (currentPolicy == null) ? "Any" : currentPolicy;
+    if(genderPolicy.equals("MaleOnly")) return "Male";
+    if(genderPolicy.equals("FemaleOnly")) return "Female";
+    return "Any";
   }
 
   public String getName(){
@@ -47,10 +51,7 @@ public class Room {
   }
 
   public int getGenderPenalty(String g) {
-    if (genderPolicy.equals("Any") ||
-        genderPolicy.equals("MaleOnly") && g.equals("Male") ||
-        genderPolicy.equals("FemaleOnly") && g.equals("Female") ||
-        genderPolicy.equals("SameGender") && currentPolicy.equals(g))
+    if (getCurrentPolicy().equals("Any") || getCurrentPolicy().equals(g))
       return 0;
     else if(genderPolicy.equals("SameGender"))
       return 1;

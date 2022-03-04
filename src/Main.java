@@ -8,5 +8,6 @@ public class Main {
     Scheduler scheduler = xmlParser.buildScheduler();
 
     scheduler.dynamicSolve();
+
   }
 }

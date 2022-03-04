@@ -212,7 +212,9 @@ public class XMLParser {
 
         if (!patientElement.getAttribute("room").isEmpty()) {
           int roomIndex = scheduler.getRoomIndex(patientElement.getAttribute("room"));
-          patient.assignRoom(-1, roomIndex);
+          for(int day = -1; day < patient.getDischargeDate(); day++){
+            patient.assignRoom(day, roomIndex);
+          }
         }
 
         Set<String> preferredProperties = new HashSet<>();
