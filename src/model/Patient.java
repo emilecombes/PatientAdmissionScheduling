@@ -1,56 +1,30 @@
 package model;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Set;
 
 public class Patient {
   private final int age, preferredCapacity, variability;
-  private final String name, gender, treatment;
-  private String registrationDate, admissionDate, dischargeDate, maxAdmission;
-  private String room;
+  private final String name, gender, treatment, neededSpecialism;
+  private final int registration, admission, discharge, maxAdmission;
   private Set<String> preferredRoomProperties;
   private Set<String> neededRoomProperties;
-  private boolean inPatient;
+  private HashMap<Integer, Integer> assignedRooms;
 
-  private int penalty;
-  private Room assignedRoom;
-
-  public Patient(String n, int a, String g, String reg, String adm, String dis, int var,
-                 String max, String cap, String t, String r) {
+  public Patient(String n, int a, String g, int reg, int adm, int dis, int var, int max, int cap,
+                 String t, String spec) {
     name = n;
     age = a;
     gender = g;
     variability = var;
-    if(!cap.isEmpty()) preferredCapacity = Integer.parseInt(cap);
-    else preferredCapacity = -1;
-    room = r;
-    inPatient = !room.isEmpty();
+    preferredCapacity = cap;
     treatment = t;
-    registrationDate = getDateString(readDate(reg));
-    admissionDate = getDateString(readDate(adm));
-    dischargeDate = getDateString(readDate(dis));
-    maxAdmission = getDateString(readDate(max));
-  }
-
-  public boolean isInPatient(){
-    return inPatient;
-  }
-
-  public GregorianCalendar readDate(String d){
-    String[] date = d.split("-");
-    return new GregorianCalendar(
-        Integer.parseInt(date[0]),
-        Integer.parseInt(date[1]),
-        Integer.parseInt(date[2])
-    );
-  }
-
-  public String getDateString(GregorianCalendar date){
-    return date.get(Calendar.DATE) + "-" +
-        date.get(Calendar.MONTH) + "-" +
-        date.get(Calendar.YEAR);
+    registration = reg;
+    admission = adm;
+    discharge = dis;
+    maxAdmission = max;
+    assignedRooms = new HashMap<>();
+    neededSpecialism = spec;
   }
 
   public void setPreferredRoomProperties(Set<String> preferredRoomProperties) {
@@ -61,7 +35,7 @@ public class Patient {
     this.neededRoomProperties = neededRoomProperties;
   }
 
-  public String getGender(){
+  public String getGender() {
     return gender;
   }
 
@@ -81,20 +55,28 @@ public class Patient {
     return treatment;
   }
 
-  public String getRoom(){
-    return room;
+  public String getNeededSpecialism(){
+    return neededSpecialism;
   }
 
-  public String getName(){
-    return name;
+  public int getRegistrationDate(){
+    return registration;
   }
 
-  public String getAdmissionDate() {
-    return admissionDate;
+  public int getAdmissionDate() {
+    return admission;
   }
 
-  public String getDischargeDate() {
-    return dischargeDate;
+  public int getDischargeDate() {
+    return discharge;
+  }
+
+  public void assignRoom(int day, int room){
+    assignedRooms.put(day, room);
+  }
+
+  public int getAssignedRoom(int day){
+    return (assignedRooms.get(day) == null) ? -1 : assignedRooms.get(day);
   }
 
   @Override

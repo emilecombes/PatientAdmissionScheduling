@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.color.ICC_ColorSpace;
 import java.util.Set;
 
 public class Room {
@@ -8,6 +9,7 @@ public class Room {
   private final String genderPolicy;
   private Set<String> roomFeatures;
   private Department department;
+  private String currentPolicy;
 
   public Room(String n, int cap, String gender) {
     capacity = cap;
@@ -24,6 +26,14 @@ public class Room {
     this.roomFeatures = roomFeatures;
   }
 
+  public void setCurrentPolicy(String pol){
+    currentPolicy = pol;
+  }
+
+  public String getCurrentPolicy(){
+    return currentPolicy;
+  }
+
   public String getName(){
     return name;
   }
@@ -32,12 +42,20 @@ public class Room {
     return capacity;
   }
 
+  public String getGenderPolicy(){
+    return genderPolicy;
+  }
+
   public int getGenderPenalty(String g) {
     if (genderPolicy.equals("Any") ||
         genderPolicy.equals("MaleOnly") && g.equals("Male") ||
         genderPolicy.equals("FemaleOnly") && g.equals("Female") ||
-        genderPolicy.equals("SameGender")) return 0;
-    else return -1;
+        genderPolicy.equals("SameGender") && currentPolicy.equals(g))
+      return 0;
+    else if(genderPolicy.equals("SameGender"))
+      return 1;
+    else
+      return -1;
   }
 
   public int getCapacityPenalty(int preference) {
@@ -65,10 +83,10 @@ public class Room {
     return -1;
   }
 
-  public boolean canHost(Patient patient, String specialism){
+  public boolean canHost(Patient patient){
     return getGenderPenalty(patient.getGender()) != -1
         && getNeededPropertiesPenalty(patient.getNeededProperties()) != -1
-        && getTreatmentPenalty(specialism) != -1;
+        && getTreatmentPenalty(patient.getNeededSpecialism()) != -1;
   }
 
   @Override

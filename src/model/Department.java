@@ -1,5 +1,6 @@
 package model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Department {
@@ -10,6 +11,7 @@ public class Department {
 
   public Department(String n){
     name = n;
+    rooms = new HashSet<>();
   }
 
   public void setMainSpecialisms(Set<String> mainSpecialisms) {

@@ -9,6 +9,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.sql.Array;
 import java.util.*;
 
 public class XMLParser {
@@ -190,19 +191,29 @@ public class XMLParser {
       Node patientNode = patientsNodeList.item(i);
       if (patientNode.getNodeType() == Node.ELEMENT_NODE) {
         Element patientElement = (Element) patientNode;
+
+        String ma = patientElement.getAttribute("max_admission");
+        int maxAdmission = (ma.equals("")) ? -1 : scheduler.getDateIndex(ma);
+        String pc = patientElement.getAttribute("preferred_capacity");
+        int preferredCapacity = (pc.equals("")) ? -1 : Integer.parseInt(pc);
         Patient patient = new Patient(
             patientElement.getAttribute("name"),
             Integer.parseInt(patientElement.getAttribute("age")),
             patientElement.getAttribute("gender"),
-            patientElement.getAttribute("registration"),
-            patientElement.getAttribute("admission"),
-            patientElement.getAttribute("discharge"),
+            scheduler.getDateIndex(patientElement.getAttribute("registration")),
+            scheduler.getDateIndex(patientElement.getAttribute("admission")),
+            scheduler.getDateIndex(patientElement.getAttribute("discharge")),
             Integer.parseInt(patientElement.getAttribute("variability")),
-            patientElement.getAttribute("max_admission"),
-            patientElement.getAttribute("preferred_capacity"),
+            maxAdmission,
+            preferredCapacity,
             patientElement.getAttribute("treatment"),
-            patientElement.getAttribute("room")
+            scheduler.getSpecialism(patientElement.getAttribute("treatment"))
         );
+
+        if (!patientElement.getAttribute("room").isEmpty()) {
+          int roomIndex = scheduler.getRoomIndex(patientElement.getAttribute("room"));
+          patient.assignRoom(-1, roomIndex);
+        }
 
         Set<String> preferredProperties = new HashSet<>();
         Set<String> neededProperties = new HashSet<>();
@@ -218,12 +229,27 @@ public class XMLParser {
             else neededProperties.add(name);
           }
         }
-        patients.add(patient);
         patient.setPreferredRoomProperties(preferredProperties);
         patient.setNeededRoomProperties(neededProperties);
+        patients.add(patient);
       }
     }
-    scheduler.setPatients(patients);
+
+    List<List<Patient>> registeredPatients = new ArrayList<>();
+    for(int i = 0; i < scheduler.getNDays(); i++){
+      List<Patient> patientList = new ArrayList<>();
+      registeredPatients.add(patientList);
+    }
+    for(Patient patient : patients){
+      registeredPatients.get(patient.getRegistrationDate()).add(patient);
+    }
+    for(int i = registeredPatients.size() - 1; i >= 0; i--){
+      for(int j = 0; j < i; j++){
+        registeredPatients.get(i).addAll(registeredPatients.get(j));
+      }
+    }
+
+    scheduler.setPatients(registeredPatients);
   }
 
 }
