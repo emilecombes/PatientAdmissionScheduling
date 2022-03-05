@@ -51,8 +51,20 @@ public class Scheduler {
     this.patients = patients;
   }
 
+  public List<Room> getRooms(){
+    return rooms;
+  }
+
   public int getNDays() {
     return nDays;
+  }
+
+  public GregorianCalendar getStartDay(){
+    return startDay;
+  }
+
+  public List<Patient> getAllPatients(){
+    return patients.get(nDays - 1);
   }
 
   public Department getDepartment(String name) {
@@ -109,97 +121,102 @@ public class Scheduler {
 
 
   public void dynamicSolve() {
-    schedule = new Set[nRooms][nDays * 3];
-    for (int i = 0; i < nRooms; i++)
-      for (int j = 0; j < schedule[0].length; j++)
-        schedule[i][j] = new HashSet<>();
-
     assignInitialPatients();
-
     int i = 0;
     while (i < 1) {
-      buildPenaltyMatrix(i);
-      insertPatients(i);
+      buildPenaltyMatrix(nDays - 1);
+      insertPatients(nDays - 1);
       i++;
     }
+    sanityCheck();
+    calculateCosts();
   }
 
   public void assignInitialPatients() {
+    schedule = new Set[nRooms][nDays * 3];
+    for (int i = 0; i < nRooms; i++) {
+      for (int j = 0; j < schedule[0].length; j++)
+        schedule[i][j] = new HashSet<>();
+    }
+
     for (int i = 0; i < patients.get(0).size(); i++) {
       Patient patient = patients.get(0).get(i);
       if (patient.getAssignedRoom(0) != -1)
-        assignRoom(i, patient.getAssignedRoom(0), 0);
+        for(int j = 0; j < patient.getDischargeDate(); j++)
+          assignRoom(patient, patient.getAssignedRoom(0), j);
     }
   }
 
-  public void assignRoom(int p, int r, int day) {
-    Patient patient = patients.get(day).get(p);
-    schedule[r][day].add(patient);
-    patient.assignRoom(day, r);
+  public void assignRoom(Patient pat, int r, int day) {
+    schedule[r][day].add(pat);
+    pat.assignRoom(day, r);
   }
 
   public void buildPenaltyMatrix(int day) {
-    // What will not be in this matrix:
-    //   1. delay costs,
-    //   2. D gender policy cost (may be different policy over a period)
-    //   3. Capacity violations (weight 10 000 -- per extra patient, per day)
-
-    List<Patient> regPatients = patients.get(day);
-    penaltyMatrix = new int[regPatients.size()][nRooms];
-    for (int i = 0; i < regPatients.size(); i++) {
-      Patient patient = regPatients.get(i);
+    List<Patient> registeredPatients = patients.get(day);
+    penaltyMatrix = new int[registeredPatients.size()][nRooms];
+    for (int i = 0; i < registeredPatients.size(); i++) {
+      Patient patient = registeredPatients.get(i);
       for (int j = 0; j < nRooms; j++) {
         Room room = rooms.get(j);
-        int length = patient.getDelay() + patient.getDischargeDate() - day;
-        int penalty = room.getRoomPenalty(patient);
-        penaltyMatrix[i][j] = (penalty == -1) ? -1 : length * penalty;
+        penaltyMatrix[i][j] = room.getRoomPenalty(patient);
       }
     }
 
-    for(int i = 0; i < regPatients.size(); i++){
-      Patient patient = regPatients.get(i);
-      if(patient.getAssignedRoom(day) != -1)
-        for(int j = 0; j < nRooms; j++)
-          if(j != patient.getAssignedRoom(day) && penaltyMatrix[i][j] != -1)
+    for (int i = 0; i < registeredPatients.size(); i++) {
+      Patient patient = registeredPatients.get(i);
+      if (patient.getAssignedRoom(day) != -1)
+        for (int j = 0; j < nRooms; j++)
+          if (j != patient.getAssignedRoom(day) && penaltyMatrix[i][j] != -1)
             penaltyMatrix[i][j] += 100;
     }
-    System.out.println("aids");
   }
 
-  public void insertPatients(int day){
-
-  }
-
-
-
-
-
-  public Set<Room> getMainSpecialityRooms(Patient patient) {
-    // TODO return a set of feasible (free space & needed features) rooms
-    Set<Room> mainRooms = new HashSet<>();
-    for (Department department : departments) {
-      if (department.hasMainSpecialism(treatmentSpecialismMap.get(patient.getTreatment()))) {
-        mainRooms.addAll(department.getRooms());
-      }
+  public void insertPatients(int day) {
+    for (int pat = 0; pat < patients.get(day).size(); pat++) {
+      Patient patient = patients.get(day).get(pat);
+//      if (patient.getRegistrationDate() == day) {
+        int room;
+        do room = (int) (nRooms * Math.random());
+        while (penaltyMatrix[pat][room] < 0);
+        for(int d = patient.getAdmissionDate(); d < patient.getDischargeDate(); d++)
+          assignRoom(patient, room, d);
+//      }
     }
-    // Remove fully occupied rooms & rooms w/ lacking features
-    Set<Room> badRooms = new HashSet<>();
-    for (Room room : mainRooms) {
-      for (int i = patient.getAdmissionDate(); i < patient.getDischargeDate(); i++) {
-        if (schedule[roomIndices.get(room.getName())][i].size() == room.getCapacity()) {
-          badRooms.add(room);
-        } else if (!room.canHost(patient)) {
-          badRooms.add(room);
+  }
+
+  public void sanityCheck(){
+    List<Patient> allPatients = patients.get(nDays-1);
+    for(Patient p : allPatients){
+      for(int i = p.getAdmissionDate(); i < p.getDischargeDate(); i++){
+        if(p.getAssignedRoom(i) == -1){
+          System.out.println("wrong");
         }
       }
     }
-    return null;
   }
 
-  public Set<Room> getAuxSpecialismRooms(Patient patient) {
-    // TODO return a set of feasible (free space & needed features) rooms
-    return null;
+  public void calculateCosts(){
+    int features = 0, preference = 0, dept = 0, fixedGender = 0, dynamicGender = 0, transfer = 0;
+    List<Patient> allPatients = patients.get(nDays-1);
+    for(Patient p : allPatients){
+      int previousRoom = p.getAssignedRoom(p.getAdmissionDate() - 1);
+      for(int i = p.getAdmissionDate(); i < p.getDischargeDate(); i++){
+        if(previousRoom != p.getAssignedRoom(i) && previousRoom != -1) {
+          transfer++;
+          previousRoom = p.getAssignedRoom(i);
+        }
+        Room room = rooms.get(p.getAssignedRoom(i));
+        if(room.getPreferredPropertiesPenalty(p.getPreferredProperties()) > 0) features++;
+        if(room.getCapacityPenalty(p.getPreferredCapacity()) > 0) preference++;
+        if(room.getTreatmentPenalty(p.getNeededSpecialism()) > 0) dept++;
+        if(room.getGenderPenalty(p.getGender()) > 0) fixedGender++;
+      }
+    }
+    System.out.println("features: " + features);
+    System.out.println("preference: " + preference);
+    System.out.println("dept: " + dept);
+    System.out.println("fixed gender: " + fixedGender);
+    System.out.println("transfer: " + transfer);
   }
-
-
 }

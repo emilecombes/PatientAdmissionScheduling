@@ -39,6 +39,10 @@ public class Patient {
     return gender;
   }
 
+  public String getName(){
+    return name;
+  }
+
   public int getPreferredCapacity() {
     return preferredCapacity;
   }
@@ -81,6 +85,10 @@ public class Patient {
 
   public int getAssignedRoom(int day){
     return (assignedRooms.get(day) == null) ? -1 : assignedRooms.get(day);
+  }
+
+  public HashMap<Integer, Integer> getAssignedRooms(){
+    return assignedRooms;
   }
 
   @Override

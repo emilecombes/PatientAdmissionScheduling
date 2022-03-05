@@ -32,6 +32,10 @@ public class Room {
     return capacity;
   }
 
+  public boolean hasDynamicGenderPolicy(){
+    return genderPolicy.equals("SameGender");
+  }
+
   public int getGenderPenalty(String g) {
     return (genderPolicy.equals("Any") ||
         genderPolicy.equals("SameGender") ||

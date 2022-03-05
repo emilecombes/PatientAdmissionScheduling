@@ -8,8 +8,11 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.sql.Array;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
 import java.util.*;
 
 public class XMLParser {
@@ -212,7 +215,7 @@ public class XMLParser {
 
         if (!patientElement.getAttribute("room").isEmpty()) {
           int roomIndex = scheduler.getRoomIndex(patientElement.getAttribute("room"));
-          for(int day = -1; day < patient.getDischargeDate(); day++){
+          for (int day = -1; day < patient.getDischargeDate(); day++) {
             patient.assignRoom(day, roomIndex);
           }
         }
@@ -238,20 +241,93 @@ public class XMLParser {
     }
 
     List<List<Patient>> registeredPatients = new ArrayList<>();
-    for(int i = 0; i < scheduler.getNDays(); i++){
+    for (int i = 0; i < scheduler.getNDays(); i++) {
       List<Patient> patientList = new ArrayList<>();
       registeredPatients.add(patientList);
     }
-    for(Patient patient : patients){
+    for (Patient patient : patients) {
       registeredPatients.get(patient.getRegistrationDate()).add(patient);
     }
-    for(int i = registeredPatients.size() - 1; i >= 0; i--){
-      for(int j = 0; j < i; j++){
+    for (int i = registeredPatients.size() - 1; i >= 0; i--) {
+      for (int j = 0; j < i; j++) {
         registeredPatients.get(i).addAll(registeredPatients.get(j));
       }
     }
 
     scheduler.setPatients(registeredPatients);
+  }
+
+  public void writeFile(String title, Scheduler scheduler) {
+    DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder docBuilder = null;
+    try {
+      docBuilder = docFactory.newDocumentBuilder();
+    } catch (Exception e) {
+      System.out.println("Something went wrong...");
+    }
+
+    // root element
+    Document doc = docBuilder.newDocument();
+    Element rootElement = doc.createElement("OrPasu_main_out");
+    doc.appendChild(rootElement);
+
+    // Dates
+    List<String> dates = new ArrayList<>();
+    GregorianCalendar date = scheduler.getStartDay();
+    for (int i = 0; i < scheduler.getNDays(); i++) {
+      dates.add(scheduler.getDateString(date));
+      date.add(Calendar.DAY_OF_YEAR, 1);
+    }
+
+    // Planning Horizon
+    Element planningElement = doc.createElement("planning_horizon");
+    rootElement.appendChild(planningElement);
+    Element startDay = doc.createElement("start_day");
+    startDay.setTextContent(dates.get(0));
+    planningElement.appendChild(startDay);
+    Element numDays = doc.createElement("num_days");
+    numDays.setTextContent(String.valueOf(dates.size()));
+    planningElement.appendChild(numDays);
+    Element currentDay = doc.createElement("current_day");
+    currentDay.setTextContent(dates.get(dates.size() - 1));
+    planningElement.appendChild(currentDay);
+
+    // Patients Scheduling
+    List<Patient> patients = scheduler.getAllPatients();
+    List<Room> rooms = scheduler.getRooms();
+    Element patientsElement = doc.createElement("patients_scheduling");
+    rootElement.appendChild(patientsElement);
+    for (Patient patient : patients) {
+      Element patientElement = doc.createElement("patient");
+      patientElement.setAttribute("name", patient.getName());
+
+      for(int i : patient.getAssignedRooms().keySet()){
+        if(patient.getAssignedRoom(i) != -1 && i != -1){
+          Element stay = doc.createElement("stay");
+          stay.setAttribute("day", dates.get(i));
+          stay.setAttribute("room", rooms.get(patient.getAssignedRoom(i)).getName());
+          patientElement.appendChild(stay);
+        }
+      }
+      patientsElement.appendChild(patientElement);
+
+    }
+
+    // write dom document to a file
+    try (FileOutputStream output = new FileOutputStream("./out/sol/" + title + ".xml")) {
+      writeXml(doc, output);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  private static void writeXml(Document doc, OutputStream output) throws TransformerException {
+    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    Transformer transformer = transformerFactory.newTransformer();
+    DOMSource source = new DOMSource(doc);
+    StreamResult result = new StreamResult(output);
+    transformer.transform(source, result);
   }
 
 }
