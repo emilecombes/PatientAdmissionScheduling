@@ -8,7 +8,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -22,11 +21,11 @@ public class XMLParser {
   private Document document;
 
   public XMLParser(String inputFile) {
-    this.inputFile = inputFile;
+    this.inputFile = inputFile + ".xml";
     try {
       factory = DocumentBuilderFactory.newInstance();
       builder = factory.newDocumentBuilder();
-      document = builder.parse(new File(inputFile));
+      document = builder.parse(new File(this.inputFile));
       document.getDocumentElement().normalize();
     } catch (Exception e) {
       System.out.println("Something went wrong...");
@@ -257,7 +256,7 @@ public class XMLParser {
     scheduler.setPatients(registeredPatients);
   }
 
-  public void writeFile(String title, Scheduler scheduler) {
+  public void writeSolution(String title, Scheduler scheduler) {
     DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder docBuilder = null;
     try {
@@ -314,7 +313,7 @@ public class XMLParser {
     }
 
     // write dom document to a file
-    try (FileOutputStream output = new FileOutputStream("./out/sol/" + title + ".xml")) {
+    try (FileOutputStream output = new FileOutputStream("./out/sol/" + title + "_sol.xml")) {
       writeXml(doc, output);
     } catch (Exception e) {
       e.printStackTrace();

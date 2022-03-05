@@ -123,12 +123,11 @@ public class Scheduler {
   public void dynamicSolve() {
     assignInitialPatients();
     int i = 0;
-    while (i < 1) {
-      buildPenaltyMatrix(nDays - 1);
-      insertPatients(nDays - 1);
+    while (i < nDays) {
+      buildPenaltyMatrix(i);
+      insertPatients(i);
       i++;
     }
-    sanityCheck();
     calculateCosts();
   }
 
@@ -175,24 +174,13 @@ public class Scheduler {
   public void insertPatients(int day) {
     for (int pat = 0; pat < patients.get(day).size(); pat++) {
       Patient patient = patients.get(day).get(pat);
-//      if (patient.getRegistrationDate() == day) {
-      int room;
-      do room = (int) (nRooms * Math.random());
-      while (penaltyMatrix[pat][room] < 0);
+      int room = patient.getAssignedRoom(patient.getAdmissionDate());
+      if (room == -1) {
+        do room = (int) (nRooms * Math.random());
+        while (penaltyMatrix[pat][room] < 0);
+      }
       for (int d = patient.getAdmissionDate(); d < patient.getDischargeDate(); d++)
         assignRoom(patient, room, d);
-//      }
-    }
-  }
-
-  public void sanityCheck() {
-    List<Patient> allPatients = patients.get(nDays - 1);
-    for (Patient p : allPatients) {
-      for (int i = p.getAdmissionDate(); i < p.getDischargeDate(); i++) {
-        if (p.getAssignedRoom(i) == -1) {
-          System.out.println("wrong");
-        }
-      }
     }
   }
 
@@ -213,24 +201,29 @@ public class Scheduler {
         if (room.getGenderPenalty(p.getGender()) > 0) fixedGender++;
       }
     }
+
+
     for (int i = 0; i < nRooms; i++) {
       Room room = rooms.get(i);
       if (room.hasDynamicGenderPolicy()) {
         for (int j = 0; j < nDays; j++) {
           int male = 0, female = 0;
-          for(Patient p : schedule[i][j]){
-            if(p.getGender().equals("Male")) male++;
+          for (Patient p : schedule[i][j]) {
+            if (p.getAssignedRoom(j) != i) System.out.println("This is your fault");
+            if (p.getGender().equals("Male")) male++;
             else female++;
           }
-          dynamicGender += Math.min(male, female);
+          if (Math.min(male, female) > 0) dynamicGender++;
         }
       }
     }
-    System.out.println("features: " + features);
-    System.out.println("preference: " + preference);
-    System.out.println("dept: " + dept);
-    System.out.println("fixed gender: " + fixedGender + " x 50 = " + fixedGender*50);
-    System.out.println("dynamic gender: " + dynamicGender + " x 50 = " + dynamicGender*50);
-    System.out.println("transfer: " + transfer);
+
+    int PRC = features * 20 + preference * 10 + dept * 20 + fixedGender * 50;
+    System.out.println("COSTS:");
+    System.out.println("Patient/room total cost = " + PRC + ": features = "
+        + features + " X 20, preference = " + preference + " X 10, dept = "
+        + dept + " X 20, fixed gender = " + fixedGender + " X 50");
+    System.out.println("Gender cost = " + dynamicGender * 50);
+    System.out.println("Transfer cost = " + transfer * 100);
   }
 }
