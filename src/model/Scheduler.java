@@ -51,7 +51,7 @@ public class Scheduler {
     this.patients = patients;
   }
 
-  public List<Room> getRooms(){
+  public List<Room> getRooms() {
     return rooms;
   }
 
@@ -59,11 +59,11 @@ public class Scheduler {
     return nDays;
   }
 
-  public GregorianCalendar getStartDay(){
+  public GregorianCalendar getStartDay() {
     return startDay;
   }
 
-  public List<Patient> getAllPatients(){
+  public List<Patient> getAllPatients() {
     return patients.get(nDays - 1);
   }
 
@@ -142,7 +142,7 @@ public class Scheduler {
     for (int i = 0; i < patients.get(0).size(); i++) {
       Patient patient = patients.get(0).get(i);
       if (patient.getAssignedRoom(0) != -1)
-        for(int j = 0; j < patient.getDischargeDate(); j++)
+        for (int j = 0; j < patient.getDischargeDate(); j++)
           assignRoom(patient, patient.getAssignedRoom(0), j);
     }
   }
@@ -176,47 +176,61 @@ public class Scheduler {
     for (int pat = 0; pat < patients.get(day).size(); pat++) {
       Patient patient = patients.get(day).get(pat);
 //      if (patient.getRegistrationDate() == day) {
-        int room;
-        do room = (int) (nRooms * Math.random());
-        while (penaltyMatrix[pat][room] < 0);
-        for(int d = patient.getAdmissionDate(); d < patient.getDischargeDate(); d++)
-          assignRoom(patient, room, d);
+      int room;
+      do room = (int) (nRooms * Math.random());
+      while (penaltyMatrix[pat][room] < 0);
+      for (int d = patient.getAdmissionDate(); d < patient.getDischargeDate(); d++)
+        assignRoom(patient, room, d);
 //      }
     }
   }
 
-  public void sanityCheck(){
-    List<Patient> allPatients = patients.get(nDays-1);
-    for(Patient p : allPatients){
-      for(int i = p.getAdmissionDate(); i < p.getDischargeDate(); i++){
-        if(p.getAssignedRoom(i) == -1){
+  public void sanityCheck() {
+    List<Patient> allPatients = patients.get(nDays - 1);
+    for (Patient p : allPatients) {
+      for (int i = p.getAdmissionDate(); i < p.getDischargeDate(); i++) {
+        if (p.getAssignedRoom(i) == -1) {
           System.out.println("wrong");
         }
       }
     }
   }
 
-  public void calculateCosts(){
+  public void calculateCosts() {
     int features = 0, preference = 0, dept = 0, fixedGender = 0, dynamicGender = 0, transfer = 0;
-    List<Patient> allPatients = patients.get(nDays-1);
-    for(Patient p : allPatients){
+    List<Patient> allPatients = patients.get(nDays - 1);
+    for (Patient p : allPatients) {
       int previousRoom = p.getAssignedRoom(p.getAdmissionDate() - 1);
-      for(int i = p.getAdmissionDate(); i < p.getDischargeDate(); i++){
-        if(previousRoom != p.getAssignedRoom(i) && previousRoom != -1) {
+      for (int i = p.getAdmissionDate(); i < p.getDischargeDate(); i++) {
+        if (previousRoom != p.getAssignedRoom(i) && previousRoom != -1) {
           transfer++;
           previousRoom = p.getAssignedRoom(i);
         }
         Room room = rooms.get(p.getAssignedRoom(i));
-        if(room.getPreferredPropertiesPenalty(p.getPreferredProperties()) > 0) features++;
-        if(room.getCapacityPenalty(p.getPreferredCapacity()) > 0) preference++;
-        if(room.getTreatmentPenalty(p.getNeededSpecialism()) > 0) dept++;
-        if(room.getGenderPenalty(p.getGender()) > 0) fixedGender++;
+        features += room.getPreferredPropertiesPenalty(p.getPreferredProperties());
+        if (room.getCapacityPenalty(p.getPreferredCapacity()) > 0) preference++;
+        if (room.getTreatmentPenalty(p.getNeededSpecialism()) > 0) dept++;
+        if (room.getGenderPenalty(p.getGender()) > 0) fixedGender++;
+      }
+    }
+    for (int i = 0; i < nRooms; i++) {
+      Room room = rooms.get(i);
+      if (room.hasDynamicGenderPolicy()) {
+        for (int j = 0; j < nDays; j++) {
+          int male = 0, female = 0;
+          for(Patient p : schedule[i][j]){
+            if(p.getGender().equals("Male")) male++;
+            else female++;
+          }
+          dynamicGender += Math.min(male, female);
+        }
       }
     }
     System.out.println("features: " + features);
     System.out.println("preference: " + preference);
     System.out.println("dept: " + dept);
-    System.out.println("fixed gender: " + fixedGender);
+    System.out.println("fixed gender: " + fixedGender + " x 50 = " + fixedGender*50);
+    System.out.println("dynamic gender: " + dynamicGender + " x 50 = " + dynamicGender*50);
     System.out.println("transfer: " + transfer);
   }
 }

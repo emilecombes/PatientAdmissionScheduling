@@ -45,14 +45,13 @@ public class Room {
   }
 
   public int getCapacityPenalty(int preference) {
-    return (preference == capacity) ? 0 : 1;
+    return (preference >= capacity || preference == -1) ? 0 : 1;
   }
 
   public int getPreferredPropertiesPenalty(Set<String> properties) {
     int penalty = 0;
     for (String p : properties)
-      if (!roomFeatures.contains(p))
-        penalty++;
+      if (!roomFeatures.contains(p)) penalty++;
     return penalty;
   }
 
