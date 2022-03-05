@@ -126,6 +126,7 @@ public class Scheduler {
     while (i < nDays) {
       buildPenaltyMatrix(i);
       insertPatients(i);
+      solve(i);
       i++;
     }
     calculateCosts();
@@ -182,6 +183,39 @@ public class Scheduler {
       for (int d = patient.getAdmissionDate(); d < patient.getDischargeDate(); d++)
         assignRoom(patient, room, d);
     }
+  }
+
+
+  public void solve(int day){
+    int random = getMovablePatient(day);
+    Patient patient = patients.get(day).get(random);
+  }
+
+  public void changeRoom(Patient patient, int room){
+    // TODO patient is moved to new room for complete LOT
+  }
+
+  public void swapRooms(Patient first, Patient second){
+    // TODO patients exchange their rooms
+  }
+
+  public void shiftAdmission(Patient patient, int days){
+    // TODO patient is delayed or advanced to min. planned admission, max. max admission
+  }
+
+  public void swapAdmission(Patient first, Patient second){
+    // TODO patients swap admission dates and rooms
+  }
+
+  public int getMovablePatient(int day){
+    int random;
+    Patient patient;
+    List<Patient> registeredPatients = patients.get(day);
+    do{
+      random = (int)(Math.random() * registeredPatients.size());
+      patient = registeredPatients.get(random);
+    } while (patient.getDischargeDate() < day);
+    return random;
   }
 
   public void calculateCosts() {
