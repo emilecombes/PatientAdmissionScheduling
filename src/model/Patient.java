@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -39,7 +40,7 @@ public class Patient {
     return gender;
   }
 
-  public String getName(){
+  public String getName() {
     return name;
   }
 
@@ -59,11 +60,15 @@ public class Patient {
     return treatment;
   }
 
-  public String getNeededSpecialism(){
+  public String getNeededSpecialism() {
     return neededSpecialism;
   }
 
-  public int getRegistrationDate(){
+  public boolean isMale(){
+    return gender.equals("Male");
+  }
+
+  public int getRegistrationDate() {
     return registration;
   }
 
@@ -71,24 +76,60 @@ public class Patient {
     return admission;
   }
 
+  public int getActualAdmission() {
+    return admission + getDelay();
+  }
+
   public int getDischargeDate() {
     return discharge;
   }
 
-  public int getDelay(){
-    return 0;
+  public int getActualDischarge() {
+    return discharge + getDelay();
   }
 
-  public void assignRoom(int day, int room){
+  public int getDelay() {
+    if (assignedRooms.size() == 0) return 0;
+    int adm = admission;
+    while (adm <= Collections.max(assignedRooms.keySet())) {
+      if (assignedRooms.get(adm) != -1) return adm - admission;
+      adm++;
+    }
+    return -1;
+  }
+
+  public int getRestingLOT(int day) {
+    int start = Math.max(admission + getDelay(), day);
+    int stop = Math.max(discharge + getDelay(), day);
+    return stop - start;
+  }
+
+  public void assignRoom(int day, int room) {
     assignedRooms.put(day, room);
   }
 
-  public int getAssignedRoom(int day){
+  public void cancelRoom(int day){
+    assignedRooms.remove(day);
+  }
+
+  public int getAssignedRoom(int day) {
     return (assignedRooms.get(day) == null) ? -1 : assignedRooms.get(day);
   }
 
-  public HashMap<Integer, Integer> getAssignedRooms(){
+  public int getLastRoom() {
+    return assignedRooms.get(Collections.max(assignedRooms.keySet()));
+  }
+
+  public HashMap<Integer, Integer> getAssignedRooms() {
     return assignedRooms;
+  }
+
+  public int[] getInDays() {
+    int[] inDays = new int[discharge - admission];
+    for (int i = 0; i < inDays.length; i++) {
+      inDays[i] = i + admission + getDelay();
+    }
+    return inDays;
   }
 
   @Override
