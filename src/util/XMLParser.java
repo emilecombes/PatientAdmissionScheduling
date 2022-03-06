@@ -13,6 +13,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class XMLParser {
   private String inputFile;
@@ -309,8 +310,38 @@ public class XMLParser {
         }
       }
       patientsElement.appendChild(patientElement);
-
     }
+
+    // Costs
+    Element costsElement = doc.createElement("costs");
+    rootElement.appendChild(costsElement);
+    int[] prc = scheduler.getPRCosts();
+    int[] weights = {20, 10, 20, 50};
+    int[] totals = prc.clone();
+    for(int i = 0; i < prc.length; i++) totals[i] *= weights[i];
+    String[] prViolations = {"properties", "preference", "specialism", "gender"};
+    Element prElement = doc.createElement("patient_room");
+    prElement.setAttribute("objectives", String.valueOf(IntStream.of(totals).sum()));
+    for(int i = 0; i < prc.length; i++){
+      Element el = doc.createElement(prViolations[i]);
+      el.setAttribute("violations", String.valueOf(prc[i]));
+      el.setAttribute("weight", String.valueOf(weights[i]));
+      prElement.appendChild(el);
+    }
+    costsElement.appendChild(prElement);
+
+    Element gElement = doc.createElement("gender");
+    gElement.setTextContent(String.valueOf(scheduler.getGCost() * 50));
+    costsElement.appendChild(gElement);
+
+    Element tElement = doc.createElement("transfer");
+    tElement.setTextContent(String.valueOf(scheduler.getTCost() * 100));
+    costsElement.appendChild(tElement);
+
+    Element dElement = doc.createElement("delay");
+    dElement.setTextContent(String.valueOf(scheduler.getDCost()));
+    costsElement.appendChild(dElement);
+
 
     // write dom document to a file
     try (FileOutputStream output = new FileOutputStream("./out/sol/" + title + "_sol.xml")) {
