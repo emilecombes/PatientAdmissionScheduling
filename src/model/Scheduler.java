@@ -131,7 +131,7 @@ public class Scheduler {
   public void dynamicSolve() {
     assignInitialPatients();
     currentDay = 0;
-    while (currentDay < 1) {
+    while (currentDay < nDays) {
       buildPenaltyMatrix();
       insertPatients();
       solve();
@@ -207,7 +207,7 @@ public class Scheduler {
         getCapacityViolations());
     cost += CAPACITY * getCapacityViolations();
 
-    int N = 1000;
+    int N = 1000000;
     for (int i = 0; i < N; i++) {
       // Change room move
       int pat = getMovablePatient();
@@ -221,6 +221,8 @@ public class Scheduler {
 
     System.out.println("Cost on end day " + currentDay + ": " + cost + "\t violations: " +
         getCapacityViolations());
+    if(cost != getCost())
+      System.out.println("Actual cost is: " + getCost());
     System.out.println("PRC: " + getPRCosts()[0] + ", gender: " + GENDER * getGenderViolations() +
         ", transfer: " + TRANSFER * getTransfers());
   }
@@ -230,34 +232,22 @@ public class Scheduler {
     int originalRoom = patient.getLastRoom();
     int firstDay = Math.max(patient.getAdmissionDate(), currentDay);
 
-    int originalCost = getCost() + CAPACITY * getCapacityViolations();
-
     int removedCost = penaltyMatrix[p][originalRoom];
     for (int i = firstDay; i < patient.getDischargeDate(); i++) {
-      int gender = getGenderViolations(originalRoom, i);
+      boolean gender = getGenderViolations(originalRoom, i) > 0;
       int cap = getCapacityViolations(originalRoom, i);
       cancelRoom(patient, i);
-      removedCost += GENDER * (gender - getGenderViolations(originalRoom, i))
-          + CAPACITY * (cap - getCapacityViolations(originalRoom, i));
+      if(gender && getGenderViolations(originalRoom, i) == 0) removedCost += GENDER;
+      removedCost += CAPACITY * (cap - getCapacityViolations(originalRoom, i));
     }
 
     int addedCost = penaltyMatrix[p][newRoom];
     for (int i = firstDay; i < patient.getDischargeDate(); i++) {
-      int gender = getGenderViolations(newRoom, i);
+      boolean gender = getGenderViolations(newRoom, i) > 0;
       int cap = getCapacityViolations(newRoom, i);
       assignRoom(patient, newRoom, i);
-      addedCost += GENDER * (getGenderViolations(newRoom, i) - gender)
-          + CAPACITY * (getCapacityViolations(newRoom, i) - cap);
-    }
-
-    if (getCost() + CAPACITY* getCapacityViolations() != originalCost - removedCost + addedCost) {
-      if(patient.getAssignedRoom(0) != -1){
-        System.out.println();
-      }
-      int newCost = getCost() + CAPACITY*getCapacityViolations();
-      System.out.println("Original: " + originalCost);
-      System.out.println("Savings: " + (removedCost - addedCost));
-      System.out.println("New: " + newCost + " ≠ " + (originalCost-removedCost+addedCost));
+      if(!gender && getGenderViolations(newRoom, i) > 0) addedCost += GENDER;
+      addedCost += CAPACITY * (getCapacityViolations(newRoom, i) - cap);
     }
 
     return removedCost - addedCost;
