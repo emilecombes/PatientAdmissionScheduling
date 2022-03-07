@@ -138,6 +138,7 @@ public class Scheduler {
       currentDay++;
     }
     currentDay--;
+    sanityCheck();
   }
 
   public void assignInitialPatients() {
@@ -167,7 +168,7 @@ public class Scheduler {
   }
 
   public void buildPenaltyMatrix() {
-    List<Patient> registeredPatients = patients.get(currentDay);
+    List<Patient> registeredPatients = getRegisteredPatients();
     penaltyMatrix = new int[registeredPatients.size()][nRooms];
     for (int i = 0; i < registeredPatients.size(); i++) {
       Patient patient = registeredPatients.get(i);
@@ -201,13 +202,13 @@ public class Scheduler {
   }
 
   public void solve() {
-    List<Patient> registeredPatients = patients.get(currentDay);
+    List<Patient> registeredPatients = getRegisteredPatients();
     int cost = getCost();
     System.out.println("Cost on start day " + currentDay + ": " + cost + "\t violations: " +
         getCapacityViolations());
     cost += CAPACITY * getCapacityViolations();
 
-    int N = 1000000;
+    int N = 100000;
     for (int i = 0; i < N; i++) {
       // Change room move
       int pat = getMovablePatient();
@@ -219,12 +220,9 @@ public class Scheduler {
       else changeRoom(pat, originalRoom);
     }
 
+    cost -= CAPACITY * getCapacityViolations();
     System.out.println("Cost on end day " + currentDay + ": " + cost + "\t violations: " +
-        getCapacityViolations());
-    if(cost != getCost())
-      System.out.println("Actual cost is: " + getCost());
-    System.out.println("PRC: " + getPRCosts()[0] + ", gender: " + GENDER * getGenderViolations() +
-        ", transfer: " + TRANSFER * getTransfers());
+        getCapacityViolations() + " (actual: " + getCost() + ")");
   }
 
   public int changeRoom(int p, int newRoom) {
@@ -237,7 +235,7 @@ public class Scheduler {
       boolean gender = getGenderViolations(originalRoom, i) > 0;
       int cap = getCapacityViolations(originalRoom, i);
       cancelRoom(patient, i);
-      if(gender && getGenderViolations(originalRoom, i) == 0) removedCost += GENDER;
+      if (gender && getGenderViolations(originalRoom, i) == 0) removedCost += GENDER;
       removedCost += CAPACITY * (cap - getCapacityViolations(originalRoom, i));
     }
 
@@ -246,7 +244,7 @@ public class Scheduler {
       boolean gender = getGenderViolations(newRoom, i) > 0;
       int cap = getCapacityViolations(newRoom, i);
       assignRoom(patient, newRoom, i);
-      if(!gender && getGenderViolations(newRoom, i) > 0) addedCost += GENDER;
+      if (!gender && getGenderViolations(newRoom, i) > 0) addedCost += GENDER;
       addedCost += CAPACITY * (getCapacityViolations(newRoom, i) - cap);
     }
 
@@ -337,13 +335,7 @@ public class Scheduler {
     int transfer = 0;
     List<Patient> registeredPatients = getRegisteredPatients();
     for (Patient p : registeredPatients) {
-      int previousRoom = p.getAssignedRoom(p.getAdmissionDate() - 1);
-      for (int i = p.getAdmissionDate(); i < p.getDischargeDate(); i++) {
-        if (previousRoom != p.getAssignedRoom(i) && previousRoom != -1) {
-          transfer++;
-          previousRoom = p.getAssignedRoom(i);
-        }
-      }
+      transfer += p.getTransfers();
     }
     return transfer;
   }
@@ -357,4 +349,44 @@ public class Scheduler {
         + TRANSFER * getTransfers() + DELAY * getDelays();
   }
 
+  public void sanityCheck() {
+    System.out.println("In assigned rooms of patients");
+    int[][][] gCount = new int[nDays][nRooms][2];
+    for (Patient p : getRegisteredPatients()) {
+      for (int i = p.getAdmissionDate(); i < p.getDischargeDate(); i++) {
+        if (p.isMale()) gCount[i][p.getAssignedRoom(i)][0]++;
+        else gCount[i][p.getAssignedRoom(i)][1]++;
+      }
+    }
+
+    int viol = 0;
+    for(int i = 0; i < nDays; i++){
+      for(int j = 0; j < nRooms; j++){
+        if(rooms.get(j).hasDynamicGenderPolicy()){
+          if(gCount[i][j][0] > 0 && gCount[i][j][1] > 0) viol++;
+        }
+      }
+    }
+    System.out.println("There are " + viol + " gender violating rooms.");
+
+
+//    System.out.println("In the schedule:");
+//    int roomViol = 0;
+//    int total = 0;
+//    for (int i = 0; i < nRooms; i++) {
+//      for (int j = 0; j < nDays; j++) {
+//        if (getGenderViolations(i, j) != 0) {
+//          roomViol++;
+//          total += getGenderViolations(i, j);
+//          System.out.println("Room " + i + " has " + getGenderViolations(i, j) + " gender " +
+//              "violations:");
+//          for (Patient p : schedule[i][j])
+//            System.out.print("Patient " + p.getName() + " (" + p.getGender() + "), ");
+//          System.out.println();
+//        }
+//      }
+//    }
+//    System.out.println("There are " + roomViol + " wrong rooms on all days with " + total + " " +
+//        "total violations");
+  }
 }

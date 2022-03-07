@@ -132,6 +132,18 @@ public class Patient {
     return inDays;
   }
 
+  public int getTransfers(){
+    int currRoom = (getAssignedRoom(-1) != -1) ? getAssignedRoom(-1) : getAssignedRoom(admission);
+    int t = 0;
+    for(int i = admission; i < discharge; i++){
+      if(assignedRooms.get(i) != currRoom) {
+        t++;
+        currRoom = assignedRooms.get(i);
+      }
+    }
+    return t;
+  }
+
   @Override
   public String toString() {
     return "Patient{" +
