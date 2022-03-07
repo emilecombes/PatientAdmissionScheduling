@@ -117,6 +117,7 @@ public class Patient {
   }
 
   public int getLastRoom() {
+    if(assignedRooms.keySet().isEmpty()) return -1;
     return assignedRooms.get(Collections.max(assignedRooms.keySet()));
   }
 
