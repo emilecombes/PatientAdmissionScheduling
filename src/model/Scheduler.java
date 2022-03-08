@@ -174,13 +174,14 @@ public class Scheduler {
       for (int j = 0; j < nRooms; j++) {
         Room room = rooms.get(j);
         penaltyMatrix[i][j] = room.getRoomPenalty(patient);
-        if (penaltyMatrix[i][j] != -1) penaltyMatrix[i][j] *= patient.getRestingLOT(currentDay);
+        if (penaltyMatrix[i][j] != -1)
+          penaltyMatrix[i][j] *= patient.getRestingLOT(currentDay);
       }
     }
 
     for (int i = 0; i < registeredPatients.size(); i++) {
       Patient patient = registeredPatients.get(i);
-      if (patient.getAssignedRoom(currentDay) != -1)
+      if (patient.getAssignedRoom(currentDay-1) != -1)
         for (int j = 0; j < nRooms; j++)
           if (j != patient.getAssignedRoom(currentDay) && penaltyMatrix[i][j] != -1)
             penaltyMatrix[i][j] += TRANSFER;
@@ -191,14 +192,12 @@ public class Scheduler {
     List<Patient> registeredPatients = getRegisteredPatients();
     for (int pat = 0; pat < registeredPatients.size(); pat++) {
       Patient patient = registeredPatients.get(pat);
-      int room = patient.getLastRoom();
-      if (room == -1) {
-        do room = (int) (nRooms * Math.random());
-        while (penaltyMatrix[pat][room] < 0);
+      if(patient.getLastRoom() == -1){
+        int room = getFeasibleRoom(pat);
+        for(int i = patient.getAdmissionDate(); i < patient.getDischargeDate(); i++){
+          assignRoom(patient, room, i);
+        }
       }
-      int firstDay = Math.max(patient.getAdmissionDate(), currentDay);
-      for (int d = firstDay; d < patient.getDischargeDate(); d++)
-        assignRoom(patient, room, d);
     }
   }
 
@@ -209,7 +208,7 @@ public class Scheduler {
         getCapacityViolations());
     cost += CAPACITY * getCapacityViolations();
 
-    int N = 100000;
+    int N = 10000;
     for (int i = 0; i < N; i++) {
       // Change room move
       int pat = getMovablePatient();
@@ -222,8 +221,8 @@ public class Scheduler {
     }
 
     cost -= CAPACITY * getCapacityViolations();
-    System.out.println("Cost on end day " + currentDay + ": " + cost + "\t violations: " +
-        getCapacityViolations() + " (actual: " + getCost() + ")");
+    System.out.println("Cost on end of day " + currentDay + ": " + cost
+        + " (" + getCost() + ")\t violations: " + getCapacityViolations());
   }
 
   public int changeRoom(int p, int newRoom) {
@@ -252,8 +251,12 @@ public class Scheduler {
     return removedCost - addedCost;
   }
 
-  public void swapRooms(Patient first, Patient second) {
-    // TODO patients who have overlapping stays exchange their rooms
+  public int swapRooms(int firstPatient, int secondPatient) {
+    int firstRoom = getRegisteredPatients().get(firstPatient).getLastRoom();
+    int secondRoom = getRegisteredPatients().get(secondPatient).getLastRoom();
+    int savings = changeRoom(firstPatient, secondRoom);
+    savings += changeRoom(secondPatient, firstRoom);
+    return savings;
   }
 
   public void shiftAdmission(Patient patient, int days) {
@@ -274,12 +277,19 @@ public class Scheduler {
   public int getMovablePatient() {
     int random;
     Patient patient;
-    List<Patient> registeredPatients = patients.get(currentDay);
+    List<Patient> registeredPatients = getRegisteredPatients();
     do {
       random = (int) (Math.random() * registeredPatients.size());
       patient = registeredPatients.get(random);
     } while (patient.getDischargeDate() < currentDay);
     return random;
+  }
+
+  public int getAdmittedPatient(int start, int end){
+    int patient;
+    do patient = getMovablePatient();
+    while (getRegisteredPatients().get(patient).isAdmittedOn(start, end));
+    return patient;
   }
 
   public int getCapacityViolations(int room, int day) {
@@ -350,4 +360,6 @@ public class Scheduler {
         + TRANSFER * getTransfers() + DELAY * getDelays();
   }
 
+  public void sanityCheck() {
+  }
 }

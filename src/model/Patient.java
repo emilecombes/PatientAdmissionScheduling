@@ -112,6 +112,13 @@ public class Patient {
     assignedRooms.remove(day);
   }
 
+  public boolean isAdmittedOn(int start, int end){
+    for(int i = start; i < end; i++){
+      if(getAssignedRoom(i) != -1) return true;
+    }
+    return false;
+  }
+
   public int getAssignedRoom(int day) {
     return (assignedRooms.get(day) == null) ? -1 : assignedRooms.get(day);
   }
