@@ -181,7 +181,7 @@ public class Scheduler {
 
     for (int i = 0; i < registeredPatients.size(); i++) {
       Patient patient = registeredPatients.get(i);
-      if (patient.getAssignedRoom(currentDay-1) != -1)
+      if (patient.getAssignedRoom(currentDay - 1) != -1)
         for (int j = 0; j < nRooms; j++)
           if (j != patient.getAssignedRoom(currentDay) && penaltyMatrix[i][j] != -1)
             penaltyMatrix[i][j] += TRANSFER;
@@ -192,9 +192,9 @@ public class Scheduler {
     List<Patient> registeredPatients = getRegisteredPatients();
     for (int pat = 0; pat < registeredPatients.size(); pat++) {
       Patient patient = registeredPatients.get(pat);
-      if(patient.getLastRoom() == -1){
+      if (patient.getLastRoom() == -1) {
         int room = getFeasibleRoom(pat);
-        for(int i = patient.getAdmissionDate(); i < patient.getDischargeDate(); i++){
+        for (int i = patient.getAdmissionDate(); i < patient.getDischargeDate(); i++) {
           assignRoom(patient, room, i);
         }
       }
@@ -208,16 +208,15 @@ public class Scheduler {
         getCapacityViolations());
     cost += CAPACITY * getCapacityViolations();
 
-    int N = 10000;
+    int N = 100000;
     for (int i = 0; i < N; i++) {
       // Change room move
-      int pat = getMovablePatient();
-      int newRoom = getFeasibleRoom(pat);
-      int originalRoom = registeredPatients.get(pat).getLastRoom();
-
-      int savings = changeRoom(pat, newRoom);
+      int fPat = getMovablePatient();
+      int sPat = getSwapPatient(fPat);
+      if(sPat == -1) continue;
+      int savings = swapRooms(fPat, sPat);
       if (savings >= 0) cost -= savings;
-      else changeRoom(pat, originalRoom);
+      else swapRooms(fPat, sPat);
     }
 
     cost -= CAPACITY * getCapacityViolations();
@@ -281,15 +280,35 @@ public class Scheduler {
     do {
       random = (int) (Math.random() * registeredPatients.size());
       patient = registeredPatients.get(random);
-    } while (patient.getDischargeDate() < currentDay);
+    } while (patient.getDischargeDate() <= currentDay);
     return random;
   }
 
-  public int getAdmittedPatient(int start, int end){
+  public int getAdmittedPatient(int start, int end) {
     int patient;
     do patient = getMovablePatient();
-    while (getRegisteredPatients().get(patient).isAdmittedOn(start, end));
+    while (!getRegisteredPatients().get(patient).isAdmittedOn(start, end));
     return patient;
+  }
+
+  public int getSwapPatient(int pat) {
+    Patient patient = getRegisteredPatients().get(pat);
+    int firstRoom = patient.getLastRoom();
+    int start = Math.max(currentDay, patient.getAdmissionDate());
+    int end = patient.getDischargeDate();
+
+    int sp;
+    int secondRoom;
+    int count = 0;
+    do {
+      sp = getAdmittedPatient(start, end);
+      Patient swapPatient = getRegisteredPatients().get(sp);
+      secondRoom = swapPatient.getLastRoom();
+      count++;
+    }
+    while (sp == pat || penaltyMatrix[pat][secondRoom] == -1
+        || penaltyMatrix[sp][firstRoom] == -1 && count < 1000);
+    return (count < 1000) ? sp : -1;
   }
 
   public int getCapacityViolations(int room, int day) {
@@ -358,8 +377,5 @@ public class Scheduler {
   public int getCost() {
     return getPRCosts()[0] + GENDER * getGenderViolations()
         + TRANSFER * getTransfers() + DELAY * getDelays();
-  }
-
-  public void sanityCheck() {
   }
 }

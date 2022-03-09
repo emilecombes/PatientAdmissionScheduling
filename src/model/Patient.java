@@ -113,7 +113,7 @@ public class Patient {
   }
 
   public boolean isAdmittedOn(int start, int end){
-    for(int i = start; i < end; i++){
+    for(int i = start; i <= end; i++){
       if(getAssignedRoom(i) != -1) return true;
     }
     return false;
