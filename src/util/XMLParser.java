@@ -195,7 +195,11 @@ public class XMLParser {
         Element patientElement = (Element) patientNode;
 
         String ma = patientElement.getAttribute("max_admission");
-        int maxAdmission = (ma.equals("")) ? -1 : scheduler.getDateIndex(ma);
+        int maxAdmission = (ma.equals(""))
+            ? scheduler.getHorizonLength()
+            - scheduler.getDateIndex(patientElement.getAttribute("discharge"))
+            + scheduler.getDateIndex(patientElement.getAttribute("admission"))
+            : scheduler.getDateIndex(ma);
         String pc = patientElement.getAttribute("preferred_capacity");
         int preferredCapacity = (pc.equals("")) ? -1 : Integer.parseInt(pc);
         Patient patient = new Patient(
@@ -273,7 +277,7 @@ public class XMLParser {
     // Dates
     List<String> dates = new ArrayList<>();
     GregorianCalendar date = scheduler.getStartDay();
-    for (int i = 0; i < scheduler.getNDays(); i++) {
+    for (int i = 0; i < scheduler.getHorizonLength(); i++) {
       dates.add(scheduler.getDateString(date));
       date.add(Calendar.DAY_OF_YEAR, 1);
     }
@@ -285,10 +289,10 @@ public class XMLParser {
     startDay.setTextContent(dates.get(0));
     planningElement.appendChild(startDay);
     Element numDays = doc.createElement("num_days");
-    numDays.setTextContent(String.valueOf(dates.size()));
+    numDays.setTextContent(String.valueOf(scheduler.getNDays()));
     planningElement.appendChild(numDays);
     Element currentDay = doc.createElement("current_day");
-    currentDay.setTextContent(dates.get(dates.size() - 1));
+    currentDay.setTextContent(dates.get(scheduler.getCurrentDay()));
     planningElement.appendChild(currentDay);
 
     // Patients Scheduling
@@ -300,8 +304,8 @@ public class XMLParser {
       Element patientElement = doc.createElement("patient");
       patientElement.setAttribute("name", patient.getName());
 
-      for(int i : patient.getAssignedRooms().keySet()){
-        if(patient.getAssignedRoom(i) != -1 && i != -1){
+      for (int i : patient.getAssignedRooms().keySet()) {
+        if (patient.getAssignedRoom(i) != -1 && i != -1) {
           Element stay = doc.createElement("stay");
           stay.setAttribute("day", dates.get(i));
           stay.setAttribute("room", rooms.get(patient.getAssignedRoom(i)).getName());
@@ -319,7 +323,7 @@ public class XMLParser {
     String[] prViolations = {"total", "properties", "preference", "specialism", "gender"};
     Element prElement = doc.createElement("patient_room");
     prElement.setAttribute("objectives", String.valueOf(prc[0]));
-    for(int i = 1; i < prc.length; i++){
+    for (int i = 1; i < prc.length; i++) {
       Element el = doc.createElement(prViolations[i]);
       el.setAttribute("violations", String.valueOf(prc[i]));
       el.setAttribute("weight", String.valueOf(weights[i]));
@@ -328,7 +332,7 @@ public class XMLParser {
     costsElement.appendChild(prElement);
 
     Element gElement = doc.createElement("gender");
-    int gender = scheduler.getGenderViolations()*50;
+    int gender = scheduler.getGenderViolations() * 50;
     gElement.setTextContent(String.valueOf(gender));
     costsElement.appendChild(gElement);
 
@@ -341,7 +345,7 @@ public class XMLParser {
     dElement.setTextContent(String.valueOf(scheduler.getDelays()));
     costsElement.appendChild(dElement);
 
-    costsElement.setAttribute("objectives", String.valueOf(prc[0]+gender+transfer));
+    costsElement.setAttribute("objectives", String.valueOf(prc[0] + gender + transfer));
 
 
     // write dom document to a file

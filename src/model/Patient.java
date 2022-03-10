@@ -1,6 +1,5 @@
 package model;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -11,6 +10,7 @@ public class Patient {
   private Set<String> preferredRoomProperties;
   private Set<String> neededRoomProperties;
   private HashMap<Integer, Integer> assignedRooms;
+  private int delay;
 
   public Patient(String n, int a, String g, int reg, int adm, int dis, int var, int max, int cap,
                  String t, String spec) {
@@ -26,6 +26,7 @@ public class Patient {
     maxAdmission = max;
     assignedRooms = new HashMap<>();
     neededSpecialism = spec;
+    delay = 0;
   }
 
   public void setPreferredRoomProperties(Set<String> preferredRoomProperties) {
@@ -64,8 +65,12 @@ public class Patient {
     return neededSpecialism;
   }
 
-  public boolean isMale(){
+  public boolean isMale() {
     return gender.equals("Male");
+  }
+
+  public boolean isUrgent() {
+    return registration == admission && registration == maxAdmission;
   }
 
   public int getRegistrationDate() {
@@ -77,7 +82,11 @@ public class Patient {
   }
 
   public int getActualAdmission() {
-    return admission + getDelay();
+    return admission + delay;
+  }
+
+  public int getMaxAdmission(){
+    return maxAdmission;
   }
 
   public int getDischargeDate() {
@@ -85,17 +94,15 @@ public class Patient {
   }
 
   public int getActualDischarge() {
-    return discharge + getDelay();
+    return discharge + delay;
   }
 
   public int getDelay() {
-    if (assignedRooms.size() == 0) return 0;
-    int adm = admission;
-    while (adm <= Collections.max(assignedRooms.keySet())) {
-      if (assignedRooms.get(adm) != -1) return adm - admission;
-      adm++;
-    }
-    return -1;
+    return delay;
+  }
+
+  public void addDelay(int d){
+    delay += d;
   }
 
   public int getRestingLOT(int day) {
@@ -108,14 +115,13 @@ public class Patient {
     assignedRooms.put(day, room);
   }
 
-  public void cancelRoom(int day){
+  public void cancelRoom(int day) {
     assignedRooms.remove(day);
   }
 
-  public boolean isAdmittedOn(int start, int end){
-    for(int i = start; i <= end; i++){
-      if(getAssignedRoom(i) != -1) return true;
-    }
+  public boolean isAdmittedOn(int start, int end) {
+    for (int i = start; i <= end; i++)
+      if (getAssignedRoom(i) != -1) return true;
     return false;
   }
 
@@ -124,27 +130,19 @@ public class Patient {
   }
 
   public int getLastRoom() {
-    if(assignedRooms.keySet().isEmpty()) return -1;
-    return assignedRooms.get(Collections.max(assignedRooms.keySet()));
+    return getAssignedRoom(discharge + delay - 1);
   }
 
   public HashMap<Integer, Integer> getAssignedRooms() {
     return assignedRooms;
   }
 
-  public int[] getInDays() {
-    int[] inDays = new int[discharge - admission];
-    for (int i = 0; i < inDays.length; i++) {
-      inDays[i] = i + admission + getDelay();
-    }
-    return inDays;
-  }
-
-  public int getTransfers(){
-    int currRoom = (getAssignedRoom(-1) != -1) ? getAssignedRoom(-1) : getAssignedRoom(admission);
+  public int getTransfers() {
+    int currRoom = (getAssignedRoom(-1) != -1) ? getAssignedRoom(-1) :
+        getAssignedRoom(admission+delay);
     int t = 0;
-    for(int i = admission; i < discharge; i++){
-      if(assignedRooms.get(i) != currRoom) {
+    for (int i = admission+delay; i < discharge+delay; i++) {
+      if (assignedRooms.get(i) != currRoom) {
         t++;
         currRoom = assignedRooms.get(i);
       }
@@ -161,6 +159,11 @@ public class Patient {
         ", treatment='" + treatment + '\'' +
         ", preferredRoomProperties=" + preferredRoomProperties +
         ", neededRoomProperties=" + neededRoomProperties +
+        ", registration=" + registration +
+        ", admission=" + admission +
+        ", maxAdmission=" + maxAdmission +
+        ", discharge=" + discharge +
+        ", delay=" + delay +
         '}';
   }
 }
