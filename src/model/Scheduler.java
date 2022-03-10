@@ -216,8 +216,10 @@ public class Scheduler {
     for (int i = 0; i < N; i++) {
       int pat = getShiftPatient();
       Patient p = registeredPatients.get(pat);
-      int shift = p.getAdmissionDate() - p.getActualAdmission();
-      shift = shift + (int) (Math.random() * (p.getMaxAdmission() - shift));
+
+      int maxDelay = p.getMaxAdmission() - p.getActualAdmission();
+      int maxAdvance = p.getActualAdmission() - currentDay;
+      int shift = -maxAdvance + (int) (Math.random() * (maxAdvance + maxDelay));
       int savings = shiftAdmission(pat, shift);
       if (p.isUrgent()) System.out.print("Urgent: ");
       System.out.println("AD: " + p.getAdmissionDate() + " (" + p.getActualAdmission() + "), DD: " +
