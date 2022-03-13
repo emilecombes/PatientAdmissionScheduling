@@ -342,7 +342,8 @@ public class XMLParser {
     costsElement.appendChild(tElement);
 
     Element dElement = doc.createElement("delay");
-    dElement.setTextContent(String.valueOf(scheduler.getDelays()));
+    int delay = scheduler.getDelays() * 5;
+    dElement.setTextContent(String.valueOf(delay));
     costsElement.appendChild(dElement);
 
     costsElement.setAttribute("objectives", String.valueOf(prc[0] + gender + transfer));

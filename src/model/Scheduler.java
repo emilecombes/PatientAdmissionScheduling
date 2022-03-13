@@ -219,10 +219,10 @@ public class Scheduler {
 
       int maxDelay = p.getMaxAdmission() - p.getActualAdmission();
       int maxAdvance = p.getActualAdmission() - Math.max(currentDay, p.getAdmissionDate());
-      System.out.println("AD: " + p.getAdmissionDate() + ", AAD: " + p.getActualAdmission()
-          + ", MA: " + p.getMaxAdmission() + ", MD: " + maxDelay + ", MA: " + maxAdvance);
       int shift = -maxAdvance + (int) (Math.random() * (maxAdvance + maxDelay));
       int savings = shiftAdmission(pat, shift);
+      if(savings > 0) cost -= savings;
+      else shiftAdmission(pat, -shift);
     }
 
     cost -= CAPACITY * getCapacityViolations();
@@ -315,7 +315,7 @@ public class Scheduler {
     int random;
     do {
       random = getMovablePatient();
-    } while (getRegisteredPatients().get(random).getAssignedRoom(currentDay - 1) != -1 &&
+    } while (getRegisteredPatients().get(random).getAssignedRoom(currentDay - 1) != -1 ||
         getRegisteredPatients().get(random).getMaxAdmission() == currentDay);
     return random;
   }
@@ -383,7 +383,7 @@ public class Scheduler {
   public int getGenderViolations() {
     int dynamicGender = 0;
     for (int i = 0; i < nRooms; i++)
-      for (int j = 0; j < nDays; j++)
+      for (int j = 0; j < (1+EXTEND)* nDays; j++)
         if (getGenderViolations(i, j) != 0) dynamicGender++;
     return dynamicGender;
   }
@@ -391,7 +391,7 @@ public class Scheduler {
   public int getCapacityViolations() {
     int cap = 0;
     for (int i = 0; i < nRooms; i++)
-      for (int j = 0; j < nDays; j++)
+      for (int j = 0; j < (1 + EXTEND) * nDays; j++)
         cap += getCapacityViolations(i, j);
     return cap;
   }
@@ -406,11 +406,19 @@ public class Scheduler {
   }
 
   public int getDelays() {
-    return 0;
+    int delays = 0;
+    for (Patient p : getRegisteredPatients()) {
+      delays += p.getDelay();
+      if (p.getDelay() < 0) {
+        System.out.println("KKK");
+      }
+    }
+    return delays;
   }
 
   public int getCost() {
     return getPRCosts()[0] + GENDER * getGenderViolations() + TRANSFER * getTransfers() +
         DELAY * getDelays();
   }
+
 }
