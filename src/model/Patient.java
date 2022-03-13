@@ -1,6 +1,7 @@
 package model;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 public class Patient {
@@ -23,7 +24,7 @@ public class Patient {
     registration = reg;
     admission = adm;
     discharge = dis;
-    maxAdmission = max;
+    maxAdmission = (max > 19) ? 19 : max;
     assignedRooms = new HashMap<>();
     neededSpecialism = spec;
     delay = 0;
@@ -43,6 +44,10 @@ public class Patient {
 
   public String getName() {
     return name;
+  }
+
+  public int getVariability() {
+    return variability;
   }
 
   public int getPreferredCapacity() {
