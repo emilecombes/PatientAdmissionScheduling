@@ -78,6 +78,10 @@ public class Patient {
     return registration == admission && registration == maxAdmission;
   }
 
+  public boolean canHaveAdmissionDate(int ad){
+    return ad >= admission && ad <= maxAdmission;
+  }
+
   public int getRegistrationDate() {
     return registration;
   }

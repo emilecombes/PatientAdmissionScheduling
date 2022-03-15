@@ -214,15 +214,27 @@ public class Scheduler {
 
     int N = 1000;
     for (int i = 0; i < N; i++) {
-      int pat = getShiftPatient();
-      Patient p = registeredPatients.get(pat);
+      int firstPat = getShiftPatient();
+      Patient firstPatient = getRegisteredPatients().get(firstPat);
+      int secPat;
+      Patient secPatient;
+      int ad = firstPatient.getActualAdmission();
+      int dd = firstPatient.getActualDischarge();
+      int count = 0;
+      do {
+        secPat = getSwapPatient(firstPat);
+        secPatient = getRegisteredPatients().get(secPat);
+        count++;
+        if (count % 1000000 == 0) System.out.println("Blocked on patient " + firstPat);
+      }
+      while (secPatient.getActualAdmission() < currentDay
+          || !secPatient.isAdmittedOn(ad, dd)
+          || !firstPatient.canHaveAdmissionDate(secPatient.getActualAdmission())
+          || !secPatient.canHaveAdmissionDate(firstPatient.getActualAdmission()));
 
-      int maxDelay = p.getMaxAdmission() - p.getActualAdmission();
-      int maxAdvance = p.getActualAdmission() - Math.max(currentDay, p.getAdmissionDate());
-      int shift = -maxAdvance + (int) (Math.random() * (maxAdvance + maxDelay));
-      int savings = shiftAdmission(pat, shift);
-      if(savings > 0) cost -= savings;
-      else shiftAdmission(pat, -shift);
+      int savings = swapAdmission(firstPat, secPat);
+      if (savings > 0) cost -= savings;
+      else swapAdmission(secPat, firstPat);
     }
 
     cost -= CAPACITY * getCapacityViolations();
@@ -290,13 +302,20 @@ public class Scheduler {
     return savings - shift * DELAY;
   }
 
-  public void swapAdmission(Patient first, Patient second) {
-    // TODO patients swap admission dates and rooms
+  public int swapAdmission(int firstPat, int secPat) {
+    Patient firstPatient = getRegisteredPatients().get(firstPat);
+    Patient secPatient = getRegisteredPatients().get(secPat);
+    int delta = secPatient.getActualAdmission() - firstPatient.getActualAdmission();
+
+    return shiftAdmission(firstPat, delta) +
+        shiftAdmission(secPat, -delta) +
+        swapRooms(firstPat, secPat);
   }
 
   public int getFeasibleRoom(int pat) {
     int room;
-    do room = (int) (nRooms * Math.random()); while (penaltyMatrix[pat][room] == -1);
+    do room = (int) (nRooms * Math.random());
+    while (penaltyMatrix[pat][room] == -1);
     return room;
   }
 
@@ -313,17 +332,16 @@ public class Scheduler {
 
   public int getShiftPatient() {
     int random;
-    do {
-      random = getMovablePatient();
-    } while (getRegisteredPatients().get(random).getAssignedRoom(currentDay - 1) != -1 ||
-        getRegisteredPatients().get(random).getMaxAdmission() == currentDay);
+    do random = getMovablePatient();
+    while (getRegisteredPatients().get(random).getAssignedRoom(currentDay - 1) != -1
+        || getRegisteredPatients().get(random).getMaxAdmission() == currentDay);
     return random;
   }
 
   public int getAdmittedPatient(int start, int end) {
     int patient;
-    do patient = getMovablePatient(); while (!getRegisteredPatients().get(patient)
-        .isAdmittedOn(start, end));
+    do patient = getMovablePatient();
+    while (!getRegisteredPatients().get(patient).isAdmittedOn(start, end));
     return patient;
   }
 
@@ -383,7 +401,7 @@ public class Scheduler {
   public int getGenderViolations() {
     int dynamicGender = 0;
     for (int i = 0; i < nRooms; i++)
-      for (int j = 0; j < (1+EXTEND)* nDays; j++)
+      for (int j = 0; j < (1 + EXTEND) * nDays; j++)
         if (getGenderViolations(i, j) != 0) dynamicGender++;
     return dynamicGender;
   }
@@ -391,28 +409,20 @@ public class Scheduler {
   public int getCapacityViolations() {
     int cap = 0;
     for (int i = 0; i < nRooms; i++)
-      for (int j = 0; j < (1 + EXTEND) * nDays; j++)
-        cap += getCapacityViolations(i, j);
+      for (int j = 0; j < (1 + EXTEND) * nDays; j++) cap += getCapacityViolations(i, j);
     return cap;
   }
 
   public int getTransfers() {
     int transfer = 0;
     List<Patient> registeredPatients = getRegisteredPatients();
-    for (Patient p : registeredPatients) {
-      transfer += p.getTransfers();
-    }
+    for (Patient p : registeredPatients) transfer += p.getTransfers();
     return transfer;
   }
 
   public int getDelays() {
     int delays = 0;
-    for (Patient p : getRegisteredPatients()) {
-      delays += p.getDelay();
-      if (p.getDelay() < 0) {
-        System.out.println("KKK");
-      }
-    }
+    for (Patient p : getRegisteredPatients()) delays += p.getDelay();
     return delays;
   }
 
