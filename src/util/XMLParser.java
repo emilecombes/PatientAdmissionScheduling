@@ -348,14 +348,12 @@ public class XMLParser {
 
     costsElement.setAttribute("objectives", String.valueOf(prc[0] + gender + transfer));
 
-
     // write dom document to a file
     try (FileOutputStream output = new FileOutputStream("./out/sol/" + title + "_sol.xml")) {
       writeXml(doc, output);
     } catch (Exception e) {
       e.printStackTrace();
     }
-
   }
 
   private static void writeXml(Document doc, OutputStream output) throws TransformerException {

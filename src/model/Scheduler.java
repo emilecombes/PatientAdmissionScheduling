@@ -16,6 +16,7 @@ public class Scheduler {
   private Map<String, Integer> dayIndices;
   private int[][] penaltyMatrix;
   private int currentDay;
+  private String[] lastMove;
 
   public Scheduler() {
   }
@@ -97,6 +98,14 @@ public class Scheduler {
     sb.append("-");
     sb.append(day);
     return sb.toString();
+  }
+
+  public List<String> getDateStrings() {
+    List<String> dates = new ArrayList<>();
+    for (String date : dayIndices.keySet()) {
+      dates.add(dayIndices.get(date), date);
+    }
+    return dates;
   }
 
   public int getHorizonLength() {
@@ -198,11 +207,34 @@ public class Scheduler {
       Patient patient = registeredPatients.get(pat);
       if (patient.getLastRoom() == -1) {
         int room = getFeasibleRoom(pat);
-        for (int i = patient.getAdmissionDate(); i < patient.getDischargeDate(); i++) {
+        for (int i = patient.getAdmissionDate(); i < patient.getDischargeDate(); i++)
           assignRoom(patient, room, i);
-        }
       }
     }
+  }
+
+  public void simulatedAnnealing() {
+    double temperature = 155;
+    double endTemperature = 1.55;
+    double alpha = 0.999;
+    int iterations = 1000;
+    int savings;
+
+    while (temperature > endTemperature) {
+      for (int i = 0; i < iterations; i++) {
+
+      }
+    }
+  }
+
+  public int doMove() {
+    // Return savings of a valid move with prob: 0.49 CR, 0.35 SR, 0.01 ShA, 0.15 SwA
+    // Save last move globally
+    return 0;
+  }
+
+  public void undoMove() {
+
   }
 
   public void solve() {
@@ -225,16 +257,18 @@ public class Scheduler {
         secPat = getSwapPatient(firstPat);
         secPatient = getRegisteredPatients().get(secPat);
         count++;
-        if (count % 1000000 == 0) System.out.println("Blocked on patient " + firstPat);
       }
       while (secPatient.getActualAdmission() < currentDay
           || !secPatient.isAdmittedOn(ad, dd)
           || !firstPatient.canHaveAdmissionDate(secPatient.getActualAdmission())
-          || !secPatient.canHaveAdmissionDate(firstPatient.getActualAdmission()));
+          || !secPatient.canHaveAdmissionDate(firstPatient.getActualAdmission())
+          && count < 1000);
 
-      int savings = swapAdmission(firstPat, secPat);
-      if (savings > 0) cost -= savings;
-      else swapAdmission(secPat, firstPat);
+      if (count < 1000) {
+        int savings = swapAdmission(firstPat, secPat);
+        if (savings > 0) cost -= savings;
+        else swapAdmission(secPat, firstPat);
+      }
     }
 
     cost -= CAPACITY * getCapacityViolations();
@@ -307,9 +341,8 @@ public class Scheduler {
     Patient secPatient = getRegisteredPatients().get(secPat);
     int delta = secPatient.getActualAdmission() - firstPatient.getActualAdmission();
 
-    return shiftAdmission(firstPat, delta) +
-        shiftAdmission(secPat, -delta) +
-        swapRooms(firstPat, secPat);
+    return shiftAdmission(firstPat, delta) + shiftAdmission(secPat, -delta)
+        + swapRooms(firstPat, secPat);
   }
 
   public int getFeasibleRoom(int pat) {

@@ -1,7 +1,6 @@
 package model;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Set;
 
 public class Patient {
@@ -24,7 +23,7 @@ public class Patient {
     registration = reg;
     admission = adm;
     discharge = dis;
-    maxAdmission = (max > 19) ? 19 : max;
+    maxAdmission = Math.min(max, 19);
     assignedRooms = new HashMap<>();
     neededSpecialism = spec;
     delay = 0;
