@@ -1,53 +1,5 @@
 package model;
 
-import java.util.HashSet;
-import java.util.Set;
+public class Department{
 
-public class Department {
-  private final String name;
-  private Set<String> mainSpecialisms;
-  private Set<String> auxSpecialisms;
-  private Set<Room> rooms;
-
-  public Department(String n){
-    name = n;
-    rooms = new HashSet<>();
-  }
-
-  public void setMainSpecialisms(Set<String> mainSpecialisms) {
-    this.mainSpecialisms = mainSpecialisms;
-  }
-
-  public void setAuxSpecialisms(Set<String> auxSpecialisms) {
-    this.auxSpecialisms = auxSpecialisms;
-  }
-
-  public void addRoom(Room r){
-    rooms.add(r);
-  }
-
-  public String getName(){
-    return name;
-  }
-
-  public Set<Room> getRooms(){
-    return rooms;
-  }
-
-  public boolean hasMainSpecialism(String specialism){
-    return mainSpecialisms.contains(specialism);
-  }
-
-  public boolean hasAuxSpecialism(String specialism){
-    return auxSpecialisms.contains(specialism);
-  }
-
-  @Override
-  public String toString() {
-    return "Department{" +
-        "name='" + name + '\'' +
-        ", mainSpecialisms=" + mainSpecialisms +
-        ", auxSpecialisms=" + auxSpecialisms +
-        '}';
-  }
 }
