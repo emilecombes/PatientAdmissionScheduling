@@ -32,17 +32,97 @@ public class XMLParser {
     }
   }
 
-  public void buildDateConverter(int extend){
+  public void buildDateConverter(int extend) {
     Element descriptor = (Element) document.getElementsByTagName("descriptor").item(0);
     Node horizon = descriptor.getElementsByTagName("Horizon").item(0);
     int nDays = Integer.parseInt(
         horizon.getAttributes().getNamedItem("num_days").getTextContent()
     );
     String startDay = horizon.getAttributes().getNamedItem("start_day").getTextContent();
-    DateConverter dateConverter = new DateConverter(startDay, nDays, extend);
+    new DateConverter(startDay, nDays, extend);
   }
 
-  public void buildPatientList(){
-    Element patients = (Element) document.getElementsByTagName("patients").item(0);
+  public RoomList buildRoomList() {
+    Node roomsNode = document.getElementsByTagName("rooms").item(0);
+    NodeList roomsNodeList = roomsNode.getChildNodes();
+    List<Room> rooms = new LinkedList<>();
+    for (int i = 0; i < roomsNodeList.getLength(); i++) {
+      Node roomNode = roomsNodeList.item(i);
+      if (roomNode.getNodeType() == Node.ELEMENT_NODE) {
+        Element roomElement = (Element) roomNode;
+
+        NodeList featureNodes = roomElement.getElementsByTagName("feature");
+        Set<String> features = new HashSet<>();
+        for (int j = 0; j < featureNodes.getLength(); j++) {
+          Node featureNode = featureNodes.item(j);
+          if (featureNode.getNodeType() == Node.ELEMENT_NODE)
+            features.add(featureNode.getTextContent());
+        }
+
+        Room room = new Room(
+            i,
+            roomElement.getAttribute("name"),
+            Integer.parseInt(roomElement.getAttribute("capacity")),
+            roomElement.getAttribute("gender_policy"),
+            roomElement.getAttribute("department"),
+            features
+        );
+
+        rooms.add(room);
+      }
+    }
+    return new RoomList(rooms);
+  }
+
+  public PatientList buildPatientList() {
+    Node patientsNode = document.getElementsByTagName("patients").item(0);
+    NodeList patientsNodeList = patientsNode.getChildNodes();
+    List<Patient> patients = new ArrayList<>();
+    for (int i = 0; i < patientsNodeList.getLength(); i++) {
+      Node patientNode = patientsNodeList.item(i);
+      if (patientNode.getNodeType() == Node.ELEMENT_NODE) {
+        Element patientElement = (Element) patientNode;
+
+        List<String> neededProps = new ArrayList<>();
+        List<String> preferredProps = new ArrayList<>();
+        NodeList propList = patientElement.getElementsByTagName("room_property");
+        for (int j = 0; j < propList.getLength(); j++) {
+          Node propertyNode = propList.item(j);
+          if (propertyNode.getNodeType() == Node.ELEMENT_NODE) {
+            Element propertyElement = (Element) propertyNode;
+            String name = propertyElement.getAttribute("name");
+            String type = propertyElement.getAttribute("type");
+            if (type.equals("preferred")) preferredProps.add(name);
+            else neededProps.add(name);
+          }
+        }
+
+        String pc = patientElement.getAttribute("preferred_capacity");
+        int preferredCapacity = (pc.equals("")) ? -1 : Integer.parseInt(pc);
+        Patient patient = new Patient(
+            i,
+            patientElement.getAttribute("name"),
+            patientElement.getAttribute("gender"),
+            patientElement.getAttribute("treatment"),
+            DateConverter.getDateIndex(patientElement.getAttribute("admission")),
+            DateConverter.getDateIndex(patientElement.getAttribute("discharge")),
+            DateConverter.getDateIndex(patientElement.getAttribute("max_admission")),
+            preferredCapacity,
+            neededProps,
+            preferredProps
+        );
+
+        if (!patientElement.getAttribute("room").isEmpty()) {
+          int roomIndex = RoomList.getRoomIndex(patientElement.getAttribute("room"));
+          for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
+            patient.assignRoom(day, roomIndex);
+          }
+        }
+
+        patients.add(patient);
+      }
+    }
+
+    return new PatientList(patients);
   }
 }

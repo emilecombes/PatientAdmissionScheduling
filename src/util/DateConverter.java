@@ -41,11 +41,11 @@ public class DateConverter {
     return sb.toString();
   }
 
-  public String getDateString(int i){
+  public static String getDateString(int i){
     return dateStrings.get(i);
   }
 
-  public int getDateIndex(String date){
-    return dateIndices.get(date);
+  public static int getDateIndex(String date){
+    return (dateIndices.get(date) == null) ? -1 : dateIndices.get(date);
   }
 }
