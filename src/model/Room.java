@@ -16,27 +16,36 @@ public class Room {
     this.features = features;
   }
 
-  public String getName(){
+  public String getName() {
     return name;
   }
 
-  public int getId(){
+  public int getId() {
     return id;
   }
 
-  public String getDepartment(){
+  public String getDepartment() {
     return department;
   }
 
-  public String getGenderPolicy() {
-    return genderPolicy;
-  }
-
-  public int getCapacity(){
+  public int getCapacity() {
     return capacity;
   }
 
-  public boolean hasFeature(String f){
+  public boolean canHostGender(String gender) {
+    return switch (genderPolicy) {
+      case "Any", "SameGender" -> true;
+      case "MaleOnly" -> gender.equals("Male");
+      case "FemaleOnly" -> gender.equals("Female");
+      default -> false;
+    };
+  }
+
+  public boolean hasFeature(String f) {
     return features.contains(f);
+  }
+
+  public boolean hasAllFeatures(Set<String> f) {
+    return features.containsAll(f);
   }
 }

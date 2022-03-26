@@ -62,17 +62,23 @@ public class RoomList {
   }
 
   public Set<Room> getMainRoomsForTreatment(String treatment) {
+    String specialism = specialisms.get(treatment);
     Set<Room> treatmentRooms = new HashSet<>();
-    for (String dep : mainDepartments.get(specialisms.get(treatment))) {
-      treatmentRooms.addAll(getDepartmentRooms(dep));
+    if (mainDepartments.containsKey(specialism)) {
+      for (String dep : mainDepartments.get(specialism)) {
+        if (dep != null) treatmentRooms.addAll(getDepartmentRooms(dep));
+      }
     }
     return treatmentRooms;
   }
 
   public Set<Room> getAuxRoomsForTreatment(String treatment) {
+    String specialism = specialisms.get(treatment);
     Set<Room> treatmentRooms = new HashSet<>();
-    for (String dep : auxDepartments.get(specialisms.get(treatment))) {
-      treatmentRooms.addAll(getDepartmentRooms(dep));
+    if (auxDepartments.containsKey(specialism)) {
+      for (String dep : auxDepartments.get(specialism)) {
+        if (dep != null) treatmentRooms.addAll(getDepartmentRooms(dep));
+      }
     }
     return treatmentRooms;
   }

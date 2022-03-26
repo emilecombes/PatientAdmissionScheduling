@@ -1,9 +1,6 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Patient {
   private final String name, treatment, gender;
@@ -15,7 +12,7 @@ public class Patient {
   private boolean inPatient;
   private int admission, discharge, delay;
   private LinkedHashMap<Integer, Integer> assignedRooms;
-  private List<Integer> roomCosts;
+  private Map<Integer, Integer> roomCosts;
   private Set<Integer> feasibleRooms;
 
   public Patient(int id, String name, String gender, String treatment, int ad, int dd,
@@ -35,13 +32,22 @@ public class Patient {
     this.neededProps = np;
     this.preferredProps = pp;
     this.neededCare = new ArrayList<>();
-    for(int i = 0; i < stayLength; i++) neededCare.add(1);
+    for (int i = 0; i < stayLength; i++) neededCare.add(1);
     assignedRooms = new LinkedHashMap<>();
+    roomCosts = new HashMap<>();
   }
 
   // Getters & Setters
-  public void setInitial(){
+  public void setInitial() {
     inPatient = true;
+  }
+
+  public void setFeasibleRooms(Set<Integer> fr) {
+    feasibleRooms = fr;
+  }
+
+  public void setRoomCost(int room, int cost) {
+    roomCosts.put(room, cost);
   }
 
   public String getName() {
@@ -58,6 +64,18 @@ public class Patient {
 
   public int getId() {
     return id;
+  }
+
+  public Set<String> getNeededProperties() {
+    return neededProps;
+  }
+
+  public Set<String> getPreferredProperties() {
+    return preferredProps;
+  }
+
+  public Set<Integer> getFeasibleRooms() {
+    return feasibleRooms;
   }
 
   public int getPreferredCap() {
@@ -92,18 +110,20 @@ public class Patient {
     return delay;
   }
 
-  public int getRoom(int day){
+  public int getRoom(int day) {
     return assignedRooms.get(day);
   }
 
-  public boolean isInitial() { return inPatient; }
+  public boolean isInitial() {
+    return inPatient;
+  }
 
   // Public methods
-  public void assignRoom(int room, int day){
+  public void assignRoom(int room, int day) {
     assignedRooms.put(day, room);
   }
 
-  public void cancelRoom(int day){
+  public void cancelRoom(int day) {
     assignedRooms.remove(day);
   }
 }

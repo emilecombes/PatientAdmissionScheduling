@@ -159,7 +159,7 @@ public class XMLParser {
           int roomIndex = RoomList.getRoomIndex(patientElement.getAttribute("room"));
           for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
             patient.setInitial();
-            patient.assignRoom(day, roomIndex);
+            patient.assignRoom(roomIndex, day);
           }
         }
 
