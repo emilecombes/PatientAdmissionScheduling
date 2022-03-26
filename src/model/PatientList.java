@@ -7,5 +7,5 @@ public class PatientList {
 
   public PatientList(List<Patient> patients){
     this.patients = patients;
-  }
+}
 }

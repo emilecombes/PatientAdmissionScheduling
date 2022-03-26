@@ -46,6 +46,7 @@ public class XMLParser {
     Node roomsNode = document.getElementsByTagName("rooms").item(0);
     NodeList roomsNodeList = roomsNode.getChildNodes();
     List<Room> rooms = new LinkedList<>();
+    int index = 0;
     for (int i = 0; i < roomsNodeList.getLength(); i++) {
       Node roomNode = roomsNodeList.item(i);
       if (roomNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -60,7 +61,7 @@ public class XMLParser {
         }
 
         Room room = new Room(
-            i,
+            index++,
             roomElement.getAttribute("name"),
             Integer.parseInt(roomElement.getAttribute("capacity")),
             roomElement.getAttribute("gender_policy"),
@@ -78,6 +79,7 @@ public class XMLParser {
     Node patientsNode = document.getElementsByTagName("patients").item(0);
     NodeList patientsNodeList = patientsNode.getChildNodes();
     List<Patient> patients = new ArrayList<>();
+    int index = 0;
     for (int i = 0; i < patientsNodeList.getLength(); i++) {
       Node patientNode = patientsNodeList.item(i);
       if (patientNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -100,7 +102,7 @@ public class XMLParser {
         String pc = patientElement.getAttribute("preferred_capacity");
         int preferredCapacity = (pc.equals("")) ? -1 : Integer.parseInt(pc);
         Patient patient = new Patient(
-            i,
+            index++,
             patientElement.getAttribute("name"),
             patientElement.getAttribute("gender"),
             patientElement.getAttribute("treatment"),

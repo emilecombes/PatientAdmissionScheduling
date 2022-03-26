@@ -11,9 +11,7 @@ public class RoomList {
   public RoomList(List<Room> rooms) {
     this.rooms = rooms;
     roomIndices = new HashMap<>();
-    for (Room room : rooms) {
-      roomIndices.put(room.getName(), room.getId());
-    }
+    for (Room room : rooms) roomIndices.put(room.getName(), room.getId());
   }
 
   public static int getRoomIndex(String name) {
