@@ -101,6 +101,18 @@ public class XMLParser {
       }
     }
 
+    // Add treatment - specialism mapping
+    NodeList treatmentNodes = document.getElementsByTagName("treatments").item(0).getChildNodes();
+    for (int i = 0; i < treatmentNodes.getLength(); i++) {
+      if (treatmentNodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
+        Element treatmentElement = (Element) treatmentNodes.item(i);
+        roomList.addSpecialism(
+            treatmentElement.getAttribute("name"),
+            treatmentElement.getAttribute("specialism")
+        );
+      }
+    }
+
     return roomList;
   }
 

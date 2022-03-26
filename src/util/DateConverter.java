@@ -48,4 +48,16 @@ public class DateConverter {
   public static int getDateIndex(String date){
     return (dateIndices.get(date) == null) ? -1 : dateIndices.get(date);
   }
+
+  public static int getNumDays(){
+    return numDays;
+  }
+
+  public static int getExtend(){
+    return extend;
+  }
+
+  public static int getTotalHorizon(){
+    return numDays + extend;
+  }
 }

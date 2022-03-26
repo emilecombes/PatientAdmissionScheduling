@@ -102,4 +102,8 @@ public class Patient {
   public void assignRoom(int room, int day){
     assignedRooms.put(day, room);
   }
+
+  public void cancelRoom(int day){
+    assignedRooms.remove(day);
+  }
 }
