@@ -9,7 +9,7 @@ public class Patient {
   private final String name, treatment, gender;
   private final int id, preferredCap;
   private final int admDate, disDate, stayLength, maxAdm;
-  private final List<String> preferredProps, neededProps;
+  private final Set<String> preferredProps, neededProps;
   private final List<Integer> neededCare;
 
   private boolean inPatient;
@@ -19,7 +19,7 @@ public class Patient {
   private Set<Integer> feasibleRooms;
 
   public Patient(int id, String name, String gender, String treatment, int ad, int dd,
-                 int ma, int cap, List<String> np, List<String> pp) {
+                 int ma, int cap, Set<String> np, Set<String> pp) {
     this.id = id;
     this.name = name;
     this.gender = gender;

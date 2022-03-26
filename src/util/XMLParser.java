@@ -114,8 +114,8 @@ public class XMLParser {
       if (patientNode.getNodeType() == Node.ELEMENT_NODE) {
         Element patientElement = (Element) patientNode;
 
-        List<String> neededProps = new ArrayList<>();
-        List<String> preferredProps = new ArrayList<>();
+        Set<String> neededProps = new HashSet<>();
+        Set<String> preferredProps = new HashSet<>();
         NodeList propList = patientElement.getElementsByTagName("room_property");
         for (int j = 0; j < propList.getLength(); j++) {
           Node propertyNode = propList.item(j);
@@ -146,6 +146,7 @@ public class XMLParser {
         if (!patientElement.getAttribute("room").isEmpty()) {
           int roomIndex = RoomList.getRoomIndex(patientElement.getAttribute("room"));
           for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
+            patient.setInitial();
             patient.assignRoom(day, roomIndex);
           }
         }
