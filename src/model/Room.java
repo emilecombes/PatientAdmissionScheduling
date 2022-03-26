@@ -1,6 +1,5 @@
 package model;
 
-import java.util.List;
 import java.util.Set;
 
 public class Room {
@@ -23,5 +22,21 @@ public class Room {
 
   public int getId(){
     return id;
+  }
+
+  public String getDepartment(){
+    return department;
+  }
+
+  public String getGenderPolicy() {
+    return genderPolicy;
+  }
+
+  public int getCapacity(){
+    return capacity;
+  }
+
+  public boolean hasFeature(String f){
+    return features.contains(f);
   }
 }

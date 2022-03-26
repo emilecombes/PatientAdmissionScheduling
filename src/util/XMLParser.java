@@ -72,7 +72,36 @@ public class XMLParser {
         rooms.add(room);
       }
     }
-    return new RoomList(rooms);
+
+    NodeList departmentNodes = document.getElementsByTagName("departments").item(0).getChildNodes();
+    List<String> departments = new ArrayList<>();
+    for (int i = 0; i < departmentNodes.getLength(); i++) {
+      if (departmentNodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
+        Element departmentElement = (Element) departmentNodes.item(i);
+        departments.add(departmentElement.getAttribute("name"));
+      }
+    }
+
+
+    RoomList roomList = new RoomList(rooms, departments);
+
+    // Add department specialisms
+    for (int i = 0; i < departmentNodes.getLength(); i++) {
+      if (departmentNodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
+        Element departmentElement = (Element) departmentNodes.item(i);
+        String department = departmentElement.getAttribute("name");
+        NodeList mainSpecs = departmentElement.getElementsByTagName("main_specialism");
+        NodeList auxSpecs = departmentElement.getElementsByTagName("aux_specialism");
+        for (int j = 0; j < mainSpecs.getLength(); j++)
+          if (mainSpecs.item(j).getNodeType() == Node.ELEMENT_NODE)
+            roomList.addMainSpecialism(department, mainSpecs.item(j).getTextContent());
+        for (int j = 0; j < auxSpecs.getLength(); j++)
+          if (auxSpecs.item(j).getNodeType() == Node.ELEMENT_NODE)
+            roomList.addAuxSpecialism(department, auxSpecs.item(j).getTextContent());
+      }
+    }
+
+    return roomList;
   }
 
   public PatientList buildPatientList() {
