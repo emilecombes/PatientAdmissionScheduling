@@ -23,5 +23,6 @@ public class Main {
 
     solver.init();
     solver.solve();
+    System.out.println(solver.getCost());
   }
 }

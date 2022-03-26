@@ -20,18 +20,24 @@ public class Solver {
     penalties = new HashMap<>();
   }
 
-  public int getPenalty(String type) {
-    return penalties.get(type);
-  }
-
   public void setPenalty(String type, int value) {
     penalties.put(type, value);
   }
 
+  public int getPenalty(String type) {
+    return penalties.get(type);
+  }
+
+  public int getCost() {
+    return cost;
+  }
+
   public void init() {
-    // TODO calculate PR costs, Set feasible rooms, insert initial patients, ...
+    cost = 0;
     setFeasibleRooms();
     calculateRoomCosts();
+    insertInitialPatients();
+    assignRandomRooms();
   }
 
   public void setFeasibleRooms() {
@@ -63,15 +69,17 @@ public class Solver {
 
         for (String property : patient.getPreferredProperties())
           if (!room.hasFeature(property))
-            roomCost += penalties.get("roomProperty");
+            roomCost += getPenalty("roomProperty");
         if (patient.getPreferredCap() < room.getCapacity() && patient.getPreferredCap() != -1)
-          roomCost += penalties.get("capacityPreference");
+          roomCost += getPenalty("capacityPreference");
         if (!roomList.getMainRoomsForTreatment(patient.getTreatment()).contains(room))
-          roomCost += penalties.get("speciality");
+          roomCost += getPenalty("speciality");
         if (!room.canHostGender(patient.getGender()))
-          roomCost += penalties.get("gender");
+          roomCost += getPenalty("gender");
+
+        roomCost *= patient.getStayLength();
         if (patient.isInitial() && patient.getRoom(patient.getAdmission()) != r)
-          roomCost += penalties.get("transfer");
+          roomCost += getPenalty("transfer");
 
         patient.setRoomCost(r, roomCost);
       }
@@ -81,13 +89,19 @@ public class Solver {
   public void insertInitialPatients() {
     for (Patient p : patientList.getInitialPatients()) {
       int room = p.getRoom(p.getAdmission());
-      for (int i = p.getAdmission(); i < p.getDischarge(); i++) {
-        schedule.assignPatient(p, i);
-      }
+      for (int i = p.getAdmission(); i < p.getDischarge(); i++)
+        schedule.assignPatient(p, room, i);
+      cost += p.getRoomCost(room);
     }
   }
 
-  public void assignPatients() {
+  public void assignRandomRooms() {
+    for (Patient p : patientList.getRegisteredPatients()) {
+      int room = p.getRandomFeasibleRoom();
+      for(int i = p.getAdmission(); i < p.getDischarge(); i++)
+        schedule.assignPatient(p, room, i);
+      cost += p.getRoomCost(room);
+    }
   }
 
   public void solve() {

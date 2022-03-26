@@ -6,21 +6,28 @@ import java.util.List;
 public class PatientList {
   private final List<Patient> patients;
   private final List<Patient> initialPatients;
+  private final List<Patient> registeredPatients;
 
   public PatientList(List<Patient> patients) {
     this.patients = patients;
     initialPatients = new ArrayList<>();
+    registeredPatients = new ArrayList<>();
     setInitialPatients();
- }
+  }
 
- public void setInitialPatients(){
-   for (Patient p : patients)
-     if (p.isInitial()) initialPatients.add(p);
- }
+  public void setInitialPatients() {
+    for (Patient p : patients)
+      if (p.isInitial()) initialPatients.add(p);
+      else registeredPatients.add(p);
+  }
 
- public List<Patient> getInitialPatients(){
+  public List<Patient> getInitialPatients() {
     return initialPatients;
- }
+  }
+
+  public List<Patient> getRegisteredPatients() {
+    return registeredPatients;
+  }
 
   public int getNumberOfPatients() {
     return patients.size();

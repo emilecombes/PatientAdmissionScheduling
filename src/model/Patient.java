@@ -5,15 +5,16 @@ import java.util.*;
 public class Patient {
   private final String name, treatment, gender;
   private final int id, preferredCap;
-  private final int admDate, disDate, stayLength, maxAdm;
+  private final int originalAD, originalDD, stayLength, maxAdm;
   private final Set<String> preferredProps, neededProps;
   private final List<Integer> neededCare;
 
-  private boolean inPatient;
+  private final LinkedHashMap<Integer, Integer> assignedRooms;
+  private final Map<Integer, Integer> roomCosts;
   private int admission, discharge, delay;
-  private LinkedHashMap<Integer, Integer> assignedRooms;
-  private Map<Integer, Integer> roomCosts;
+  private boolean inPatient;
   private Set<Integer> feasibleRooms;
+  private List<Integer> feasibleRoomList;
 
   public Patient(int id, String name, String gender, String treatment, int ad, int dd,
                  int ma, int cap, Set<String> np, Set<String> pp) {
@@ -21,8 +22,8 @@ public class Patient {
     this.name = name;
     this.gender = gender;
     this.treatment = treatment;
-    this.admDate = ad;
-    this.disDate = dd;
+    this.originalAD = ad;
+    this.originalDD = dd;
     this.maxAdm = ma;
     this.stayLength = dd - ad;
     this.admission = ad;
@@ -44,6 +45,8 @@ public class Patient {
 
   public void setFeasibleRooms(Set<Integer> fr) {
     feasibleRooms = fr;
+    feasibleRoomList = new ArrayList<>();
+    feasibleRoomList.addAll(feasibleRooms);
   }
 
   public void setRoomCost(int room, int cost) {
@@ -78,16 +81,24 @@ public class Patient {
     return feasibleRooms;
   }
 
+  public int getRoomCost(int room) {
+    return roomCosts.get(room);
+  }
+
   public int getPreferredCap() {
     return preferredCap;
   }
 
-  public int getAdmDate() {
-    return admDate;
+  public int getNeededCare(int day) {
+    return neededCare.get(day - admission);
   }
 
-  public int getDisDate() {
-    return disDate;
+  public int getOriginalAD() {
+    return originalAD;
+  }
+
+  public int getOriginalDD() {
+    return originalDD;
   }
 
   public int getStayLength() {
@@ -110,15 +121,19 @@ public class Patient {
     return delay;
   }
 
+  // Public methods
   public int getRoom(int day) {
     return assignedRooms.get(day);
+  }
+
+  public int getRandomFeasibleRoom(){
+    return feasibleRoomList.get((int) (Math.random() * feasibleRoomList.size()));
   }
 
   public boolean isInitial() {
     return inPatient;
   }
 
-  // Public methods
   public void assignRoom(int room, int day) {
     assignedRooms.put(day, room);
   }
@@ -126,4 +141,11 @@ public class Patient {
   public void cancelRoom(int day) {
     assignedRooms.remove(day);
   }
+
+  public void shiftAdmission(int days) {
+    admission += days;
+    discharge += days;
+    delay += days;
+  }
+
 }

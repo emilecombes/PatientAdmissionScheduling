@@ -25,11 +25,9 @@ public class Schedule {
     return null;
   }
 
-  public void assignPatient(Patient pat, int room) {
-    for(int i = pat.getAdmission(); i < pat.getDischarge(); i++){
-      pat.assignRoom(room, i);
-      schedule[room][i].add(pat.getId());
-    }
+  public void assignPatient(Patient pat, int room, int day) {
+    pat.assignRoom(room, day);
+    schedule[room][day].add(pat.getId());
   }
 
   public void cancelPatient(Patient pat) {
