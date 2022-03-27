@@ -10,7 +10,7 @@ public class Main {
     xmlParser.buildDateConverter(extend);
     RoomList roomList = xmlParser.buildRoomList();
     PatientList patientList = xmlParser.buildPatientList();
-    Schedule schedule = new Schedule(roomList.getNumberOfRooms(), DateConverter.getTotalHorizon());
+    Schedule schedule = new Schedule(roomList, patientList);
     Solver solver = new Solver(patientList, roomList, schedule);
 
     solver.setPenalty("roomProperty", 20);
@@ -23,6 +23,6 @@ public class Main {
 
     solver.init();
     solver.solve();
-    System.out.println(solver.getCost());
+    xmlParser.writeSolution(solver);
   }
 }

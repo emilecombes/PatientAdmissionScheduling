@@ -38,7 +38,6 @@ public class Patient {
     roomCosts = new HashMap<>();
   }
 
-  // Getters & Setters
   public void setInitial() {
     inPatient = true;
   }
@@ -121,13 +120,16 @@ public class Patient {
     return delay;
   }
 
-  // Public methods
   public int getRoom(int day) {
     return assignedRooms.get(day);
   }
 
-  public int getRandomFeasibleRoom(){
+  public int getRandomFeasibleRoom() {
     return feasibleRoomList.get((int) (Math.random() * feasibleRoomList.size()));
+  }
+
+  public String getStatus() {
+    return inPatient ? "arrived" : "registered";
   }
 
   public boolean isInitial() {

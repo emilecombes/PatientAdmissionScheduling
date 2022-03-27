@@ -41,6 +41,10 @@ public class Room {
     };
   }
 
+  public boolean hasGenderPolicy(String pol) {
+    return genderPolicy.equals(pol);
+  }
+
   public boolean hasFeature(String f) {
     return features.contains(f);
   }

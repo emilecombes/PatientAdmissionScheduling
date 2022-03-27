@@ -15,17 +15,16 @@ import java.io.*;
 import java.util.*;
 
 public class XMLParser {
-  private final String inputFile;
-  private DocumentBuilderFactory factory;
-  private DocumentBuilder builder;
+  private final String inputInstance;
   private Document document;
 
-  public XMLParser(String inputFile) {
-    this.inputFile = "data/Instances/" + inputFile + ".xml";
+  public XMLParser(String instance) {
+    inputInstance = instance;
+    String inputFile = "data/Instances/" + inputInstance + ".xml";
     try {
-      factory = DocumentBuilderFactory.newInstance();
-      builder = factory.newDocumentBuilder();
-      document = builder.parse(new File(this.inputFile));
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      document = builder.parse(new File(inputFile));
       document.getDocumentElement().normalize();
     } catch (Exception e) {
       System.out.println("Something went wrong...");
@@ -81,7 +80,6 @@ public class XMLParser {
         departments.add(departmentElement.getAttribute("name"));
       }
     }
-
 
     RoomList roomList = new RoomList(rooms, departments);
 
@@ -169,4 +167,74 @@ public class XMLParser {
 
     return new PatientList(patients);
   }
+
+  public void writeSolution(Solver solver) {
+    String outputFile = "out/solutions/" + inputInstance + "_sol.xml";
+    PatientList patientList = solver.getPatientList();
+    RoomList roomList = solver.getRoomList();
+
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder builder = null;
+    try {
+      builder = factory.newDocumentBuilder();
+    } catch (Exception e) {
+      System.out.println("Something went wrong...");
+    }
+    assert builder != null;
+    Document doc = builder.newDocument();
+    Element root = doc.createElement("OrPasu_main_out");
+    doc.appendChild(root);
+
+    // Write planning horizon
+    HashMap<String, String> planningHorizon = solver.getPlanningHorizon();
+    Element planningHorizonElement = doc.createElement("planning_horizon");
+    root.appendChild(planningHorizonElement);
+    for (String key : planningHorizon.keySet()) {
+      Element element = doc.createElement(key);
+      element.setTextContent(planningHorizon.get(key));
+      planningHorizonElement.appendChild(element);
+    }
+
+    // Write patients scheduling
+    Element patientsElement = doc.createElement("patients_scheduling");
+    root.appendChild(patientsElement);
+    for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
+      Patient p = patientList.getPatient(i);
+      Element patientElement = doc.createElement("patient");
+      patientElement.setAttribute("name", p.getName());
+      patientElement.setAttribute("delay", String.valueOf(p.getDelay()));
+      patientElement.setAttribute("status", p.getStatus());
+
+      for (int j = p.getAdmission(); j < p.getDischarge(); j++) {
+        Element stayElement = doc.createElement("stay");
+        stayElement.setAttribute("day", DateConverter.getDateString(j));
+        stayElement.setAttribute("room", roomList.getRoom(p.getRoom(j)).getName());
+        patientElement.appendChild(stayElement);
+      }
+      patientsElement.appendChild(patientElement);
+    }
+
+    // Write costs
+    Element costsElement = doc.createElement("costs");
+    root.appendChild(costsElement);
+    int capacityViolations = solver.getCapacityViolations();
+    int transfer = solver.getTransferCost();
+    int delay = solver.getDelayCost();
+
+    // Write to file
+    try (FileOutputStream output = new FileOutputStream(outputFile)) {
+      writeXml(doc, output);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private static void writeXml(Document doc, OutputStream output) throws TransformerException {
+    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    Transformer transformer = transformerFactory.newTransformer();
+    DOMSource source = new DOMSource(doc);
+    StreamResult result = new StreamResult(output);
+    transformer.transform(source, result);
+  }
+
 }

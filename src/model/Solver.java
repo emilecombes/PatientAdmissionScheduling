@@ -1,5 +1,7 @@
 package model;
 
+import util.DateConverter;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,7 +13,7 @@ public class Solver {
   private final RoomList roomList;
   private final Schedule schedule;
   private int cost;
-  private Map<String, String> lastMove; // ex: move="CR", patient="2", room="4", savings="20"
+  // private Map<String, String> lastMove; // ex: move="CR", patient="2", room="4", savings="20"
 
   public Solver(PatientList pl, RoomList rl, Schedule s) {
     patientList = pl;
@@ -28,8 +30,39 @@ public class Solver {
     return penalties.get(type);
   }
 
+  public PatientList getPatientList() {
+    return patientList;
+  }
+
+  public RoomList getRoomList() {
+    return roomList;
+  }
+
+  public int getCapacityViolations() {
+    return 0;
+  }
+
+  public int getTransferCost() {
+    return 0;
+  }
+
+  public int getDelayCost() {
+    int totalDelay = 0;
+    for (int i = 0; i < patientList.getNumberOfPatients(); i++)
+      totalDelay += patientList.getPatient(i).getDelay();
+    return totalDelay * getPenalty("delay");
+  }
+
   public int getCost() {
     return cost;
+  }
+
+  public HashMap<String, String> getPlanningHorizon() {
+    HashMap<String, String> horizon = new HashMap<>();
+    horizon.put("start_day", DateConverter.getDateString(0));
+    horizon.put("num_days", String.valueOf(DateConverter.getNumDays()));
+    horizon.put("current_day", DateConverter.getDateString(0));
+    return horizon;
   }
 
   public void init() {
@@ -63,8 +96,8 @@ public class Solver {
   public void calculateRoomCosts() {
     for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
       Patient patient = patientList.getPatient(i);
-      int roomCost = 0;
       for (int r : patient.getFeasibleRooms()) {
+        int roomCost = 0;
         Room room = roomList.getRoom(r);
 
         for (String property : patient.getPreferredProperties())
@@ -98,7 +131,7 @@ public class Solver {
   public void assignRandomRooms() {
     for (Patient p : patientList.getRegisteredPatients()) {
       int room = p.getRandomFeasibleRoom();
-      for(int i = p.getAdmission(); i < p.getDischarge(); i++)
+      for (int i = p.getAdmission(); i < p.getDischarge(); i++)
         schedule.assignPatient(p, room, i);
       cost += p.getRoomCost(room);
     }
