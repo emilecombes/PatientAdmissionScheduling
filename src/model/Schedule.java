@@ -3,6 +3,7 @@ package model;
 import util.DateConverter;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class Schedule {
@@ -23,6 +24,26 @@ public class Schedule {
     capacityViolations = new int[roomList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
   }
 
+  public int getDynamicGenderViolations() {
+    int violations = 0;
+    for (int r = 0; r < roomList.getNumberOfRooms(); r++) {
+      Room room = roomList.getRoom(r);
+      if (room.hasGenderPolicy("Any")) {
+        for (int day = 0; day < DateConverter.getTotalHorizon(); day++) {
+          int female = 0;
+          int male = 0;
+          for (Integer p : schedule[r][day]) {
+            Patient patient = patientList.getPatient(p);
+            if (patient.getGender().equals("Male")) male++;
+            else female++;
+          }
+          if(Math.min(female, male) > 0) violations++;
+        }
+      }
+    }
+    return violations;
+  }
+
   public Patient getSwapRoomPatient(int pat) {
     Patient firstPat = patientList.getPatient(pat);
     int firstRoom = firstPat.getRoom(firstPat.getAdmission());
@@ -41,7 +62,7 @@ public class Schedule {
   public void assignPatient(Patient pat, int room, int day) {
     pat.assignRoom(room, day);
     schedule[room][day].add(pat.getId());
-    if(roomList.getRoom(room).hasGenderPolicy("Any")){
+    if (roomList.getRoom(room).hasGenderPolicy("Any")) {
 
     }
   }

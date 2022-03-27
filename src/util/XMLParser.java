@@ -1,5 +1,6 @@
 package util;
 
+import com.sun.jdi.event.StepEvent;
 import model.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -215,11 +216,16 @@ public class XMLParser {
     }
 
     // Write costs
+    HashMap<String, Integer> costs = solver.getCosts();
     Element costsElement = doc.createElement("costs");
     root.appendChild(costsElement);
-    int capacityViolations = solver.getCapacityViolations();
-    int transfer = solver.getTransferCost();
-    int delay = solver.getDelayCost();
+    for (String key : costs.keySet()) {
+      Element element = doc.createElement(key);
+      if(key.equals("patient_room"))
+        element.setAttribute("objectives", String.valueOf(costs.get(key)));
+      else element.setTextContent(String.valueOf(costs.get(key)));
+      costsElement.appendChild(element);
+    }
 
     // Write to file
     try (FileOutputStream output = new FileOutputStream(outputFile)) {

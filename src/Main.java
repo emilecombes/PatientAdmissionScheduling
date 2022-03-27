@@ -1,6 +1,9 @@
 import model.*;
 import util.*;
 
+// Run validator with: ./or_pas_validator Instances/or_pas_dept2_short01.xml .
+// ./out/solutions/or_pas_dept2_short01_sol.xml in ./data
+
 public class Main {
   public static void main(String[] args) {
     int extend = 14;

@@ -38,19 +38,21 @@ public class Solver {
     return roomList;
   }
 
-  public int getCapacityViolations() {
-    return 0;
-  }
+  public HashMap<String, Integer> getCosts() {
+    HashMap<String, Integer> costs = new HashMap<>();
 
-  public int getTransferCost() {
-    return 0;
-  }
-
-  public int getDelayCost() {
+    int roomCosts = 0;
     int totalDelay = 0;
-    for (int i = 0; i < patientList.getNumberOfPatients(); i++)
-      totalDelay += patientList.getPatient(i).getDelay();
-    return totalDelay * getPenalty("delay");
+    for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
+      Patient patient = patientList.getPatient(i);
+      roomCosts += patient.getTotalRoomCost();
+      totalDelay += patient.getDelay();
+    }
+    costs.put("patient_room", roomCosts);
+    costs.put("delay", totalDelay);
+    costs.put("gender", schedule.getDynamicGenderViolations() * getPenalty("gender"));
+
+    return costs;
   }
 
   public int getCost() {
