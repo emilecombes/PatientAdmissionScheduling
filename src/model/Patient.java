@@ -10,6 +10,7 @@ public class Patient {
   private final List<Integer> neededCare;
 
   private final LinkedHashMap<Integer, Integer> assignedRooms;
+  private final Map<String, Map<Integer, Integer>> specificRoomCosts;
   private final Map<Integer, Integer> roomCosts;
   private int admission, discharge, delay;
   private boolean inPatient;
@@ -36,20 +37,7 @@ public class Patient {
     for (int i = 0; i < stayLength; i++) neededCare.add(1);
     assignedRooms = new LinkedHashMap<>();
     roomCosts = new HashMap<>();
-  }
-
-  public void setInitial() {
-    inPatient = true;
-  }
-
-  public void setFeasibleRooms(Set<Integer> fr) {
-    feasibleRooms = fr;
-    feasibleRoomList = new ArrayList<>();
-    feasibleRoomList.addAll(feasibleRooms);
-  }
-
-  public void setRoomCost(int room, int cost) {
-    roomCosts.put(room, cost);
+    specificRoomCosts = new HashMap<>();
   }
 
   public String getName() {
@@ -134,6 +122,30 @@ public class Patient {
 
   public String getStatus() {
     return inPatient ? "arrived" : "registered";
+  }
+
+  public void setInitial() {
+    inPatient = true;
+  }
+
+  public void setFeasibleRooms(Set<Integer> fr) {
+    feasibleRooms = fr;
+    feasibleRoomList = new ArrayList<>();
+    feasibleRoomList.addAll(feasibleRooms);
+  }
+
+  public void setRoomCost(String type, int room, int cost) {
+    specificRoomCosts.computeIfAbsent(type, k -> new HashMap<>());
+    specificRoomCosts.get(type).put(room, cost);
+  }
+
+  public void calculateTotalRoomCost() {
+    for (int room : feasibleRoomList) {
+      int roomCost = 0;
+      for (String type : specificRoomCosts.keySet())
+        roomCost += specificRoomCosts.get(type).get(room);
+      roomCosts.put(room, roomCost);
+    }
   }
 
   public boolean isInitial() {

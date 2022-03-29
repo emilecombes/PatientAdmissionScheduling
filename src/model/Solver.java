@@ -10,14 +10,14 @@ import java.util.Set;
 public class Solver {
   private final Map<String, Integer> penalties;
   private final PatientList patientList;
-  private final RoomList roomList;
+  private final DepartmentList departmentList;
   private final Schedule schedule;
   private int cost;
   // private Map<String, String> lastMove; // ex: move="CR", patient="2", room="4", savings="20"
 
-  public Solver(PatientList pl, RoomList rl, Schedule s) {
+  public Solver(PatientList pl, DepartmentList dl, Schedule s) {
     patientList = pl;
-    roomList = rl;
+    departmentList = dl;
     schedule = s;
     penalties = new HashMap<>();
   }
@@ -34,8 +34,8 @@ public class Solver {
     return patientList;
   }
 
-  public RoomList getRoomList() {
-    return roomList;
+  public int getCost() {
+    return cost;
   }
 
   public HashMap<String, Integer> getCosts() {
@@ -53,10 +53,6 @@ public class Solver {
     costs.put("gender", schedule.getDynamicGenderViolations() * getPenalty("gender"));
 
     return costs;
-  }
-
-  public int getCost() {
-    return cost;
   }
 
   public HashMap<String, String> getPlanningHorizon() {
@@ -80,14 +76,15 @@ public class Solver {
       Patient patient = patientList.getPatient(i);
 
       Set<Integer> feasibleRooms = new HashSet<>();
-      for (Room room : roomList.getRoomsForTreatment(patient.getTreatment())) {
-        feasibleRooms.add(room.getId());
-      }
+      for (Department department : departmentList.getDepartmentsForTreatment(
+          patient.getTreatment()))
+        feasibleRooms.addAll(department.getRoomIndices());
 
       Set<Integer> infeasibleRooms = new HashSet<>();
       for (int r : feasibleRooms) {
-        Room room = roomList.getRoom(r);
-        if (!room.hasAllFeatures(patient.getNeededProperties())) infeasibleRooms.add(r);
+        Room room = departmentList.getRoom(r);
+        if (!room.hasAllFeatures(patient.getNeededProperties()))
+          infeasibleRooms.add(r);
       }
 
       feasibleRooms.removeAll(infeasibleRooms);
@@ -99,24 +96,39 @@ public class Solver {
     for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
       Patient patient = patientList.getPatient(i);
       for (int r : patient.getFeasibleRooms()) {
-        int roomCost = 0;
-        Room room = roomList.getRoom(r);
+        Room room = departmentList.getRoom(r);
 
+        int propertyCost = 0;
         for (String property : patient.getPreferredProperties())
           if (!room.hasFeature(property))
-            roomCost += getPenalty("roomProperty");
+            propertyCost += getPenalty("roomProperty");
+        patient.setRoomCost("roomProperty", r, propertyCost);
+
+        int capacityCost;
         if (patient.getPreferredCap() < room.getCapacity() && patient.getPreferredCap() != -1)
-          roomCost += getPenalty("capacityPreference");
-        if (!roomList.getMainRoomsForTreatment(patient.getTreatment()).contains(room))
-          roomCost += getPenalty("speciality");
-        if (!room.canHostGender(patient.getGender()))
-          roomCost += getPenalty("gender");
+          capacityCost = getPenalty("capacityPreference");
+        else capacityCost = 0;
+        patient.setRoomCost("capacityPreference", r, capacityCost);
 
-        roomCost *= patient.getStayLength();
+        int specialityCost;
+        String specialism = departmentList.getNeededSpecialism(patient.getTreatment());
+        Department department = departmentList.getDepartment(room.getDepartment());
+        if (!department.hasMainSpecialism(specialism)) specialityCost = getPenalty("speciality");
+        else specialityCost = 0;
+        patient.setRoomCost("speciality", r, specialityCost);
+
+        int genderCost;
+        if (!room.canHostGender(patient.getGender())) genderCost = getPenalty("gender");
+        else genderCost = 0;
+        patient.setRoomCost("gender", r, genderCost);
+
+        int transferCost;
         if (patient.isInitial() && patient.getRoom(patient.getAdmission()) != r)
-          roomCost += getPenalty("transfer");
+          transferCost = getPenalty("transfer");
+        else transferCost = 0;
+        patient.setRoomCost("transfer", r, transferCost);
 
-        patient.setRoomCost(r, roomCost);
+        patient.calculateTotalRoomCost();
       }
     }
   }

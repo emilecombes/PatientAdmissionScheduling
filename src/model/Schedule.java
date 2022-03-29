@@ -3,31 +3,32 @@ package model;
 import util.DateConverter;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class Schedule {
-  private final RoomList roomList;
+  private final DepartmentList departmentList;
   private final PatientList patientList;
   private final Set<Integer>[][] schedule;
   private int[][] dynamicGenderViolations;
   private int[][] capacityViolations;
 
-  public Schedule(RoomList rl, PatientList pl) {
-    roomList = rl;
+  public Schedule(DepartmentList dl, PatientList pl) {
+    departmentList = dl;
     patientList = pl;
-    schedule = new Set[roomList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
-    for (int i = 0; i < roomList.getNumberOfRooms(); i++)
+    schedule = new Set[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
+    for (int i = 0; i < departmentList.getNumberOfRooms(); i++)
       for (int j = 0; j < DateConverter.getTotalHorizon(); j++)
         schedule[i][j] = new HashSet<>();
-    dynamicGenderViolations = new int[roomList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
-    capacityViolations = new int[roomList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
+    dynamicGenderViolations =
+        new int[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
+    capacityViolations =
+        new int[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
   }
 
   public int getDynamicGenderViolations() {
     int violations = 0;
-    for (int r = 0; r < roomList.getNumberOfRooms(); r++) {
-      Room room = roomList.getRoom(r);
+    for (int r = 0; r < departmentList.getNumberOfRooms(); r++) {
+      Room room = departmentList.getRoom(r);
       if (room.hasGenderPolicy("Any")) {
         for (int day = 0; day < DateConverter.getTotalHorizon(); day++) {
           int female = 0;
@@ -62,7 +63,7 @@ public class Schedule {
   public void assignPatient(Patient pat, int room, int day) {
     pat.assignRoom(room, day);
     schedule[room][day].add(pat.getId());
-    if (roomList.getRoom(room).hasGenderPolicy("Any")) {
+    if (departmentList.getRoom(room).hasGenderPolicy("Any")) {
 
     }
   }

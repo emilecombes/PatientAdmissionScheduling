@@ -1,6 +1,5 @@
 package util;
 
-import com.sun.jdi.event.StepEvent;
 import model.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -42,10 +41,11 @@ public class XMLParser {
     new DateConverter(startDay, nDays, extend);
   }
 
-  public RoomList buildRoomList() {
+  public DepartmentList buildDepartmentList() {
+    // Build rooms
+    List<Room> rooms = new ArrayList<>();
     Node roomsNode = document.getElementsByTagName("rooms").item(0);
     NodeList roomsNodeList = roomsNode.getChildNodes();
-    List<Room> rooms = new LinkedList<>();
     int index = 0;
     for (int i = 0; i < roomsNodeList.getLength(); i++) {
       Node roomNode = roomsNodeList.item(i);
@@ -73,46 +73,58 @@ public class XMLParser {
       }
     }
 
+    // Build departments
+    Map<String, Map<Integer, Room>> departmentRooms = new HashMap<>();
+    Map<String, Set<String>> mainSpecialisms = new HashMap<>();
+    Map<String, Set<String>> auxSpecialisms = new HashMap<>();
     NodeList departmentNodes = document.getElementsByTagName("departments").item(0).getChildNodes();
-    List<String> departments = new ArrayList<>();
     for (int i = 0; i < departmentNodes.getLength(); i++) {
       if (departmentNodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
         Element departmentElement = (Element) departmentNodes.item(i);
-        departments.add(departmentElement.getAttribute("name"));
-      }
-    }
+        String name = departmentElement.getAttribute("name");
+        departmentRooms.put(name, new HashMap<>());
+        for (Room room : rooms)
+          if (room.getDepartment().equals(name))
+            departmentRooms.get(name).put(room.getId(), room);
 
-    RoomList roomList = new RoomList(rooms, departments);
-
-    // Add department specialisms
-    for (int i = 0; i < departmentNodes.getLength(); i++) {
-      if (departmentNodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
-        Element departmentElement = (Element) departmentNodes.item(i);
-        String department = departmentElement.getAttribute("name");
+        mainSpecialisms.put(name, new HashSet<>());
         NodeList mainSpecs = departmentElement.getElementsByTagName("main_specialism");
-        NodeList auxSpecs = departmentElement.getElementsByTagName("aux_specialism");
         for (int j = 0; j < mainSpecs.getLength(); j++)
           if (mainSpecs.item(j).getNodeType() == Node.ELEMENT_NODE)
-            roomList.addMainSpecialism(department, mainSpecs.item(j).getTextContent());
+            mainSpecialisms.get(name).add(mainSpecs.item(j).getTextContent());
+
+        auxSpecialisms.put(name, new HashSet<>());
+        NodeList auxSpecs = departmentElement.getElementsByTagName("aux_specialism");
         for (int j = 0; j < auxSpecs.getLength(); j++)
           if (auxSpecs.item(j).getNodeType() == Node.ELEMENT_NODE)
-            roomList.addAuxSpecialism(department, auxSpecs.item(j).getTextContent());
+            auxSpecialisms.get(name).add(auxSpecs.item(j).getTextContent());
       }
     }
 
-    // Add treatment - specialism mapping
+    // Build treatment - specialism mapping
+    Map<String, String> treatmentToSpecialism = new HashMap<>();
     NodeList treatmentNodes = document.getElementsByTagName("treatments").item(0).getChildNodes();
     for (int i = 0; i < treatmentNodes.getLength(); i++) {
       if (treatmentNodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
         Element treatmentElement = (Element) treatmentNodes.item(i);
-        roomList.addSpecialism(
+        treatmentToSpecialism.put(
             treatmentElement.getAttribute("name"),
             treatmentElement.getAttribute("specialism")
         );
       }
     }
 
-    return roomList;
+    // Build DepartmentList
+    Map<String, Department> departments = new HashMap<>();
+    for (String name : departmentRooms.keySet()) {
+      departments.put(name, new Department(
+          departmentRooms.get(name),
+          mainSpecialisms.get(name),
+          auxSpecialisms.get(name))
+      );
+    }
+
+    return new DepartmentList(rooms, departments, treatmentToSpecialism);
   }
 
   public PatientList buildPatientList() {
@@ -155,11 +167,10 @@ public class XMLParser {
         );
 
         if (!patientElement.getAttribute("room").isEmpty()) {
-          int roomIndex = RoomList.getRoomIndex(patientElement.getAttribute("room"));
-          for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
-            patient.setInitial();
+          int roomIndex = DepartmentList.getRoomIndex(patientElement.getAttribute("room"));
+          patient.setInitial();
+          for (int day = patient.getAdmission(); day < patient.getDischarge(); day++)
             patient.assignRoom(roomIndex, day);
-          }
         }
 
         patients.add(patient);
@@ -172,7 +183,6 @@ public class XMLParser {
   public void writeSolution(Solver solver) {
     String outputFile = "out/solutions/" + inputInstance + "_sol.xml";
     PatientList patientList = solver.getPatientList();
-    RoomList roomList = solver.getRoomList();
 
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = null;
@@ -209,7 +219,7 @@ public class XMLParser {
       for (int j = p.getAdmission(); j < p.getDischarge(); j++) {
         Element stayElement = doc.createElement("stay");
         stayElement.setAttribute("day", DateConverter.getDateString(j));
-        stayElement.setAttribute("room", roomList.getRoom(p.getRoom(j)).getName());
+        stayElement.setAttribute("room", DepartmentList.getRoomId(p.getRoom(p.getAdmission())));
         patientElement.appendChild(stayElement);
       }
       patientsElement.appendChild(patientElement);
@@ -221,7 +231,7 @@ public class XMLParser {
     root.appendChild(costsElement);
     for (String key : costs.keySet()) {
       Element element = doc.createElement(key);
-      if(key.equals("patient_room"))
+      if (key.equals("patient_room"))
         element.setAttribute("objectives", String.valueOf(costs.get(key)));
       else element.setTextContent(String.valueOf(costs.get(key)));
       costsElement.appendChild(element);

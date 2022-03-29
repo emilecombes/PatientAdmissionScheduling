@@ -11,10 +11,10 @@ public class Main {
 
     XMLParser xmlParser = new XMLParser(instance);
     xmlParser.buildDateConverter(extend);
-    RoomList roomList = xmlParser.buildRoomList();
+    DepartmentList departmentList = xmlParser.buildDepartmentList();
     PatientList patientList = xmlParser.buildPatientList();
-    Schedule schedule = new Schedule(roomList, patientList);
-    Solver solver = new Solver(patientList, roomList, schedule);
+    Schedule schedule = new Schedule(departmentList, patientList);
+    Solver solver = new Solver(patientList, departmentList, schedule);
 
     solver.setPenalty("roomProperty", 20);
     solver.setPenalty("capacityPreference", 10);
