@@ -29,11 +29,11 @@ public class Schedule {
     int violations = 0;
     for (int r = 0; r < departmentList.getNumberOfRooms(); r++) {
       Room room = departmentList.getRoom(r);
-      if (room.hasGenderPolicy("Any")) {
+      if (room.hasGenderPolicy("SameGender")) {
         for (int day = 0; day < DateConverter.getTotalHorizon(); day++) {
           int female = 0;
           int male = 0;
-          for (Integer p : schedule[r][day]) {
+          for (int p : schedule[r][day]) {
             Patient patient = patientList.getPatient(p);
             if (patient.getGender().equals("Male")) male++;
             else female++;

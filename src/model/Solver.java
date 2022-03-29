@@ -127,9 +127,9 @@ public class Solver {
           transferCost = getPenalty("transfer");
         else transferCost = 0;
         patient.setRoomCost("transfer", r, transferCost);
-
-        patient.calculateTotalRoomCost();
       }
+
+      patient.calculateTotalRoomCost();
     }
   }
 

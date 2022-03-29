@@ -143,7 +143,8 @@ public class Patient {
     for (int room : feasibleRoomList) {
       int roomCost = 0;
       for (String type : specificRoomCosts.keySet())
-        roomCost += specificRoomCosts.get(type).get(room);
+        if(type.equals("transfer")) roomCost += specificRoomCosts.get(type).get(room);
+        else roomCost += specificRoomCosts.get(type).get(room) * getStayLength();
       roomCosts.put(room, roomCost);
     }
   }
