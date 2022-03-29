@@ -116,6 +116,10 @@ public class Patient {
     return assignedRooms.get(day);
   }
 
+  public int getLastRoom() {
+    return getRoom(discharge - 1);
+  }
+
   public int getRandomFeasibleRoom() {
     return feasibleRoomList.get((int) (Math.random() * feasibleRoomList.size()));
   }

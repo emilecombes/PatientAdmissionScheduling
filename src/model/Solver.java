@@ -13,7 +13,7 @@ public class Solver {
   private final DepartmentList departmentList;
   private final Schedule schedule;
   private int cost;
-  // private Map<String, String> lastMove; // ex: move="CR", patient="2", room="4", savings="20"
+  private Map<String, Integer> lastMove; // ex: move="CR", patient="2", room="4", savings="20"
 
   public Solver(PatientList pl, DepartmentList dl, Schedule s) {
     patientList = pl;
@@ -152,5 +152,45 @@ public class Solver {
   }
 
   public void solve() {
+    Map<String, Integer> move = generateNewMove();
+  }
+
+  public int executeMove(Map<String, Integer> move) {
+    System.out.println("TODO");
+    lastMove = move;
+    return executeChangeRoom(move.get("patient"), move.get("new_room"));
+  }
+
+  public void undoLastMove() {
+    switch (lastMove.get("type")) {
+      case 1:
+        System.out.println("TODO");
+        break;
+      case 2:
+        System.out.println();
+      default:
+        break;
+    }
+  }
+
+  public int executeChangeRoom(int pat, int room) {
+    Patient patient = patientList.getPatient(pat);
+    int originalRoom = patient.getLastRoom();
+
+    return 0;
+  }
+
+  public Map<String, Integer> generateNewMove() {
+    return generateChangeRoom();
+  }
+
+  public Map<String, Integer> generateChangeRoom() {
+    Map<String, Integer> move = new HashMap<>();
+    Patient patient = patientList.getRandomPatient();
+    move.put("type", 1);
+    move.put("patient", patient.getId());
+    move.put("original_room", patient.getRoom(patient.getAdmission()));
+    move.put("new_room", patient.getRandomFeasibleRoom());
+    return move;
   }
 }

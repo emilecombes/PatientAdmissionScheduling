@@ -37,6 +37,22 @@ public class Schedule {
     }
   }
 
+  public void setGenderPolicy(int room, int day, String gender) {
+    currentGenderPolicies.get(room).set(day, gender);
+  }
+
+  public int getGenderImbalance(int room, int day) {
+    int imbalance = 0;
+    for (int i : schedule[room][day])
+      if (patientList.getPatient(i).getGender().equals("Male")) imbalance++;
+      else imbalance--;
+    return Math.abs(imbalance);
+  }
+
+  public String getCurrentGenderPolicy(int room, int day) {
+    return currentGenderPolicies.get(room).get(day);
+  }
+
   public int getDynamicGenderViolations() {
     int violations = 0;
     for (int r : dynamicGenderViolations.keySet())
@@ -44,6 +60,14 @@ public class Schedule {
         if (dynamicGenderViolations.get(r).get(d) != 0)
           violations++;
     return violations;
+  }
+
+  public void incrementGenderViolations(int room, int day) {
+    dynamicGenderViolations.get(room).set(day, dynamicGenderViolations.get(room).get(day) + 1);
+  }
+
+  public void decrementGenderViolations(int room, int day) {
+    dynamicGenderViolations.get(room).set(day, dynamicGenderViolations.get(room).get(day) - 1);
   }
 
   public Patient getSwapRoomPatient(int pat) {
@@ -64,28 +88,30 @@ public class Schedule {
   public void assignPatient(Patient pat, int room, int day) {
     if (dynamicGenderViolations.containsKey(room)) {
       if (getCurrentGenderPolicy(room, day).equals("None"))
-        currentGenderPolicies.get(room).set(day, pat.getGender());
-      else if (!getCurrentGenderPolicy(room, day).equals(pat.getGender())) {
-        if (getGenderCount(room, day, "Male") == getGenderCount(room, day, "Female"))
-          currentGenderPolicies.get(room).set(day, pat.getGender());
-        else dynamicGenderViolations.get(room)
-            .set(day, dynamicGenderViolations.get(room).get(day) + 1);
-      }
+        setGenderPolicy(room, day, pat.getGender());
+      else if (!getCurrentGenderPolicy(room, day).equals(pat.getGender()))
+        if (getGenderImbalance(room, day) == 0)
+          setGenderPolicy(room, day, pat.getGender());
+        else incrementGenderViolations(room, day);
     }
     pat.assignRoom(room, day);
     schedule[room][day].add(pat.getId());
   }
 
-  public int getGenderCount(int room, int day, String gender) {
-    int count = 0;
-    for (int integer : schedule[room][day])
-      if (gender.equals(patientList.getPatient(integer).getGender()))
-        count++;
-    return count;
+  public void cancelPatient(Patient pat, int day) {
+    int room = pat.getRoom(day);
+    if (dynamicGenderViolations.containsKey(room)) {
+      if (schedule[room][day].size() == 1) setGenderPolicy(room, day, "None");
+      else if (!getCurrentGenderPolicy(room, day).equals(pat.getGender())) {
+        if (getGenderImbalance(room, day) == 0) {
+          String newPolicy = (pat.getGender().equals("Male")) ? "Female" : "Male";
+          setGenderPolicy(room, day, newPolicy);
+        } else decrementGenderViolations(room, day);
+      }
+    }
+    pat.cancelRoom(day);
+    schedule[room][day].remove(pat.getId());
   }
 
-  public String getCurrentGenderPolicy(int room, int day) {
-    return currentGenderPolicies.get(room).get(day);
-  }
 
 }
