@@ -2,46 +2,47 @@ package model;
 
 import util.DateConverter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Schedule {
   private final DepartmentList departmentList;
   private final PatientList patientList;
   private final Set<Integer>[][] schedule;
-  private int[][] dynamicGenderViolations;
-  private int[][] capacityViolations;
+  private final Map<Integer, List<String>> currentGenderPolicies;
+  private final Map<Integer, List<Integer>> dynamicGenderViolations;
+  private final Map<Integer, List<Integer>> capacityViolations;
 
   public Schedule(DepartmentList dl, PatientList pl) {
     departmentList = dl;
     patientList = pl;
     schedule = new Set[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
-    for (int i = 0; i < departmentList.getNumberOfRooms(); i++)
-      for (int j = 0; j < DateConverter.getTotalHorizon(); j++)
+    dynamicGenderViolations = new HashMap<>();
+    currentGenderPolicies = new HashMap<>();
+    capacityViolations = new HashMap<>();
+
+    for (int i = 0; i < departmentList.getNumberOfRooms(); i++) {
+      capacityViolations.put(i, new ArrayList<>());
+      for (int j = 0; j < DateConverter.getTotalHorizon(); j++) {
         schedule[i][j] = new HashSet<>();
-    dynamicGenderViolations =
-        new int[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
-    capacityViolations =
-        new int[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
+        capacityViolations.get(0).add(0);
+      }
+      if (departmentList.getRoom(i).hasGenderPolicy("SameGender")) {
+        dynamicGenderViolations.put(i, new ArrayList<>());
+        currentGenderPolicies.put(i, new ArrayList<>());
+        for (int j = 0; j < DateConverter.getTotalHorizon(); j++) {
+          dynamicGenderViolations.get(i).add(0);
+          currentGenderPolicies.get(i).add("None");
+        }
+      }
+    }
   }
 
   public int getDynamicGenderViolations() {
     int violations = 0;
-    for (int r = 0; r < departmentList.getNumberOfRooms(); r++) {
-      Room room = departmentList.getRoom(r);
-      if (room.hasGenderPolicy("SameGender")) {
-        for (int day = 0; day < DateConverter.getTotalHorizon(); day++) {
-          int female = 0;
-          int male = 0;
-          for (int p : schedule[r][day]) {
-            Patient patient = patientList.getPatient(p);
-            if (patient.getGender().equals("Male")) male++;
-            else female++;
-          }
-          if(Math.min(female, male) > 0) violations++;
-        }
-      }
-    }
+    for (int r : dynamicGenderViolations.keySet())
+      for (int d = 0; d < DateConverter.getTotalHorizon(); d++)
+        if (dynamicGenderViolations.get(r).get(d) != 0)
+          violations++;
     return violations;
   }
 
@@ -61,20 +62,30 @@ public class Schedule {
   }
 
   public void assignPatient(Patient pat, int room, int day) {
+    if (dynamicGenderViolations.containsKey(room)) {
+      if (getCurrentGenderPolicy(room, day).equals("None"))
+        currentGenderPolicies.get(room).set(day, pat.getGender());
+      else if (!getCurrentGenderPolicy(room, day).equals(pat.getGender())) {
+        if (getGenderCount(room, day, "Male") == getGenderCount(room, day, "Female"))
+          currentGenderPolicies.get(room).set(day, pat.getGender());
+        else dynamicGenderViolations.get(room)
+            .set(day, dynamicGenderViolations.get(room).get(day) + 1);
+      }
+    }
     pat.assignRoom(room, day);
     schedule[room][day].add(pat.getId());
-    if (departmentList.getRoom(room).hasGenderPolicy("Any")) {
-
-    }
   }
 
-  public void cancelPatient(Patient pat) {
-    int ad = pat.getAdmission();
-    int dd = pat.getDischarge();
-    int room = pat.getRoom(dd);
-    for (int i = ad; i < dd; i++) {
-      pat.cancelRoom(i);
-      schedule[room][i].remove(pat.getId());
-    }
+  public int getGenderCount(int room, int day, String gender) {
+    int count = 0;
+    for (int integer : schedule[room][day])
+      if (gender.equals(patientList.getPatient(integer).getGender()))
+        count++;
+    return count;
   }
+
+  public String getCurrentGenderPolicy(int room, int day) {
+    return currentGenderPolicies.get(room).get(day);
+  }
+
 }
