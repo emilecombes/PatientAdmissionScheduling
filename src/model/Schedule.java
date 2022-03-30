@@ -30,8 +30,12 @@ public class Schedule {
     }
   }
 
-  public int getCapacityViolations(int room, int day){
+  public int getCapacityViolations(int room, int day) {
     return Math.max(0, schedule[room][day].size() - departmentList.getRoom(room).getCapacity());
+  }
+
+  public int getCapacityMargin(int room, int day) {
+    return Math.max(0, departmentList.getRoom(room).getCapacity() - schedule[room][day].size());
   }
 
   public int getGenderCount(int room, int day, String gender) {

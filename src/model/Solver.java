@@ -13,7 +13,6 @@ public class Solver {
   private final DepartmentList departmentList;
   private final Schedule schedule;
   private int cost;
-  private Map<String, Integer> lastMove; // ex: move="CR", patient="2", room="4", savings="20"
 
   public Solver(PatientList pl, DepartmentList dl, Schedule s) {
     patientList = pl;
@@ -133,6 +132,36 @@ public class Solver {
     }
   }
 
+  public int getCancellationSavings(Patient pat) {
+    int savings = 0;
+    int room = pat.getLastRoom();
+    savings += pat.getRoomCost(room);
+    for (int day = pat.getAdmission(); day < pat.getDischarge(); day++) {
+      if (schedule.getCapacityViolations(room, day) > 0)
+        savings += getPenalty("capacityViolation");
+      if (departmentList.getRoom(room).hasGenderPolicy("SameGender"))
+        if (schedule.getGenderViolations(room, day) > 0
+            && schedule.getGenderCount(room, day, pat.getGender()) == 1)
+          savings += getPenalty("gender");
+    }
+    return savings;
+  }
+
+  public int getAssignmentCost(Patient pat, int room) {
+    int cost = pat.getRoomCost(room);
+    for (int day = pat.getAdmission(); day < pat.getDischarge(); day++) {
+      if (schedule.getCapacityMargin(room, day) == 0)
+        cost += getPenalty("capacityViolation");
+      if (departmentList.getRoom(room).hasGenderPolicy("SameGender")) {
+        String otherGender = (pat.getGender().equals("Male")) ? "Female" : "Male";
+        if (schedule.getGenderViolations(room, day) == 0
+            && schedule.getGenderCount(room, day, otherGender) > 0)
+          cost += getPenalty("gender");
+      }
+    }
+    return cost;
+  }
+
   public void insertInitialPatients() {
     for (Patient p : patientList.getInitialPatients()) {
       int room = p.getRoom(p.getAdmission());
@@ -155,29 +184,12 @@ public class Solver {
     Map<String, Integer> move = generateNewMove();
   }
 
-  public int executeMove(Map<String, Integer> move) {
+  public void executeMove(Map<String, Integer> move) {
     System.out.println("TODO");
-    lastMove = move;
-    return executeChangeRoom(move.get("patient"), move.get("new_room"));
+    executeChangeRoom(move.get("patient"), move.get("new_room"));
   }
 
-  public void undoLastMove() {
-    switch (lastMove.get("type")) {
-      case 1:
-        System.out.println("TODO");
-        break;
-      case 2:
-        System.out.println();
-      default:
-        break;
-    }
-  }
-
-  public int executeChangeRoom(int pat, int room) {
-    Patient patient = patientList.getPatient(pat);
-    int originalRoom = patient.getLastRoom();
-
-    return 0;
+  public void executeChangeRoom(int pat, int room) {
   }
 
   public Map<String, Integer> generateNewMove() {
@@ -187,10 +199,12 @@ public class Solver {
   public Map<String, Integer> generateChangeRoom() {
     Map<String, Integer> move = new HashMap<>();
     Patient patient = patientList.getRandomPatient();
+    int room = patient.getRandomFeasibleRoom();
     move.put("type", 1);
     move.put("patient", patient.getId());
-    move.put("original_room", patient.getRoom(patient.getAdmission()));
-    move.put("new_room", patient.getRandomFeasibleRoom());
+    move.put("original_room", patient.getLastRoom());
+    move.put("new_room", room);
+    move.put("savings", getCancellationSavings(patient) - getAssignmentCost(patient, room));
     return move;
   }
 }
