@@ -181,15 +181,29 @@ public class Solver {
   }
 
   public void solve() {
-    Map<String, Integer> move = generateNewMove();
+    int loops = 1000000;
+    while (loops > 0) {
+      Map<String, Integer> move = generateNewMove();
+      if (move.get("savings") > 0) executeMove(move);
+      if(loops%100000 == 0)
+        System.out.println("Total cost: " + cost +
+            "\nCapacity violations: " + schedule.getCapacityViolations() +
+            "\nSoft cost: " + (cost - getPenalty("capacityViolation") * schedule.getCapacityViolations()));
+      loops--;
+    }
   }
 
   public void executeMove(Map<String, Integer> move) {
-    System.out.println("TODO");
     executeChangeRoom(move.get("patient"), move.get("new_room"));
+    cost -= move.get("savings");
   }
 
   public void executeChangeRoom(int pat, int room) {
+    Patient patient = patientList.getPatient(pat);
+    for(int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
+      schedule.cancelPatient(patient, day);
+      schedule.assignPatient(patient, room, day);
+    }
   }
 
   public Map<String, Integer> generateNewMove() {

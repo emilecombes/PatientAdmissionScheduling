@@ -30,6 +30,14 @@ public class Schedule {
     }
   }
 
+  public int getCapacityViolations() {
+    int violations = 0;
+    for(int room : genderCount.keySet())
+      for(int day = 0; day < DateConverter.getTotalHorizon(); day++)
+        violations += getCapacityViolations(room, day);
+    return violations;
+  }
+
   public int getCapacityViolations(int room, int day) {
     return Math.max(0, schedule[room][day].size() - departmentList.getRoom(room).getCapacity());
   }
