@@ -114,7 +114,7 @@ public class Patient {
   }
 
   public int getRoom(int day) {
-    return assignedRooms.get(day);
+    return (assignedRooms.get(day) == null) ? -1 : assignedRooms.get(day);
   }
 
   public int getInitialRoom() {
@@ -126,7 +126,10 @@ public class Patient {
   }
 
   public int getRandomFeasibleRoom() {
-    return feasibleRoomList.get((int) (Math.random() * feasibleRoomList.size()));
+    int room;
+    do room = feasibleRoomList.get((int) (Math.random() * feasibleRoomList.size()));
+    while (room == getLastRoom());
+    return room;
   }
 
   public String getStatus() {

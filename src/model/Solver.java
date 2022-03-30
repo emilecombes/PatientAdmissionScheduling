@@ -2,10 +2,7 @@ package model;
 
 import util.DateConverter;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Solver {
   private final Map<String, Integer> penalties;
@@ -45,8 +42,8 @@ public class Solver {
     int totalDelay = 0;
     for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
       Patient patient = patientList.getPatient(i);
-      if(patient.isInitial())
-        if(patient.getInitialRoom() != patient.getLastRoom())
+      if (patient.isInitial())
+        if (patient.getInitialRoom() != patient.getLastRoom())
           transfer += getPenalty("transfer");
       roomCosts += patient.getTotalRoomCost();
       totalDelay += patient.getDelay();
@@ -69,6 +66,11 @@ public class Solver {
     horizon.put("num_days", String.valueOf(DateConverter.getNumDays()));
     horizon.put("current_day", DateConverter.getDateString(0));
     return horizon;
+  }
+
+  public boolean verifyCost() {
+    return cost == getCosts().get("total") + getCosts().get("capacity_violations") * getPenalty(
+        "capacityViolation");
   }
 
   public void init() {
@@ -211,6 +213,10 @@ public class Solver {
   public void executeMove(Map<String, Integer> move) {
     executeChangeRoom(move.get("patient"), move.get("new_room"));
     cost -= move.get("savings");
+    if (!verifyCost()) {
+      if (Objects.equals(move.get("original_room"), move.get("new_room")))
+        System.out.println("Wrong");
+    }
   }
 
   public void executeChangeRoom(int pat, int room) {
