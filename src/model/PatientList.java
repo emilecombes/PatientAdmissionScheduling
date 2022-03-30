@@ -38,13 +38,6 @@ public class PatientList {
   }
 
   public Patient getRandomPatient() {
-    // TODO
-    return patients.get(0);
+    return patients.get((int) (Math.random() * getNumberOfPatients()));
   }
-
-  public Patient getRandomShiftPatient() {
-    // TODO don't return initial patients
-    return null;
-  }
-
 }

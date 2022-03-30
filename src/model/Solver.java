@@ -41,15 +41,24 @@ public class Solver {
     HashMap<String, Integer> costs = new HashMap<>();
 
     int roomCosts = 0;
+    int transfer = 0;
     int totalDelay = 0;
     for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
       Patient patient = patientList.getPatient(i);
+      if(patient.isInitial())
+        if(patient.getInitialRoom() != patient.getLastRoom())
+          transfer += getPenalty("transfer");
       roomCosts += patient.getTotalRoomCost();
       totalDelay += patient.getDelay();
     }
+    roomCosts -= transfer;
+    int gender = schedule.getDynamicGenderViolations() * getPenalty("gender");
+    costs.put("capacity_violations", schedule.getCapacityViolations());
+    costs.put("transfer", transfer);
     costs.put("patient_room", roomCosts);
     costs.put("delay", totalDelay);
-    costs.put("gender", schedule.getDynamicGenderViolations() * getPenalty("gender"));
+    costs.put("gender", gender);
+    costs.put("total", transfer + roomCosts + totalDelay + gender);
 
     return costs;
   }
@@ -68,6 +77,8 @@ public class Solver {
     calculateRoomCosts();
     insertInitialPatients();
     assignRandomRooms();
+    cost += schedule.getDynamicGenderViolations() * getPenalty("gender");
+    cost += schedule.getCapacityViolations() * getPenalty("capacityViolation");
   }
 
   public void setFeasibleRooms() {
@@ -185,12 +196,16 @@ public class Solver {
     while (loops > 0) {
       Map<String, Integer> move = generateNewMove();
       if (move.get("savings") > 0) executeMove(move);
-      if(loops%100000 == 0)
+      if (loops % 100000 == 0)
         System.out.println("Total cost: " + cost +
             "\nCapacity violations: " + schedule.getCapacityViolations() +
-            "\nSoft cost: " + (cost - getPenalty("capacityViolation") * schedule.getCapacityViolations()));
+            "\nSoft cost: " +
+            (cost - (getPenalty("capacityViolation") * schedule.getCapacityViolations())));
       loops--;
     }
+    System.out.println("\n\nTotal cost: " + cost +
+        "\nCapacity violations: " + schedule.getCapacityViolations() + "\nSoft cost: " +
+        (cost - (getPenalty("capacityViolation") * schedule.getCapacityViolations())));
   }
 
   public void executeMove(Map<String, Integer> move) {
@@ -200,7 +215,7 @@ public class Solver {
 
   public void executeChangeRoom(int pat, int room) {
     Patient patient = patientList.getPatient(pat);
-    for(int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
+    for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
       schedule.cancelPatient(patient, day);
       schedule.assignPatient(patient, room, day);
     }

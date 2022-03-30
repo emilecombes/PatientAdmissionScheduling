@@ -12,6 +12,7 @@ public class Patient {
   private final LinkedHashMap<Integer, Integer> assignedRooms;
   private final Map<String, Map<Integer, Integer>> specificRoomCosts;
   private final Map<Integer, Integer> roomCosts;
+  private int initialRoom;
   private int admission, discharge, delay;
   private boolean inPatient;
   private Set<Integer> feasibleRooms;
@@ -73,7 +74,7 @@ public class Patient {
   }
 
   public int getTotalRoomCost() {
-    return roomCosts.get(assignedRooms.get(admission));
+    return roomCosts.get(getLastRoom());
   }
 
   public int getPreferredCap() {
@@ -116,6 +117,10 @@ public class Patient {
     return assignedRooms.get(day);
   }
 
+  public int getInitialRoom() {
+    return initialRoom;
+  }
+
   public int getLastRoom() {
     return getRoom(discharge - 1);
   }
@@ -128,8 +133,11 @@ public class Patient {
     return inPatient ? "arrived" : "registered";
   }
 
-  public void setInitial() {
+  public void setInitialRoom(int room) {
     inPatient = true;
+    initialRoom = room;
+    for (int i = admission; i < discharge; i++)
+      assignRoom(room, i);
   }
 
   public void setFeasibleRooms(Set<Integer> fr) {
@@ -147,7 +155,7 @@ public class Patient {
     for (int room : feasibleRoomList) {
       int roomCost = 0;
       for (String type : specificRoomCosts.keySet())
-        if(type.equals("transfer")) roomCost += specificRoomCosts.get(type).get(room);
+        if (type.equals("transfer")) roomCost += specificRoomCosts.get(type).get(room);
         else roomCost += specificRoomCosts.get(type).get(room) * getStayLength();
       roomCosts.put(room, roomCost);
     }

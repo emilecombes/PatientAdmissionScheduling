@@ -168,9 +168,7 @@ public class XMLParser {
 
         if (!patientElement.getAttribute("room").isEmpty()) {
           int roomIndex = DepartmentList.getRoomIndex(patientElement.getAttribute("room"));
-          patient.setInitial();
-          for (int day = patient.getAdmission(); day < patient.getDischarge(); day++)
-            patient.assignRoom(roomIndex, day);
+          patient.setInitialRoom(roomIndex);
         }
 
         patients.add(patient);

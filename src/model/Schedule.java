@@ -32,8 +32,8 @@ public class Schedule {
 
   public int getCapacityViolations() {
     int violations = 0;
-    for(int room : genderCount.keySet())
-      for(int day = 0; day < DateConverter.getTotalHorizon(); day++)
+    for (int room = 0; room < departmentList.getNumberOfRooms(); room++)
+      for (int day = 0; day < DateConverter.getTotalHorizon(); day++)
         violations += getCapacityViolations(room, day);
     return violations;
   }
@@ -71,33 +71,16 @@ public class Schedule {
     genderCount.get(room).get(day).put(gender, getGenderCount(room, day, gender) - 1);
   }
 
-  public Patient getSwapRoomPatient(int pat) {
-    Patient firstPat = patientList.getPatient(pat);
-    int firstRoom = firstPat.getRoom(firstPat.getAdmission());
-    for (int feasibleRoom : firstPat.getFeasibleRooms()) {
-
-    }
-    // First count to 3 in feasRooms btwn ad & dd
-    return null;
-  }
-
-  public Patient getSwapAdmissionPatient(int pat) {
-    // Don't count, there will always be a feasible patient
-    return null;
-  }
-
   public void assignPatient(Patient pat, int room, int day) {
-    if (genderCount.containsKey(room)) incrementGenderCount(room, day, pat.getGender());
     pat.assignRoom(room, day);
     schedule[room][day].add(pat.getId());
+    if (genderCount.containsKey(room)) incrementGenderCount(room, day, pat.getGender());
   }
 
   public void cancelPatient(Patient pat, int day) {
     int room = pat.getLastRoom();
-    if (genderCount.containsKey(room)) decrementGenderCount(room, day, pat.getGender());
     pat.cancelRoom(day);
     schedule[room][day].remove(pat.getId());
+    if (genderCount.containsKey(room)) decrementGenderCount(room, day, pat.getGender());
   }
-
-
 }
