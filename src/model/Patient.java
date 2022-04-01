@@ -53,6 +53,10 @@ public class Patient {
     return gender;
   }
 
+  public String getOtherGender(){
+    return (gender.equals("Male")) ? "Female" : "Male";
+  }
+
   public int getId() {
     return id;
   }
@@ -166,6 +170,10 @@ public class Patient {
 
   public boolean isInitial() {
     return inPatient;
+  }
+
+  public boolean hasFeasibleRoom(int room) {
+    return feasibleRooms.contains(room);
   }
 
   public void assignRoom(int room, int day) {

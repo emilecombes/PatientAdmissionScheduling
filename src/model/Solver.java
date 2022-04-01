@@ -153,7 +153,7 @@ public class Solver {
       if (schedule.getCapacityViolations(room, day) > 0)
         savings += getPenalty("capacityViolation");
       if (departmentList.getRoom(room).hasGenderPolicy("SameGender"))
-        if (schedule.getGenderViolations(room, day) > 0
+        if (schedule.getDynamicGenderViolations(room, day) > 0
             && schedule.getGenderCount(room, day, pat.getGender()) == 1)
           savings += getPenalty("gender");
     }
@@ -167,7 +167,7 @@ public class Solver {
         cost += getPenalty("capacityViolation");
       if (departmentList.getRoom(room).hasGenderPolicy("SameGender")) {
         String otherGender = (pat.getGender().equals("Male")) ? "Female" : "Male";
-        if (schedule.getGenderViolations(room, day) == 0
+        if (schedule.getDynamicGenderViolations(room, day) == 0
             && schedule.getGenderCount(room, day, otherGender) > 0)
           cost += getPenalty("gender");
       }
@@ -240,6 +240,58 @@ public class Solver {
     move.put("original_room", patient.getLastRoom());
     move.put("new_room", room);
     move.put("savings", getCancellationSavings(patient) - getAssignmentCost(patient, room));
+    return move;
+  }
+
+  public Map<String, Integer> generateSwapRoom() {
+    Map<String, Integer> move = new HashMap<>();
+    Patient firstPatient = patientList.getRandomPatient();
+    Patient secondPatient = schedule.getSwapRoomPatient(firstPatient);
+    move.put("type", 2);
+    move.put("first_patient", firstPatient.getId());
+    move.put("second_patient", secondPatient.getId());
+    move.put("first_room", firstPatient.getLastRoom());
+    move.put("second_room", secondPatient.getLastRoom());
+
+    // Calculate savings
+    int capacityViolations = 0;
+    int genderViolations = 0;
+    Patient earliestPatient = (firstPatient.getAdmission() < secondPatient.getAdmission())
+        ? firstPatient : secondPatient;
+    Patient latestPatient = (firstPatient.getDischarge() > secondPatient.getDischarge())
+        ? firstPatient : secondPatient;
+    int newRoomEP = latestPatient.getLastRoom();
+    int newRoomLP = earliestPatient.getLastRoom();
+    for (int i = earliestPatient.getAdmission(); i < latestPatient.getDischarge(); i++) {
+
+      if (i < latestPatient.getAdmission()) {
+        if (schedule.getCapacityMargin(newRoomEP, i) == 0)
+          capacityViolations++;
+        if (schedule.getCapacityViolations(newRoomLP, i) > 0)
+          capacityViolations--;
+        if (schedule.isFirstGenderViolation(newRoomEP, i, earliestPatient.getGender()))
+          genderViolations++;
+        if (schedule.hasSingleGenderViolation(newRoomLP, i, earliestPatient.getGender()))
+          genderViolations--;
+
+      } else if (i < earliestPatient.getDischarge() &&
+          !earliestPatient.getGender().equals(latestPatient.getGender())) {
+        if(schedule.hasSingleGenderViolation(newRoomEP, i, latestPatient.getGender()))
+          genderViolations--;
+        if(schedule.hasSingleGenderViolation(newRoomLP, i, earliestPatient.getGender()))
+          genderViolations--;
+
+      } else {
+        if(schedule.getCapacityMargin(newRoomLP, i) == 0)
+          capacityViolations++;
+        if(schedule.getCapacityViolations(newRoomEP, i) > 0)
+          capacityViolations--;
+        if(schedule.isFirstGenderViolation(newRoomLP, i, latestPatient.getGender()))
+          genderViolations++;
+        if(schedule.hasSingleGenderViolation(newRoomEP, i, latestPatient.getGender()))
+          genderViolations--;
+      }
+    }
     return move;
   }
 }

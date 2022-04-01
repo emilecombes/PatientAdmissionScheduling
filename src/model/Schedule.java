@@ -30,6 +30,10 @@ public class Schedule {
     }
   }
 
+  public Set<Integer> getPatients(int room, int day) {
+    return schedule[room][day];
+  }
+
   public int getCapacityViolations() {
     int violations = 0;
     for (int room = 0; room < departmentList.getNumberOfRooms(); room++)
@@ -50,17 +54,22 @@ public class Schedule {
     return genderCount.get(room).get(day).get(gender);
   }
 
-  public int getGenderViolations(int room, int day) {
-    return Math.min(getGenderCount(room, day, "Male"), getGenderCount(room, day, "Female"));
+  public int getOtherGenderCount(int room, int day, String gender) {
+    String otherGender = (gender.equals("Male")) ? "Female" : "Male";
+    return getGenderCount(room, day, otherGender);
   }
 
   public int getDynamicGenderViolations() {
     int violations = 0;
     for (int r : genderCount.keySet())
       for (int d = 0; d < DateConverter.getTotalHorizon(); d++)
-        if (getGenderViolations(r, d) > 0)
+        if (getDynamicGenderViolations(r, d) > 0)
           violations++;
     return violations;
+  }
+
+  public int getDynamicGenderViolations(int room, int day) {
+    return Math.min(getGenderCount(room, day, "Male"), getGenderCount(room, day, "Female"));
   }
 
   public void incrementGenderCount(int room, int day, String gender) {
@@ -69,6 +78,35 @@ public class Schedule {
 
   public void decrementGenderCount(int room, int day, String gender) {
     genderCount.get(room).get(day).put(gender, getGenderCount(room, day, gender) - 1);
+  }
+
+  public boolean hasSingleGenderViolation(int room, int day, String gender) {
+    if(!genderCount.containsKey(room)) return false;
+    return getDynamicGenderViolations(room, day) == 1 && getGenderCount(room, day, gender) == 1;
+  }
+
+  public boolean isFirstGenderViolation(int room, int day, String gender) {
+    if(!genderCount.containsKey(room)) return false;
+    return getDynamicGenderViolations(room, day) == 0 && getOtherGenderCount(room, day, gender) > 1;
+  }
+
+  public Patient getSwapRoomPatient(Patient firstPatient) {
+    List<Integer> feasiblePatients = new ArrayList<>();
+    int room = firstPatient.getLastRoom();
+    for (int r : firstPatient.getFeasibleRooms())
+      if (r != room)
+        for (int d = firstPatient.getAdmission(); d < firstPatient.getDischarge(); d++)
+          feasiblePatients.addAll(getPatients(r, d));
+
+    List<Integer> infeasiblePatients = new ArrayList<>();
+    for (int p : feasiblePatients)
+      if (!patientList.getPatient(p).hasFeasibleRoom(room))
+        infeasiblePatients.add(p);
+    feasiblePatients.removeAll(infeasiblePatients);
+
+    if (feasiblePatients.isEmpty()) return null;
+    int patient = feasiblePatients.get((int) (Math.random() * feasiblePatients.size()));
+    return patientList.getPatient(patient);
   }
 
   public void assignPatient(Patient pat, int room, int day) {
