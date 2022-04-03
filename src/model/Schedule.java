@@ -81,12 +81,12 @@ public class Schedule {
   }
 
   public boolean hasSingleGenderViolation(int room, int day, String gender) {
-    if(!genderCount.containsKey(room)) return false;
+    if (!genderCount.containsKey(room)) return false;
     return getDynamicGenderViolations(room, day) == 1 && getGenderCount(room, day, gender) == 1;
   }
 
   public boolean isFirstGenderViolation(int room, int day, String gender) {
-    if(!genderCount.containsKey(room)) return false;
+    if (!genderCount.containsKey(room)) return false;
     return getDynamicGenderViolations(room, day) == 0 && getOtherGenderCount(room, day, gender) > 1;
   }
 

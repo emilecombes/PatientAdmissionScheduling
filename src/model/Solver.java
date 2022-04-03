@@ -73,6 +73,13 @@ public class Solver {
         "capacityViolation");
   }
 
+  public void printCosts() {
+    System.out.println("Total cost: " + cost +
+        "\nCapacity violations: " + schedule.getCapacityViolations() +
+        "\nSoft cost: " +
+        (cost - (getPenalty("capacityViolation") * schedule.getCapacityViolations())));
+  }
+
   public void init() {
     cost = 0;
     setFeasibleRooms();
@@ -186,7 +193,7 @@ public class Solver {
 
   public void assignRandomRooms() {
     for (Patient p : patientList.getRegisteredPatients()) {
-      int room = p.getRandomFeasibleRoom();
+      int room = p.getNewRandomFeasibleRoom();
       for (int i = p.getAdmission(); i < p.getDischarge(); i++)
         schedule.assignPatient(p, room, i);
       cost += p.getRoomCost(room);
@@ -196,27 +203,27 @@ public class Solver {
   public void solve() {
     int loops = 1000000;
     while (loops > 0) {
-      Map<String, Integer> move = generateNewMove();
-      if (move.get("savings") > 0) executeMove(move);
-      if (loops % 100000 == 0)
-        System.out.println("Total cost: " + cost +
-            "\nCapacity violations: " + schedule.getCapacityViolations() +
-            "\nSoft cost: " +
-            (cost - (getPenalty("capacityViolation") * schedule.getCapacityViolations())));
+      int savings = executeNewMove();
+      if (savings < 0) undoLastMove();
+      else cost -= savings;
+      if (loops % 100000 == 1) printCosts();
       loops--;
     }
-    System.out.println("\n\nTotal cost: " + cost +
-        "\nCapacity violations: " + schedule.getCapacityViolations() + "\nSoft cost: " +
-        (cost - (getPenalty("capacityViolation") * schedule.getCapacityViolations())));
   }
 
-  public void executeMove(Map<String, Integer> move) {
-    executeChangeRoom(move.get("patient"), move.get("new_room"));
-    cost -= move.get("savings");
-    if (!verifyCost()) {
-      if (Objects.equals(move.get("original_room"), move.get("new_room")))
-        System.out.println("Wrong");
+  public void undoLastMove() {
+
+  }
+
+  public int executeNewMove() {
+    Map<String, Integer> move = generateMove();
+    switch (move.get("type")) {
+      case 0 -> executeChangeRoom(move.get("patient"), move.get("new_room"));
+      case 1 -> executeSwapRoom(move.get("first_patient"), move.get("second_patient"));
+      case 2 -> executeShiftAdmission(move.get("patient"), move.get("shift"));
+      case 3 -> executeSwapAdmission(move.get("first_patient"), move.get("second_patient"));
     }
+    return 0;
   }
 
   public void executeChangeRoom(int pat, int room) {
@@ -227,19 +234,32 @@ public class Solver {
     }
   }
 
-  public Map<String, Integer> generateNewMove() {
-    return generateChangeRoom();
+  public void executeSwapRoom(int fPat, int sPat){}
+
+  public void executeShiftAdmission(int pat, int shift){}
+
+  public void executeSwapAdmission(int fPat, int sPat){}
+
+  public Map<String, Integer> generateMove() {
+    int type = (int) (Math.random() * 4);
+    return switch (type) {
+      case 0 -> generateChangeRoom();
+      case 1 -> generateSwapRoom();
+      case 2 -> generateShiftAdmission();
+      case 3 -> generateSwapAdmission();
+      default -> null;
+    };
   }
+
 
   public Map<String, Integer> generateChangeRoom() {
     Map<String, Integer> move = new HashMap<>();
     Patient patient = patientList.getRandomPatient();
-    int room = patient.getRandomFeasibleRoom();
+    int room = patient.getNewRandomFeasibleRoom();
     move.put("type", 1);
     move.put("patient", patient.getId());
     move.put("original_room", patient.getLastRoom());
     move.put("new_room", room);
-    move.put("savings", getCancellationSavings(patient) - getAssignmentCost(patient, room));
     return move;
   }
 
@@ -252,46 +272,16 @@ public class Solver {
     move.put("second_patient", secondPatient.getId());
     move.put("first_room", firstPatient.getLastRoom());
     move.put("second_room", secondPatient.getLastRoom());
-
-    // Calculate savings
-    int capacityViolations = 0;
-    int genderViolations = 0;
-    Patient earliestPatient = (firstPatient.getAdmission() < secondPatient.getAdmission())
-        ? firstPatient : secondPatient;
-    Patient latestPatient = (firstPatient.getDischarge() > secondPatient.getDischarge())
-        ? firstPatient : secondPatient;
-    int newRoomEP = latestPatient.getLastRoom();
-    int newRoomLP = earliestPatient.getLastRoom();
-    for (int i = earliestPatient.getAdmission(); i < latestPatient.getDischarge(); i++) {
-
-      if (i < latestPatient.getAdmission()) {
-        if (schedule.getCapacityMargin(newRoomEP, i) == 0)
-          capacityViolations++;
-        if (schedule.getCapacityViolations(newRoomLP, i) > 0)
-          capacityViolations--;
-        if (schedule.isFirstGenderViolation(newRoomEP, i, earliestPatient.getGender()))
-          genderViolations++;
-        if (schedule.hasSingleGenderViolation(newRoomLP, i, earliestPatient.getGender()))
-          genderViolations--;
-
-      } else if (i < earliestPatient.getDischarge() &&
-          !earliestPatient.getGender().equals(latestPatient.getGender())) {
-        if(schedule.hasSingleGenderViolation(newRoomEP, i, latestPatient.getGender()))
-          genderViolations--;
-        if(schedule.hasSingleGenderViolation(newRoomLP, i, earliestPatient.getGender()))
-          genderViolations--;
-
-      } else {
-        if(schedule.getCapacityMargin(newRoomLP, i) == 0)
-          capacityViolations++;
-        if(schedule.getCapacityViolations(newRoomEP, i) > 0)
-          capacityViolations--;
-        if(schedule.isFirstGenderViolation(newRoomLP, i, latestPatient.getGender()))
-          genderViolations++;
-        if(schedule.hasSingleGenderViolation(newRoomEP, i, latestPatient.getGender()))
-          genderViolations--;
-      }
-    }
     return move;
   }
+
+  public Map<String, Integer> generateShiftAdmission() {
+    return null;
+  }
+
+  public Map<String, Integer> generateSwapAdmission() {
+    return null;
+  }
+
+
 }

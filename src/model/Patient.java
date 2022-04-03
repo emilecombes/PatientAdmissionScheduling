@@ -53,7 +53,7 @@ public class Patient {
     return gender;
   }
 
-  public String getOtherGender(){
+  public String getOtherGender() {
     return (gender.equals("Male")) ? "Female" : "Male";
   }
 
@@ -129,7 +129,8 @@ public class Patient {
     return getRoom(discharge - 1);
   }
 
-  public int getRandomFeasibleRoom() {
+  public int getNewRandomFeasibleRoom() {
+    if(feasibleRoomList.size() <= 1) return -1;
     int room;
     do room = feasibleRoomList.get((int) (Math.random() * feasibleRoomList.size()));
     while (room == getLastRoom());
@@ -170,6 +171,10 @@ public class Patient {
 
   public boolean isInitial() {
     return inPatient;
+  }
+
+  public boolean isAssignedOn(int day) {
+    return admission <= day && day < discharge;
   }
 
   public boolean hasFeasibleRoom(int room) {
