@@ -234,11 +234,14 @@ public class Solver {
     }
   }
 
-  public void executeSwapRoom(int fPat, int sPat){}
+  public void executeSwapRoom(int fPat, int sPat) {
+  }
 
-  public void executeShiftAdmission(int pat, int shift){}
+  public void executeShiftAdmission(int pat, int shift) {
+  }
 
-  public void executeSwapAdmission(int fPat, int sPat){}
+  public void executeSwapAdmission(int fPat, int sPat) {
+  }
 
   public Map<String, Integer> generateMove() {
     int type = (int) (Math.random() * 4);
@@ -276,11 +279,23 @@ public class Solver {
   }
 
   public Map<String, Integer> generateShiftAdmission() {
-    return null;
+    Map<String, Integer> move = new HashMap<>();
+    Patient patient = patientList.getRandomShiftPatient();
+    int shift = patient.getRandomShift();
+    move.put("type", 3);
+    move.put("patient", patient.getId());
+    move.put("shift", shift);
+    return move;
   }
 
   public Map<String, Integer> generateSwapAdmission() {
-    return null;
+    Map<String, Integer> move = new HashMap<>();
+    Patient firstPatient = patientList.getRandomPatient();
+    Patient secondPatient = schedule.getSwapAdmissionPatient(firstPatient);
+    move.put("type", 4);
+    move.put("first_patient", firstPatient.getId());
+    move.put("second_patient", secondPatient.getId());
+    return move;
   }
 
 

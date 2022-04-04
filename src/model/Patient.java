@@ -117,6 +117,18 @@ public class Patient {
     return delay;
   }
 
+  public int getMaxDelay() {
+    return maxAdm - admission;
+  }
+
+  public int getMaxAdvance() {
+    return admission - originalAD;
+  }
+
+  public int getRandomShift() {
+    return -getMaxAdvance() + (int) (Math.random() * (getMaxAdvance() + getMaxDelay()));
+  }
+
   public int getRoom(int day) {
     return (assignedRooms.get(day) == null) ? -1 : assignedRooms.get(day);
   }
@@ -130,7 +142,7 @@ public class Patient {
   }
 
   public int getNewRandomFeasibleRoom() {
-    if(feasibleRoomList.size() <= 1) return -1;
+    if (feasibleRoomList.size() <= 1) return -1;
     int room;
     do room = feasibleRoomList.get((int) (Math.random() * feasibleRoomList.size()));
     while (room == getLastRoom());
@@ -175,6 +187,10 @@ public class Patient {
 
   public boolean isAssignedOn(int day) {
     return admission <= day && day < discharge;
+  }
+
+  public boolean isAdmissibleOn(int day) {
+    return day > originalAD && day < maxAdm;
   }
 
   public boolean hasFeasibleRoom(int room) {

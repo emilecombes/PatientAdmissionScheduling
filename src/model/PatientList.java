@@ -40,4 +40,12 @@ public class PatientList {
   public Patient getRandomPatient() {
     return patients.get((int) (Math.random() * getNumberOfPatients()));
   }
+
+  public Patient getRandomShiftPatient() {
+    Patient pat;
+    do pat = registeredPatients.get((int) (Math.random() * registeredPatients.size()));
+    while (pat.getMaxDelay() == 0 && pat.getMaxAdvance() == 0);
+    return pat;
+  }
+
 }

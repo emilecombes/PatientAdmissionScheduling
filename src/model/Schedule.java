@@ -90,20 +90,37 @@ public class Schedule {
     return getDynamicGenderViolations(room, day) == 0 && getOtherGenderCount(room, day, gender) > 1;
   }
 
+  public List<Integer> getSwapRoomPatients(Patient patient, boolean overlapping) {
+    int start = (overlapping) ? patient.getAdmission() : 0;
+    int end = (overlapping) ? patient.getDischarge() : DateConverter.getTotalHorizon();
+
+    Set<Integer> candidates = new HashSet<>();
+    Set<Integer> rooms = patient.getFeasibleRooms();
+    rooms.remove(patient.getLastRoom());
+    for (int room : rooms)
+      for (int i = start; i < end; i++)
+        candidates.addAll(getPatients(room, i));
+
+    Set<Integer> feasiblePatients = new HashSet<>();
+    for (int pat : candidates)
+      if (patientList.getPatient(pat).hasFeasibleRoom(patient.getLastRoom()))
+        if (overlapping) feasiblePatients.add(pat);
+        else if (patientList.getPatient(pat).isAdmissibleOn(patient.getAdmission()) &&
+            patient.isAdmissibleOn(patientList.getPatient(pat).getAdmission()))
+          feasiblePatients.add(pat);
+
+    return new ArrayList<>(feasiblePatients);
+  }
+
   public Patient getSwapRoomPatient(Patient firstPatient) {
-    List<Integer> feasiblePatients = new ArrayList<>();
-    int room = firstPatient.getLastRoom();
-    for (int r : firstPatient.getFeasibleRooms())
-      if (r != room)
-        for (int d = firstPatient.getAdmission(); d < firstPatient.getDischarge(); d++)
-          feasiblePatients.addAll(getPatients(r, d));
+    List<Integer> feasiblePatients = getSwapRoomPatients(firstPatient, true);
+    if (feasiblePatients.isEmpty()) return null;
+    int patient = feasiblePatients.get((int) (Math.random() * feasiblePatients.size()));
+    return patientList.getPatient(patient);
+  }
 
-    List<Integer> infeasiblePatients = new ArrayList<>();
-    for (int p : feasiblePatients)
-      if (!patientList.getPatient(p).hasFeasibleRoom(room))
-        infeasiblePatients.add(p);
-    feasiblePatients.removeAll(infeasiblePatients);
-
+  public Patient getSwapAdmissionPatient(Patient firstPatient) {
+    List<Integer> feasiblePatients = getSwapRoomPatients(firstPatient, false);
     if (feasiblePatients.isEmpty()) return null;
     int patient = feasiblePatients.get((int) (Math.random() * feasiblePatients.size()));
     return patientList.getPatient(patient);
