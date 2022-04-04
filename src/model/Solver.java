@@ -165,9 +165,9 @@ public class Solver {
 
   public int getDynamicAssignmentCost(Patient patient, int room, int day) {
     int cost = 0;
-    if(schedule.getCapacityMargin(room, day) == 0)
+    if (schedule.getCapacityMargin(room, day) == 0)
       cost += getPenalty("capacity_violation");
-    if(schedule.isFirstDynamicGenderViolation(room, day, patient.getGender()))
+    if (schedule.isFirstDynamicGenderViolation(room, day, patient.getGender()))
       cost += getPenalty("gender");
     return cost;
   }
@@ -232,11 +232,28 @@ public class Solver {
   }
 
   public int executeSwapRoom(int fPat, int sPat) {
-    return 0;
+    int fRoom = patientList.getPatient(fPat).getLastRoom();
+    int sRoom = patientList.getPatient(sPat).getLastRoom();
+    return executeChangeRoom(fPat, sRoom) + executeChangeRoom(sPat, fRoom);
   }
 
   public int executeShiftAdmission(int pat, int shift) {
-    return 0;
+    Patient patient = patientList.getPatient(pat);
+    int room = patient.getLastRoom();
+    int savings = 0;
+    for (int i = 0; i < Math.min(patient.getStayLength(), Math.abs(shift)); i++) {
+      int cancelDay = (shift > 0)
+          ? patient.getAdmission() + i
+          : patient.getDischarge() - 1 - 1;
+      int assignmentDay = (shift > 0)
+          ? Math.max(patient.getDischarge(), patient.getAdmission() + shift) + i
+          : Math.min(patient.getAdmission(), patient.getDischarge() + shift) - i;
+      savings += getDynamicCancellationSavings(patient, cancelDay);
+      schedule.cancelPatient(patient, cancelDay);
+      savings -= getDynamicAssignmentCost(patient, room, assignmentDay);
+      schedule.assignPatient(patient, room, assignmentDay);
+    }
+    return savings;
   }
 
   public int executeSwapAdmission(int fPat, int sPat) {
