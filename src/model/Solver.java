@@ -207,13 +207,18 @@ public class Solver {
   public void solve() {
     int loops = 1000000;
     while (loops > 0) {
-      int savings = executeNewMove();
+      executeNewMove();
+      int savings = lastMove.get("savings");
       if (savings < 0)
         undoLastMove();
       else
         cost -= savings;
 
-      if (loops % 100000 == 1) printCosts();
+      if (loops % 100000 == 1) {
+        printCosts();
+        if (!verifyCost())
+          System.out.printf("An invalid move was executed near loop %d", 1000000 - loops);
+      }
       loops--;
     }
   }
@@ -228,11 +233,27 @@ public class Solver {
   }
 
   public void undoChangeRoom() {
-
+    Patient patient = patientList.getPatient(lastMove.get("patient"));
+    int originalRoom = lastMove.get("original_room");
+    for (int i = patient.getAdmission(); i < patient.getDischarge(); i++) {
+      schedule.cancelPatient(patient, i);
+      schedule.assignPatient(patient, originalRoom, i);
+    }
   }
 
   public void undoSwapRoom() {
-
+    Patient firstPatient = patientList.getPatient(lastMove.get("first_patient"));
+    Patient secondPatient = patientList.getPatient(lastMove.get("second_patient"));
+    int firstRoom = lastMove.get("first_room");
+    int secondRoom = lastMove.get("second_room");
+    for (int i = firstPatient.getAdmission(); i < firstPatient.getDischarge(); i++) {
+      schedule.cancelPatient(firstPatient, i);
+      schedule.assignPatient(firstPatient, firstRoom, i);
+    }
+    for (int i = secondPatient.getAdmission(); i < secondPatient.getDischarge(); i++) {
+      schedule.cancelPatient(secondPatient, i);
+      schedule.assignPatient(secondPatient, secondRoom, i);
+    }
   }
 
   public void undoShiftAdmission() {
@@ -243,15 +264,15 @@ public class Solver {
 
   }
 
-  public int executeNewMove() {
+  public void executeNewMove() {
     lastMove = generateMove();
-    return switch (lastMove.get("type")) {
+    lastMove.put("savings", switch (lastMove.get("type")) {
       case 0 -> executeChangeRoom(lastMove.get("patient"), lastMove.get("new_room"));
       case 1 -> executeSwapRoom(lastMove.get("first_patient"), lastMove.get("second_patient"));
       case 2 -> executeShiftAdmission(lastMove.get("patient"), lastMove.get("shift"));
       case 3 -> executeSwapAdmission(lastMove.get("first_patient"), lastMove.get("second_patient"));
       default -> 0;
-    };
+    });
   }
 
   public int executeChangeRoom(int pat, int room) {
