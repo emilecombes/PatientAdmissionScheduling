@@ -8,23 +8,23 @@ public class Schedule {
   private final DepartmentList departmentList;
   private final PatientList patientList;
   private final Set<Integer>[][] schedule;
-  private final Map<Integer, List<Map<String, Integer>>> genderCount;
+  private final Map<Integer, List<Map<String, Integer>>> dynamicGenderCount;
 
   public Schedule(DepartmentList dl, PatientList pl) {
     departmentList = dl;
     patientList = pl;
     schedule = new Set[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
-    genderCount = new HashMap<>();
+    dynamicGenderCount = new HashMap<>();
 
     for (int i = 0; i < departmentList.getNumberOfRooms(); i++) {
       for (int j = 0; j < DateConverter.getTotalHorizon(); j++)
         schedule[i][j] = new HashSet<>();
       if (departmentList.getRoom(i).hasGenderPolicy("SameGender")) {
-        genderCount.put(i, new ArrayList<>());
+        dynamicGenderCount.put(i, new ArrayList<>());
         for (int j = 0; j < DateConverter.getTotalHorizon(); j++) {
-          genderCount.get(i).add(new HashMap<>());
-          genderCount.get(i).get(j).put("Male", 0);
-          genderCount.get(i).get(j).put("Female", 0);
+          dynamicGenderCount.get(i).add(new HashMap<>());
+          dynamicGenderCount.get(i).get(j).put("Male", 0);
+          dynamicGenderCount.get(i).get(j).put("Female", 0);
         }
       }
     }
@@ -51,7 +51,7 @@ public class Schedule {
   }
 
   public int getGenderCount(int room, int day, String gender) {
-    return genderCount.get(room).get(day).get(gender);
+    return dynamicGenderCount.get(room).get(day).get(gender);
   }
 
   public int getOtherGenderCount(int room, int day, String gender) {
@@ -61,7 +61,7 @@ public class Schedule {
 
   public int getDynamicGenderViolations() {
     int violations = 0;
-    for (int r : genderCount.keySet())
+    for (int r : dynamicGenderCount.keySet())
       for (int d = 0; d < DateConverter.getTotalHorizon(); d++)
         if (getDynamicGenderViolations(r, d) > 0)
           violations++;
@@ -72,25 +72,26 @@ public class Schedule {
     return Math.min(getGenderCount(room, day, "Male"), getGenderCount(room, day, "Female"));
   }
 
-  public void incrementGenderCount(int room, int day, String gender) {
-    genderCount.get(room).get(day).put(gender, getGenderCount(room, day, gender) + 1);
-  }
-
-  public void decrementGenderCount(int room, int day, String gender) {
-    genderCount.get(room).get(day).put(gender, getGenderCount(room, day, gender) - 1);
-  }
-
-  public boolean hasSingleGenderViolation(int room, int day, String gender) {
-    if (!genderCount.containsKey(room)) return false;
+  public boolean hasSingleDynamicGenderViolation(int room, int day, String gender) {
+    if (!dynamicGenderCount.containsKey(room)) return false;
     return getDynamicGenderViolations(room, day) == 1 && getGenderCount(room, day, gender) == 1;
   }
 
-  public boolean isFirstGenderViolation(int room, int day, String gender) {
-    if (!genderCount.containsKey(room)) return false;
-    return getDynamicGenderViolations(room, day) == 0 && getOtherGenderCount(room, day, gender) > 1;
+  public boolean isFirstDynamicGenderViolation(int room, int day, String gender) {
+    if (!dynamicGenderCount.containsKey(room)) return false;
+    return getDynamicGenderViolations(room, day) == 0 && getOtherGenderCount(room, day, gender) > 0;
+  }
+
+  public void incrementGenderCount(int room, int day, String gender) {
+    dynamicGenderCount.get(room).get(day).put(gender, getGenderCount(room, day, gender) + 1);
+  }
+
+  public void decrementGenderCount(int room, int day, String gender) {
+    dynamicGenderCount.get(room).get(day).put(gender, getGenderCount(room, day, gender) - 1);
   }
 
   public List<Integer> getSwapRoomPatients(Patient patient, boolean overlapping) {
+    // This is weird code
     int start = (overlapping) ? patient.getAdmission() : 0;
     int end = (overlapping) ? patient.getDischarge() : DateConverter.getTotalHorizon();
 
@@ -129,13 +130,13 @@ public class Schedule {
   public void assignPatient(Patient pat, int room, int day) {
     pat.assignRoom(room, day);
     schedule[room][day].add(pat.getId());
-    if (genderCount.containsKey(room)) incrementGenderCount(room, day, pat.getGender());
+    if (dynamicGenderCount.containsKey(room)) incrementGenderCount(room, day, pat.getGender());
   }
 
   public void cancelPatient(Patient pat, int day) {
     int room = pat.getLastRoom();
     pat.cancelRoom(day);
     schedule[room][day].remove(pat.getId());
-    if (genderCount.containsKey(room)) decrementGenderCount(room, day, pat.getGender());
+    if (dynamicGenderCount.containsKey(room)) decrementGenderCount(room, day, pat.getGender());
   }
 }

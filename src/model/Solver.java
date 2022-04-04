@@ -70,14 +70,14 @@ public class Solver {
 
   public boolean verifyCost() {
     return cost == getCosts().get("total") + getCosts().get("capacity_violations") * getPenalty(
-        "capacityViolation");
+        "capacity_violation");
   }
 
   public void printCosts() {
     System.out.println("Total cost: " + cost +
         "\nCapacity violations: " + schedule.getCapacityViolations() +
         "\nSoft cost: " +
-        (cost - (getPenalty("capacityViolation") * schedule.getCapacityViolations())));
+        (cost - (getPenalty("capacity_violation") * schedule.getCapacityViolations())));
   }
 
   public void init() {
@@ -87,7 +87,7 @@ public class Solver {
     insertInitialPatients();
     assignRandomRooms();
     cost += schedule.getDynamicGenderViolations() * getPenalty("gender");
-    cost += schedule.getCapacityViolations() * getPenalty("capacityViolation");
+    cost += schedule.getCapacityViolations() * getPenalty("capacity_violation");
   }
 
   public void setFeasibleRooms() {
@@ -120,14 +120,14 @@ public class Solver {
         int propertyCost = 0;
         for (String property : patient.getPreferredProperties())
           if (!room.hasFeature(property))
-            propertyCost += getPenalty("roomProperty");
-        patient.setRoomCost("roomProperty", r, propertyCost);
+            propertyCost += getPenalty("room_property");
+        patient.setRoomCost("room_property", r, propertyCost);
 
         int capacityCost;
         if (patient.getPreferredCap() < room.getCapacity() && patient.getPreferredCap() != -1)
-          capacityCost = getPenalty("capacityPreference");
+          capacityCost = getPenalty("capacity_preference");
         else capacityCost = 0;
-        patient.setRoomCost("capacityPreference", r, capacityCost);
+        patient.setRoomCost("capacity_preference", r, capacityCost);
 
         int specialityCost;
         String specialism = departmentList.getNeededSpecialism(patient.getTreatment());
@@ -152,33 +152,23 @@ public class Solver {
     }
   }
 
-  public int getCancellationSavings(Patient pat) {
+  // Are these methods ever used for a single day?
+  public int getDynamicCancellationSavings(Patient patient, int day) {
+    int room = patient.getRoom(day);
     int savings = 0;
-    int room = pat.getLastRoom();
-    savings += pat.getRoomCost(room);
-    for (int day = pat.getAdmission(); day < pat.getDischarge(); day++) {
-      if (schedule.getCapacityViolations(room, day) > 0)
-        savings += getPenalty("capacityViolation");
-      if (departmentList.getRoom(room).hasGenderPolicy("SameGender"))
-        if (schedule.getDynamicGenderViolations(room, day) > 0
-            && schedule.getGenderCount(room, day, pat.getGender()) == 1)
-          savings += getPenalty("gender");
-    }
+    if (schedule.getCapacityViolations(room, day) > 0)
+      savings += getPenalty("capacity_violation");
+    if (schedule.hasSingleDynamicGenderViolation(room, day, patient.getGender()))
+      savings += getPenalty("gender");
     return savings;
   }
 
-  public int getAssignmentCost(Patient pat, int room) {
-    int cost = pat.getRoomCost(room);
-    for (int day = pat.getAdmission(); day < pat.getDischarge(); day++) {
-      if (schedule.getCapacityMargin(room, day) == 0)
-        cost += getPenalty("capacityViolation");
-      if (departmentList.getRoom(room).hasGenderPolicy("SameGender")) {
-        String otherGender = (pat.getGender().equals("Male")) ? "Female" : "Male";
-        if (schedule.getDynamicGenderViolations(room, day) == 0
-            && schedule.getGenderCount(room, day, otherGender) > 0)
-          cost += getPenalty("gender");
-      }
-    }
+  public int getDynamicAssignmentCost(Patient patient, int room, int day) {
+    int cost = 0;
+    if(schedule.getCapacityMargin(room, day) == 0)
+      cost += getPenalty("capacity_violation");
+    if(schedule.isFirstDynamicGenderViolation(room, day, patient.getGender()))
+      cost += getPenalty("gender");
     return cost;
   }
 
@@ -204,8 +194,11 @@ public class Solver {
     int loops = 1000000;
     while (loops > 0) {
       int savings = executeNewMove();
-      if (savings < 0) undoLastMove();
-      else cost -= savings;
+      if (savings < 0)
+        undoLastMove();
+      else
+        cost -= savings;
+
       if (loops % 100000 == 1) printCosts();
       loops--;
     }
@@ -253,7 +246,6 @@ public class Solver {
       default -> null;
     };
   }
-
 
   public Map<String, Integer> generateChangeRoom() {
     Map<String, Integer> move = new HashMap<>();

@@ -18,13 +18,13 @@ public class Main {
     Schedule schedule = new Schedule(departmentList, patientList);
     Solver solver = new Solver(patientList, departmentList, schedule);
 
-    solver.setPenalty("roomProperty", 20);
-    solver.setPenalty("capacityPreference", 10);
+    solver.setPenalty("room_property", 20);
+    solver.setPenalty("capacity_preference", 10);
     solver.setPenalty("speciality", 20);
     solver.setPenalty("gender", 50);
     solver.setPenalty("transfer", 100);
     solver.setPenalty("delay", 5);
-    solver.setPenalty("capacityViolation", 1000);
+    solver.setPenalty("capacity_violation", 1000);
 
     solver.init();
     solver.solve();
