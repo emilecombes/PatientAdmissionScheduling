@@ -172,6 +172,20 @@ public class Solver {
     return cost;
   }
 
+  public int getDynamicSwapAdmissionSavings(Patient patient, int shift, int room) {
+    int savings = 0;
+    for (int i = patient.getAdmission(); i < patient.getDischarge(); i++) {
+      savings += getDynamicCancellationSavings(patient, i);
+      schedule.cancelPatient(patient, i);
+    }
+    patient.shiftAdmission(shift);
+    for (int i = patient.getAdmission(); i < patient.getDischarge(); i++) {
+      savings -= getDynamicAssignmentCost(patient, room, i);
+      schedule.assignPatient(patient, i, room);
+    }
+    return savings;
+  }
+
   public void insertInitialPatients() {
     for (Patient p : patientList.getInitialPatients()) {
       int room = p.getRoom(p.getAdmission());
@@ -240,7 +254,7 @@ public class Solver {
   public int executeShiftAdmission(int pat, int shift) {
     Patient patient = patientList.getPatient(pat);
     int room = patient.getLastRoom();
-    int savings = 0;
+    int savings = shift * getPenalty("delay");
     for (int i = 0; i < Math.min(patient.getStayLength(), Math.abs(shift)); i++) {
       int cancelDay = (shift > 0)
           ? patient.getAdmission() + i
@@ -253,11 +267,25 @@ public class Solver {
       savings -= getDynamicAssignmentCost(patient, room, assignmentDay);
       schedule.assignPatient(patient, room, assignmentDay);
     }
+    patient.shiftAdmission(shift);
     return savings;
   }
 
   public int executeSwapAdmission(int fPat, int sPat) {
-    return 0;
+    Patient firstPatient = patientList.getPatient(fPat);
+    Patient secondPatient = patientList.getPatient(sPat);
+    int savings = firstPatient.getCurrentRoomCost()
+        - firstPatient.getRoomCost(secondPatient.getLastRoom())
+        + secondPatient.getCurrentRoomCost()
+        - secondPatient.getRoomCost(firstPatient.getLastRoom());
+    // Since both patients can be admitted on the other AD, the total delay cost stays the same
+    int firstShift = secondPatient.getAdmission() - firstPatient.getAdmission();
+    int secondShift = firstPatient.getAdmission() - secondPatient.getAdmission();
+    int firstRoom = firstPatient.getLastRoom();
+    int secondRoom = secondPatient.getLastRoom();
+    savings += getDynamicSwapAdmissionSavings(firstPatient, firstShift, secondRoom);
+    savings += getDynamicSwapAdmissionSavings(secondPatient, secondShift, firstRoom);
+    return savings;
   }
 
   public Map<String, Integer> generateMove() {

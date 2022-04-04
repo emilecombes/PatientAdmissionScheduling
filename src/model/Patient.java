@@ -5,7 +5,7 @@ import java.util.*;
 public class Patient {
   private final String name, treatment, gender;
   private final int id, preferredCap;
-  private final int originalAD, originalDD, stayLength, maxAdm;
+  private final int originalAD, stayLength, maxAdm;
   private final Set<String> preferredProps, neededProps;
   private final List<Integer> neededCare;
 
@@ -25,11 +25,10 @@ public class Patient {
     this.gender = gender;
     this.treatment = treatment;
     this.originalAD = ad;
-    this.originalDD = dd;
-    this.maxAdm = ma;
-    this.stayLength = dd - ad;
     this.admission = ad;
     this.discharge = dd;
+    this.maxAdm = ma;
+    this.stayLength = dd - ad;
     this.delay = 0;
     this.preferredCap = cap;
     this.neededProps = np;
@@ -53,10 +52,6 @@ public class Patient {
     return gender;
   }
 
-  public String getOtherGender() {
-    return (gender.equals("Male")) ? "Female" : "Male";
-  }
-
   public int getId() {
     return id;
   }
@@ -77,6 +72,10 @@ public class Patient {
     return roomCosts.get(room);
   }
 
+  public int getCurrentRoomCost() {
+    return getRoomCost(getLastRoom());
+  }
+
   public int getTotalRoomCost() {
     return roomCosts.get(getLastRoom());
   }
@@ -85,24 +84,8 @@ public class Patient {
     return preferredCap;
   }
 
-  public int getNeededCare(int day) {
-    return neededCare.get(day - admission);
-  }
-
-  public int getOriginalAD() {
-    return originalAD;
-  }
-
-  public int getOriginalDD() {
-    return originalDD;
-  }
-
   public int getStayLength() {
     return stayLength;
-  }
-
-  public int getMaxAdm() {
-    return maxAdm;
   }
 
   public int getAdmission() {
@@ -183,10 +166,6 @@ public class Patient {
 
   public boolean isInitial() {
     return inPatient;
-  }
-
-  public boolean isAssignedOn(int day) {
-    return admission <= day && day < discharge;
   }
 
   public boolean isAdmissibleOn(int day) {
