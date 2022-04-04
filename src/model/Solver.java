@@ -10,6 +10,7 @@ public class Solver {
   private final DepartmentList departmentList;
   private final Schedule schedule;
   private int cost;
+  private Map<String, Integer> lastMove;
 
   public Solver(PatientList pl, DepartmentList dl, Schedule s) {
     patientList = pl;
@@ -152,7 +153,6 @@ public class Solver {
     }
   }
 
-  // Are these methods ever used for a single day?
   public int getDynamicCancellationSavings(Patient patient, int day) {
     int room = patient.getRoom(day);
     int savings = 0;
@@ -219,16 +219,37 @@ public class Solver {
   }
 
   public void undoLastMove() {
+    switch (lastMove.get("type")) {
+      case 0 -> undoChangeRoom();
+      case 1 -> undoSwapRoom();
+      case 2 -> undoShiftAdmission();
+      case 3 -> undoSwapAdmission();
+    }
+  }
+
+  public void undoChangeRoom() {
+
+  }
+
+  public void undoSwapRoom() {
+
+  }
+
+  public void undoShiftAdmission() {
+
+  }
+
+  public void undoSwapAdmission() {
 
   }
 
   public int executeNewMove() {
-    Map<String, Integer> move = generateMove();
-    return switch (move.get("type")) {
-      case 0 -> executeChangeRoom(move.get("patient"), move.get("new_room"));
-      case 1 -> executeSwapRoom(move.get("first_patient"), move.get("second_patient"));
-      case 2 -> executeShiftAdmission(move.get("patient"), move.get("shift"));
-      case 3 -> executeSwapAdmission(move.get("first_patient"), move.get("second_patient"));
+    lastMove = generateMove();
+    return switch (lastMove.get("type")) {
+      case 0 -> executeChangeRoom(lastMove.get("patient"), lastMove.get("new_room"));
+      case 1 -> executeSwapRoom(lastMove.get("first_patient"), lastMove.get("second_patient"));
+      case 2 -> executeShiftAdmission(lastMove.get("patient"), lastMove.get("shift"));
+      case 3 -> executeSwapAdmission(lastMove.get("first_patient"), lastMove.get("second_patient"));
       default -> 0;
     };
   }
