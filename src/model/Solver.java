@@ -210,30 +210,37 @@ public class Solver {
 
   public int executeNewMove() {
     Map<String, Integer> move = generateMove();
-    switch (move.get("type")) {
+    return switch (move.get("type")) {
       case 0 -> executeChangeRoom(move.get("patient"), move.get("new_room"));
       case 1 -> executeSwapRoom(move.get("first_patient"), move.get("second_patient"));
       case 2 -> executeShiftAdmission(move.get("patient"), move.get("shift"));
       case 3 -> executeSwapAdmission(move.get("first_patient"), move.get("second_patient"));
+      default -> 0;
+    };
+  }
+
+  public int executeChangeRoom(int pat, int room) {
+    Patient patient = patientList.getPatient(pat);
+    int savings = patient.getRoomCost(patient.getLastRoom()) - patient.getRoomCost(room);
+    for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
+      savings += getDynamicCancellationSavings(patient, day);
+      schedule.cancelPatient(patient, day);
+      savings -= getDynamicAssignmentCost(patient, room, day);
+      schedule.assignPatient(patient, room, day);
     }
+    return savings;
+  }
+
+  public int executeSwapRoom(int fPat, int sPat) {
     return 0;
   }
 
-  public void executeChangeRoom(int pat, int room) {
-    Patient patient = patientList.getPatient(pat);
-    for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
-      schedule.cancelPatient(patient, day);
-      schedule.assignPatient(patient, room, day);
-    }
+  public int executeShiftAdmission(int pat, int shift) {
+    return 0;
   }
 
-  public void executeSwapRoom(int fPat, int sPat) {
-  }
-
-  public void executeShiftAdmission(int pat, int shift) {
-  }
-
-  public void executeSwapAdmission(int fPat, int sPat) {
+  public int executeSwapAdmission(int fPat, int sPat) {
+    return 0;
   }
 
   public Map<String, Integer> generateMove() {
