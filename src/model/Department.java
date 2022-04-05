@@ -1,20 +1,36 @@
 package model;
 
+import util.DateConverter;
+
 import java.util.*;
 
 public class Department {
   private final Map<Integer, Room> rooms;
   private final Set<String> mainSpecialisms;
   private final Set<String> auxSpecialisms;
+  private final int size;
+  private final List<Integer> workLoads;
+  private int workLoadVariance;
 
   public Department(Map<Integer, Room> rooms, Set<String> mainSpec, Set<String> auxSpec) {
     this.rooms = rooms;
     this.mainSpecialisms = mainSpec;
     this.auxSpecialisms = auxSpec;
+
+    int s = 0;
+    for (int r : rooms.keySet()) s += rooms.get(r).getCapacity();
+    size = s;
+
+    workLoads = new ArrayList<>();
+    for (int i = 0; i < DateConverter.getTotalHorizon(); i++) workLoads.add(0);
   }
 
   public Set<Integer> getRoomIndices() {
     return rooms.keySet();
+  }
+
+  public int getWorkLoadVariance() {
+    return workLoadVariance;
   }
 
   public boolean hasMainSpecialism(String spec) {
@@ -25,4 +41,18 @@ public class Department {
     return mainSpecialisms.contains(spec) || auxSpecialisms.contains(spec);
   }
 
+  public void addWorkLoad(int day, int load) {
+    workLoads.set(day, workLoads.get(day) + load / size);
+  }
+
+  public void removeWorkLoad(int day, int load) {
+    workLoads.set(day, workLoads.get(day) - load / size);
+  }
+
+  public void calculateWorkLoadVariance() {
+    workLoadVariance = 0;
+    for(int load : workLoads) {
+      workLoadVariance += load;
+    }
+  }
 }
