@@ -10,6 +10,7 @@ public class DepartmentList {
   private static List<Room> allRooms;
   private final Map<String, Department> departments;
   private final Map<String, String> treatmentToSpecialism;
+  private List<Integer> workLoadVariances;
 
   public DepartmentList(List<Room> rooms, Map<String, Department> deps, Map<String, String> specs) {
     allRooms = rooms;

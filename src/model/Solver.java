@@ -257,11 +257,32 @@ public class Solver {
   }
 
   public void undoShiftAdmission() {
-
+    Patient patient = patientList.getPatient(lastMove.get("patient"));
+    int shift = lastMove.get("shift");
+    int room = patient.getLastRoom();
+    for (int i = patient.getAdmission(); i < patient.getDischarge(); i++)
+      schedule.cancelPatient(patient, i);
+    patient.shiftAdmission(-shift);
+    for (int i = patient.getAdmission(); i < patient.getDischarge(); i++)
+      schedule.assignPatient(patient, room, i);
   }
 
   public void undoSwapAdmission() {
-
+    Patient firstPatient = patientList.getPatient(lastMove.get("first_patient"));
+    Patient secondPatient = patientList.getPatient(lastMove.get("second_patient"));
+    int firstRoom = secondPatient.getLastRoom();
+    int secondRoom = firstPatient.getLastRoom();
+    int delta = secondPatient.getAdmission() - firstPatient.getAdmission();
+    for (int i = firstPatient.getAdmission(); i < firstPatient.getDischarge(); i++) {
+      schedule.cancelPatient(firstPatient, i);
+      schedule.assignPatient(firstPatient, firstRoom, i + delta);
+    }
+    for (int i = secondPatient.getAdmission(); i < secondPatient.getDischarge(); i++) {
+      schedule.cancelPatient(secondPatient, i);
+      schedule.assignPatient(secondPatient, secondRoom, i - delta);
+    }
+    firstPatient.shiftAdmission(delta);
+    secondPatient.shiftAdmission(-delta);
   }
 
   public void executeNewMove() {
