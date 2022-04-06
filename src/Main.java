@@ -27,6 +27,6 @@ public class Main {
     solver.init();
     solver.solve();
     xmlParser.writeSolution(solver);
-    System.out.println(solver.getCost());
+    System.out.println("\t\t\t\t\t\t" + solver.getCost());
   }
 }

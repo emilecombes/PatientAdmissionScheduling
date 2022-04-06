@@ -39,7 +39,6 @@ public class Solver {
 
   public HashMap<String, Integer> getCosts() {
     HashMap<String, Integer> costs = new HashMap<>();
-
     int roomCosts = 0;
     int transfer = 0;
     int totalDelay = 0;
@@ -71,15 +70,10 @@ public class Solver {
     return horizon;
   }
 
-  public boolean verifyCost() {
-    return cost == getCosts().get("total") + getCosts().get("capacity_violations") * getPenalty(
-        "capacity_violation");
-  }
-
   public void printCosts() {
-    System.out.println("Total cost: " + cost +
-        "\nCapacity violations: " + schedule.getCapacityViolations() +
-        "\nSoft cost: " +
+    System.out.println("\nTotal cost: \t\t\t" + cost +
+        "\nCapacity violations: \t" + schedule.getCapacityViolations() +
+        "\nSoft cost: \t\t\t\t" +
         (cost - (getPenalty("capacity_violation") * schedule.getCapacityViolations())));
   }
 
@@ -207,7 +201,7 @@ public class Solver {
   }
 
   public void solve() {
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < 100000; i++) {
       executeNewMove();
       int savings = lastMove.get("savings");
       if (savings > 0) {
@@ -285,7 +279,7 @@ public class Solver {
   }
 
   public void executeNewMove() {
-    lastMove = generateSwapAdmission();
+    lastMove = generateMove();
     lastMove.put("savings", switch (lastMove.get("type")) {
       case 0 -> executeChangeRoom(lastMove.get("patient"), lastMove.get("new_room"));
       case 1 -> executeSwapRoom(lastMove.get("first_patient"), lastMove.get("second_patient"));
@@ -353,9 +347,9 @@ public class Solver {
   public Map<String, Integer> generateMove() {
     int random = (int) (Math.random() * 100);
     int type;
-    if (random < 49) type = 0;
-    else if (random < 84) type = 1;
-    else if (random < 85) type = 2;
+    if (random < 20) type = 0;
+    else if (random < 40) type = 1;
+    else if (random < 0) type = 2;
     else type = 3;
     return switch (type) {
       case 0 -> generateChangeRoom();
