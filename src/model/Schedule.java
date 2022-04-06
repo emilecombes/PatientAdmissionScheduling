@@ -134,7 +134,7 @@ public class Schedule {
   }
 
   public void cancelPatient(Patient pat, int day) {
-    int room = pat.getLastRoom();
+    int room = pat.getRoom(day);
     pat.cancelRoom(day);
     schedule[room][day].remove(pat.getId());
     if (dynamicGenderCount.containsKey(room)) decrementGenderCount(room, day, pat.getGender());

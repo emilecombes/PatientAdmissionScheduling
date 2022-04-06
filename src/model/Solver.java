@@ -49,7 +49,7 @@ public class Solver {
         if (patient.getInitialRoom() != patient.getLastRoom())
           transfer += getPenalty("transfer");
       roomCosts += patient.getTotalRoomCost();
-      totalDelay += patient.getDelay();
+      totalDelay += patient.getDelay() * getPenalty("delay");
     }
     roomCosts -= transfer;
     int gender = schedule.getDynamicGenderViolations() * getPenalty("gender");
@@ -207,7 +207,7 @@ public class Solver {
   }
 
   public void solve() {
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 1000000; i++) {
       executeNewMove();
       int savings = lastMove.get("savings");
       if (savings > 0) {
@@ -284,7 +284,7 @@ public class Solver {
   }
 
   public void executeNewMove() {
-    lastMove = generateSwapRoom();
+    lastMove = generateShiftAdmission();
     lastMove.put("savings", switch (lastMove.get("type")) {
       case 0 -> executeChangeRoom(lastMove.get("patient"), lastMove.get("new_room"));
       case 1 -> executeSwapRoom(lastMove.get("first_patient"), lastMove.get("second_patient"));
@@ -315,14 +315,14 @@ public class Solver {
   public int executeShiftAdmission(int pat, int shift) {
     Patient patient = patientList.getPatient(pat);
     int room = patient.getLastRoom();
-    int savings = shift * getPenalty("delay");
+    int savings = -shift * getPenalty("delay");
     for (int i = 0; i < Math.min(patient.getStayLength(), Math.abs(shift)); i++) {
       int cancelDay = (shift > 0)
           ? patient.getAdmission() + i
-          : patient.getDischarge() - 1 - 1;
+          : patient.getDischarge() - 1 - i;
       int assignmentDay = (shift > 0)
-          ? Math.max(patient.getDischarge(), patient.getAdmission() + shift) + i
-          : Math.min(patient.getAdmission(), patient.getDischarge() + shift) - i;
+          ? patient.getDischarge() - 1 + shift - i
+          : patient.getAdmission() + shift + i;
       savings += getDynamicCancellationSavings(patient, cancelDay);
       schedule.cancelPatient(patient, cancelDay);
       savings -= getDynamicAssignmentCost(patient, room, assignmentDay);

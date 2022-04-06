@@ -1,5 +1,7 @@
 package model;
 
+import util.DateConverter;
+
 import java.util.*;
 
 public class Patient {
@@ -27,8 +29,8 @@ public class Patient {
     this.originalAD = ad;
     this.admission = ad;
     this.discharge = dd;
-    this.maxAdm = ma;
     this.stayLength = dd - ad;
+    this.maxAdm = (ma == -1) ? DateConverter.getTotalHorizon() - stayLength : ma;
     this.delay = 0;
     this.preferredCap = cap;
     this.neededProps = np;
@@ -169,7 +171,7 @@ public class Patient {
   }
 
   public boolean isAdmissibleOn(int day) {
-    return day > originalAD && day < maxAdm;
+    return day >= originalAD && day <= maxAdm;
   }
 
   public boolean hasFeasibleRoom(int room) {
