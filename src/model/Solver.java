@@ -10,6 +10,7 @@ public class Solver {
   private final DepartmentList departmentList;
   private final Schedule schedule;
   private int cost;
+  private final List<Map<String, Integer>> generatedMoves;
   private Map<String, Integer> lastMove;
 
   public Solver(PatientList pl, DepartmentList dl, Schedule s) {
@@ -17,6 +18,7 @@ public class Solver {
     departmentList = dl;
     schedule = s;
     penalties = new HashMap<>();
+    generatedMoves = new ArrayList<>();
   }
 
   public void setPenalty(String type, int value) {
@@ -205,21 +207,17 @@ public class Solver {
   }
 
   public void solve() {
-    int loops = 1000000;
-    while (loops > 0) {
+    for (int i = 0; i < 10000; i++) {
       executeNewMove();
       int savings = lastMove.get("savings");
-      if (savings < 0)
-        undoLastMove();
-      else
+      if (savings > 0) {
+        lastMove.put("accepted", 1);
         cost -= savings;
-
-      if (loops % 100000 == 1) {
-        printCosts();
-        if (!verifyCost())
-          System.out.printf("An invalid move was executed near loop %d", 1000000 - loops);
+      } else {
+        lastMove.put("accepted", 0);
+        undoLastMove();
       }
-      loops--;
+      generatedMoves.add(lastMove);
     }
   }
 
@@ -286,7 +284,7 @@ public class Solver {
   }
 
   public void executeNewMove() {
-    lastMove = generateMove();
+    lastMove = generateChangeRoom();
     lastMove.put("savings", switch (lastMove.get("type")) {
       case 0 -> executeChangeRoom(lastMove.get("patient"), lastMove.get("new_room"));
       case 1 -> executeSwapRoom(lastMove.get("first_patient"), lastMove.get("second_patient"));
@@ -352,7 +350,12 @@ public class Solver {
   }
 
   public Map<String, Integer> generateMove() {
-    int type = (int) (Math.random() * 4);
+    int random = (int) (Math.random() * 100);
+    int type;
+    if (random < 49) type = 0;
+    else if (random < 84) type = 1;
+    else if (random < 85) type = 2;
+    else type = 3;
     return switch (type) {
       case 0 -> generateChangeRoom();
       case 1 -> generateSwapRoom();
@@ -366,7 +369,7 @@ public class Solver {
     Map<String, Integer> move = new HashMap<>();
     Patient patient = patientList.getRandomPatient();
     int room = patient.getNewRandomFeasibleRoom();
-    move.put("type", 1);
+    move.put("type", 0);
     move.put("patient", patient.getId());
     move.put("original_room", patient.getLastRoom());
     move.put("new_room", room);
@@ -377,7 +380,7 @@ public class Solver {
     Map<String, Integer> move = new HashMap<>();
     Patient firstPatient = patientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapRoomPatient(firstPatient);
-    move.put("type", 2);
+    move.put("type", 1);
     move.put("first_patient", firstPatient.getId());
     move.put("second_patient", secondPatient.getId());
     move.put("first_room", firstPatient.getLastRoom());
@@ -389,7 +392,7 @@ public class Solver {
     Map<String, Integer> move = new HashMap<>();
     Patient patient = patientList.getRandomShiftPatient();
     int shift = patient.getRandomShift();
-    move.put("type", 3);
+    move.put("type", 2);
     move.put("patient", patient.getId());
     move.put("shift", shift);
     return move;
@@ -399,7 +402,7 @@ public class Solver {
     Map<String, Integer> move = new HashMap<>();
     Patient firstPatient = patientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapAdmissionPatient(firstPatient);
-    move.put("type", 4);
+    move.put("type", 3);
     move.put("first_patient", firstPatient.getId());
     move.put("second_patient", secondPatient.getId());
     return move;
