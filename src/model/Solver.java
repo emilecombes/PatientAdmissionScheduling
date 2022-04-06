@@ -266,16 +266,18 @@ public class Solver {
     int firstRoom = secondPatient.getLastRoom();
     int secondRoom = firstPatient.getLastRoom();
     int delta = secondPatient.getAdmission() - firstPatient.getAdmission();
-    for (int i = firstPatient.getAdmission(); i < firstPatient.getDischarge(); i++) {
+
+    for (int i = firstPatient.getAdmission(); i < firstPatient.getDischarge(); i++)
       schedule.cancelPatient(firstPatient, i);
-      schedule.assignPatient(firstPatient, firstRoom, i + delta);
-    }
-    for (int i = secondPatient.getAdmission(); i < secondPatient.getDischarge(); i++) {
-      schedule.cancelPatient(secondPatient, i);
-      schedule.assignPatient(secondPatient, secondRoom, i - delta);
-    }
     firstPatient.shiftAdmission(delta);
+    for (int i = firstPatient.getAdmission(); i < firstPatient.getDischarge(); i++)
+      schedule.assignPatient(firstPatient, firstRoom, i);
+
+    for (int i = secondPatient.getAdmission(); i < secondPatient.getDischarge(); i++)
+      schedule.cancelPatient(secondPatient, i);
     secondPatient.shiftAdmission(-delta);
+    for (int i = secondPatient.getAdmission(); i < secondPatient.getDischarge(); i++)
+      schedule.assignPatient(secondPatient, secondRoom, i);
   }
 
   public void executeNewMove() {
@@ -304,6 +306,8 @@ public class Solver {
   public int executeSwapRoom(int fPat, int sPat) {
     int fRoom = patientList.getPatient(fPat).getLastRoom();
     int sRoom = patientList.getPatient(sPat).getLastRoom();
+    patientList.getPatient(fPat).verifyLOS("sr");
+    patientList.getPatient(sPat).verifyLOS("sr");
     return executeChangeRoom(fPat, sRoom) + executeChangeRoom(sPat, fRoom);
   }
 
@@ -347,9 +351,9 @@ public class Solver {
   public Map<String, Integer> generateMove() {
     int random = (int) (Math.random() * 100);
     int type;
-    if (random < 20) type = 0;
-    else if (random < 40) type = 1;
-    else if (random < 0) type = 2;
+    if (random < 50) type = 0;
+    else if (random < 80) type = 1;
+    else if (random < 85) type = 2;
     else type = 3;
     return switch (type) {
       case 0 -> generateChangeRoom();

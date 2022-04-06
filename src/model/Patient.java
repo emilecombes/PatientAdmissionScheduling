@@ -192,4 +192,11 @@ public class Patient {
     delay += days;
   }
 
+  public void verifyLOS(String type) {
+    for (int i = admission; i < discharge; i++) {
+      if(getRoom(i) == -1)
+        System.out.println("err (" + type + ")");
+    }
+  }
+
 }
