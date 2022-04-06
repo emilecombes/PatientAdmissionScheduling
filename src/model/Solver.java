@@ -183,7 +183,7 @@ public class Solver {
     patient.shiftAdmission(shift);
     for (int i = patient.getAdmission(); i < patient.getDischarge(); i++) {
       savings -= getDynamicAssignmentCost(patient, room, i);
-      schedule.assignPatient(patient, i, room);
+      schedule.assignPatient(patient, room, i);
     }
     return savings;
   }
@@ -218,6 +218,7 @@ public class Solver {
         undoLastMove();
       }
       generatedMoves.add(lastMove);
+      if (i % 10000 == 0) printCosts();
     }
   }
 
@@ -284,7 +285,7 @@ public class Solver {
   }
 
   public void executeNewMove() {
-    lastMove = generateShiftAdmission();
+    lastMove = generateSwapAdmission();
     lastMove.put("savings", switch (lastMove.get("type")) {
       case 0 -> executeChangeRoom(lastMove.get("patient"), lastMove.get("new_room"));
       case 1 -> executeSwapRoom(lastMove.get("first_patient"), lastMove.get("second_patient"));
@@ -380,7 +381,7 @@ public class Solver {
     Map<String, Integer> move = new HashMap<>();
     Patient firstPatient = patientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapRoomPatient(firstPatient);
-    if(secondPatient == null) return generateSwapRoom();
+    if (secondPatient == null) return generateSwapRoom();
     move.put("type", 1);
     move.put("first_patient", firstPatient.getId());
     move.put("second_patient", secondPatient.getId());
@@ -403,13 +404,11 @@ public class Solver {
     Map<String, Integer> move = new HashMap<>();
     Patient firstPatient = patientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapAdmissionPatient(firstPatient);
+    if (secondPatient == null) return generateSwapAdmission();
     move.put("type", 3);
     move.put("first_patient", firstPatient.getId());
     move.put("second_patient", secondPatient.getId());
     return move;
   }
-
-
-
 
 }
