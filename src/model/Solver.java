@@ -284,7 +284,7 @@ public class Solver {
   }
 
   public void executeNewMove() {
-    lastMove = generateChangeRoom();
+    lastMove = generateSwapRoom();
     lastMove.put("savings", switch (lastMove.get("type")) {
       case 0 -> executeChangeRoom(lastMove.get("patient"), lastMove.get("new_room"));
       case 1 -> executeSwapRoom(lastMove.get("first_patient"), lastMove.get("second_patient"));
@@ -380,6 +380,7 @@ public class Solver {
     Map<String, Integer> move = new HashMap<>();
     Patient firstPatient = patientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapRoomPatient(firstPatient);
+    if(secondPatient == null) return generateSwapRoom();
     move.put("type", 1);
     move.put("first_patient", firstPatient.getId());
     move.put("second_patient", secondPatient.getId());
@@ -407,6 +408,8 @@ public class Solver {
     move.put("second_patient", secondPatient.getId());
     return move;
   }
+
+
 
 
 }
