@@ -37,7 +37,7 @@ public class Solver {
     return cost;
   }
 
-  public HashMap<String, Integer> getCosts() {
+  public HashMap<String, Integer> getCostInfo() {
     HashMap<String, Integer> costs = new HashMap<>();
     int roomCosts = 0;
     int transfer = 0;
@@ -62,7 +62,7 @@ public class Solver {
     return costs;
   }
 
-  public HashMap<String, String> getPlanningHorizon() {
+  public HashMap<String, String> getPlanningHorizonInfo() {
     HashMap<String, String> horizon = new HashMap<>();
     horizon.put("start_day", DateConverter.getDateString(0));
     horizon.put("num_days", String.valueOf(DateConverter.getNumDays()));
@@ -201,9 +201,9 @@ public class Solver {
   }
 
   public void solve() {
-    for (int i = 0; i < 100000; i++) {
+    for (int i = 0; i < 1000000; i++) {
       executeNewMove();
-      int savings = lastMove.get("savings");
+      int savings = lastMove.get("patient_savings");
       if (savings > 0) {
         lastMove.put("accepted", 1);
         cost -= savings;
@@ -282,59 +282,68 @@ public class Solver {
 
   public void executeNewMove() {
     lastMove = generateMove();
-    lastMove.put("savings", switch (lastMove.get("type")) {
+    int[] savings;
+    savings = switch (lastMove.get("type")) {
       case 0 -> executeChangeRoom(lastMove.get("patient"), lastMove.get("new_room"));
       case 1 -> executeSwapRoom(lastMove.get("first_patient"), lastMove.get("second_patient"));
       case 2 -> executeShiftAdmission(lastMove.get("patient"), lastMove.get("shift"));
       case 3 -> executeSwapAdmission(lastMove.get("first_patient"), lastMove.get("second_patient"));
-      default -> 0;
-    });
+      default -> new int[]{0, 0};
+    };
+    lastMove.put("patient_savings", savings[0]);
+    lastMove.put("load_savings", savings[1]);
   }
 
-  public int executeChangeRoom(int pat, int room) {
+  public int[] executeChangeRoom(int pat, int room) {
     Patient patient = patientList.getPatient(pat);
-    int savings = patient.getRoomCost(patient.getLastRoom()) - patient.getRoomCost(room);
+    int patientSavings = patient.getRoomCost(patient.getLastRoom()) - patient.getRoomCost(room);
     for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
-      savings += getDynamicCancellationSavings(patient, day);
+      patientSavings += getDynamicCancellationSavings(patient, day);
       schedule.cancelPatient(patient, day);
-      savings -= getDynamicAssignmentCost(patient, room, day);
+      patientSavings -= getDynamicAssignmentCost(patient, room, day);
       schedule.assignPatient(patient, room, day);
     }
-    return savings;
+    int loadSavings = 0;
+    return new int[]{patientSavings, loadSavings};
   }
 
-  public int executeSwapRoom(int fPat, int sPat) {
+  public int[] executeSwapRoom(int fPat, int sPat) {
     int fRoom = patientList.getPatient(fPat).getLastRoom();
     int sRoom = patientList.getPatient(sPat).getLastRoom();
-    patientList.getPatient(fPat).verifyLOS("sr");
-    patientList.getPatient(sPat).verifyLOS("sr");
-    return executeChangeRoom(fPat, sRoom) + executeChangeRoom(sPat, fRoom);
+    int patientSavings = executeChangeRoom(fPat, sRoom)[0] + executeChangeRoom(sPat, fRoom)[0];
+    int loadSavings = 0;
+    return new int[]{patientSavings, loadSavings};
   }
 
-  public int executeShiftAdmission(int pat, int shift) {
+  public int[] executeShiftAdmission(int pat, int shift) {
     Patient patient = patientList.getPatient(pat);
     int room = patient.getLastRoom();
-    int savings = -shift * getPenalty("delay");
+    int patientSavings = -shift * getPenalty("delay");
+
     for (int i = 0; i < Math.min(patient.getStayLength(), Math.abs(shift)); i++) {
       int cancelDay = (shift > 0)
           ? patient.getAdmission() + i
           : patient.getDischarge() - 1 - i;
-      int assignmentDay = (shift > 0)
-          ? patient.getDischarge() - 1 + shift - i
-          : patient.getAdmission() + shift + i;
-      savings += getDynamicCancellationSavings(patient, cancelDay);
+      patientSavings += getDynamicCancellationSavings(patient, cancelDay);
       schedule.cancelPatient(patient, cancelDay);
-      savings -= getDynamicAssignmentCost(patient, room, assignmentDay);
+    }
+
+    patient.shiftAdmission(shift);
+    for(int i = 0; i < Math.min(patient.getStayLength(), Math.abs(shift)); i++) {
+      int assignmentDay = (shift > 0)
+          ? patient.getDischarge() - 1 - i
+          : patient.getAdmission() + i;
+      patientSavings -= getDynamicAssignmentCost(patient, room, assignmentDay);
       schedule.assignPatient(patient, room, assignmentDay);
     }
-    patient.shiftAdmission(shift);
-    return savings;
+    int loadSavings = 0;
+    return new int[]{patientSavings, loadSavings};
   }
 
-  public int executeSwapAdmission(int fPat, int sPat) {
+  public int[] executeSwapAdmission(int fPat, int sPat) {
     Patient firstPatient = patientList.getPatient(fPat);
     Patient secondPatient = patientList.getPatient(sPat);
-    int savings = firstPatient.getCurrentRoomCost()
+    int patientSavings = firstPatient.getCurrentRoomCost()
         - firstPatient.getRoomCost(secondPatient.getLastRoom())
         + secondPatient.getCurrentRoomCost()
         - secondPatient.getRoomCost(firstPatient.getLastRoom());
@@ -343,9 +352,10 @@ public class Solver {
     int secondShift = firstPatient.getAdmission() - secondPatient.getAdmission();
     int firstRoom = firstPatient.getLastRoom();
     int secondRoom = secondPatient.getLastRoom();
-    savings += getDynamicSwapAdmissionSavings(firstPatient, firstShift, secondRoom);
-    savings += getDynamicSwapAdmissionSavings(secondPatient, secondShift, firstRoom);
-    return savings;
+    patientSavings += getDynamicSwapAdmissionSavings(firstPatient, firstShift, secondRoom);
+    patientSavings += getDynamicSwapAdmissionSavings(secondPatient, secondShift, firstRoom);
+    int loadSavings = 0;
+    return new int[]{patientSavings, loadSavings};
   }
 
   public Map<String, Integer> generateMove() {

@@ -10,11 +10,14 @@ public class Schedule {
   private final Set<Integer>[][] schedule;
   private final Map<Integer, List<Map<String, Integer>>> dynamicGenderCount;
 
+  private int[][] loadMatrix;
+
   public Schedule(DepartmentList dl, PatientList pl) {
     departmentList = dl;
     patientList = pl;
     schedule = new Set[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
     dynamicGenderCount = new HashMap<>();
+    loadMatrix = new int[departmentList.getNumberOfDepartments()][DateConverter.getTotalHorizon()];
 
     for (int i = 0; i < departmentList.getNumberOfRooms(); i++) {
       for (int j = 0; j < DateConverter.getTotalHorizon(); j++)
@@ -131,6 +134,8 @@ public class Schedule {
     pat.assignRoom(room, day);
     schedule[room][day].add(pat.getId());
     if (dynamicGenderCount.containsKey(room)) incrementGenderCount(room, day, pat.getGender());
+    int depId = departmentList.getDepartment(departmentList.getRoom(room).getDepartment()).getId();
+    loadMatrix[depId][day] += pat.getNeededCare(day);
   }
 
   public void cancelPatient(Patient pat, int day) {
@@ -138,5 +143,7 @@ public class Schedule {
     pat.cancelRoom(day);
     schedule[room][day].remove(pat.getId());
     if (dynamicGenderCount.containsKey(room)) decrementGenderCount(room, day, pat.getGender());
+    int depId = departmentList.getDepartment(departmentList.getRoom(room).getDepartment()).getId();
+    loadMatrix[depId][day] -= pat.getNeededCare(day);
   }
 }

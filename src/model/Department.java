@@ -5,6 +5,7 @@ import util.DateConverter;
 import java.util.*;
 
 public class Department {
+  private final int id;
   private final Map<Integer, Room> rooms;
   private final Set<String> mainSpecialisms;
   private final Set<String> auxSpecialisms;
@@ -12,7 +13,8 @@ public class Department {
   private final List<Float> workLoads;
   private float workLoadVariance;
 
-  public Department(Map<Integer, Room> rooms, Set<String> mainSpec, Set<String> auxSpec) {
+  public Department(int id, Map<Integer, Room> rooms, Set<String> mainSpec, Set<String> auxSpec) {
+    this.id = id;
     this.rooms = rooms;
     this.mainSpecialisms = mainSpec;
     this.auxSpecialisms = auxSpec;
@@ -23,6 +25,10 @@ public class Department {
 
     workLoads = new ArrayList<>();
     for (int i = 0; i < DateConverter.getTotalHorizon(); i++) workLoads.add((float) 0);
+  }
+
+  public int getId() {
+    return id;
   }
 
   public Set<Integer> getRoomIndices() {

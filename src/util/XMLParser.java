@@ -115,9 +115,11 @@ public class XMLParser {
     }
 
     // Build DepartmentList
+    int id = 0;
     Map<String, Department> departments = new HashMap<>();
     for (String name : departmentRooms.keySet()) {
       departments.put(name, new Department(
+          id++,
           departmentRooms.get(name),
           mainSpecialisms.get(name),
           auxSpecialisms.get(name))
@@ -195,7 +197,7 @@ public class XMLParser {
     doc.appendChild(root);
 
     // Write planning horizon
-    HashMap<String, String> planningHorizon = solver.getPlanningHorizon();
+    HashMap<String, String> planningHorizon = solver.getPlanningHorizonInfo();
     Element planningHorizonElement = doc.createElement("planning_horizon");
     root.appendChild(planningHorizonElement);
     for (String key : planningHorizon.keySet()) {
@@ -224,7 +226,7 @@ public class XMLParser {
     }
 
     // Write costs
-    HashMap<String, Integer> costs = solver.getCosts();
+    HashMap<String, Integer> costs = solver.getCostInfo();
     Element costsElement = doc.createElement("costs");
     root.appendChild(costsElement);
     for (String key : costs.keySet()) {

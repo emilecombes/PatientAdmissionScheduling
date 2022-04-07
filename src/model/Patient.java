@@ -86,6 +86,10 @@ public class Patient {
     return preferredCap;
   }
 
+  public int getNeededCare(int day) {
+    return neededCare.get(day - admission);
+  }
+
   public int getStayLength() {
     return stayLength;
   }
@@ -194,7 +198,7 @@ public class Patient {
 
   public void verifyLOS(String type) {
     for (int i = admission; i < discharge; i++) {
-      if(getRoom(i) == -1)
+      if (getRoom(i) == -1)
         System.out.println("err (" + type + ")");
     }
   }
