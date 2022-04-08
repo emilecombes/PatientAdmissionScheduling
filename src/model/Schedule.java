@@ -134,6 +134,10 @@ public class Schedule {
     averageDepartmentLoads[dep] += delta;
   }
 
+  public void decrementAverageDepartmentLoad(int dep, double delta) {
+    averageDepartmentLoads[dep] -= delta;
+  }
+
 
   public double getDailyLoadCost(int day) {
     return dailyLoads[day];
@@ -201,9 +205,12 @@ public class Schedule {
     pat.assignRoom(room, day);
     schedule[room][day].add(pat.getId());
     if (dynamicGenderCount.containsKey(room)) incrementGenderCount(room, day, pat.getGender());
-    int depId = departmentList.getDepartment(departmentList.getRoom(room).getDepartment()).getId();
-    double delta = (double) pat.getNeededCare(day) / departmentList.getDepartment(depId).getSize();
-    loadMatrix[depId][day] += delta;
+
+    int dep = departmentList.getDepartment(departmentList.getRoom(room).getDepartment()).getId();
+    double delta = (double) pat.getNeededCare(day) / departmentList.getDepartment(dep).getSize();
+    loadMatrix[dep][day] += delta;
+    incrementAverageDailyLoad(day, delta / horizonLength);
+    incrementAverageDepartmentLoad(dep, delta / departmentCount);
   }
 
   public void cancelPatient(Patient pat, int day) {
@@ -211,8 +218,11 @@ public class Schedule {
     pat.cancelRoom(day);
     schedule[room][day].remove(pat.getId());
     if (dynamicGenderCount.containsKey(room)) decrementGenderCount(room, day, pat.getGender());
-    int depId = departmentList.getDepartment(departmentList.getRoom(room).getDepartment()).getId();
-    double delta = (double) pat.getNeededCare(day) / departmentList.getDepartment(depId).getSize();
-    loadMatrix[depId][day] -= delta;
+
+    int dep = departmentList.getDepartment(departmentList.getRoom(room).getDepartment()).getId();
+    double delta = (double) pat.getNeededCare(day) / departmentList.getDepartment(dep).getSize();
+    loadMatrix[dep][day] -= delta;
+    decrementAverageDailyLoad(day, delta / horizonLength);
+    decrementAverageDepartmentLoad(dep, delta / departmentCount);
   }
 }
