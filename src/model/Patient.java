@@ -119,7 +119,7 @@ public class Patient {
   }
 
   public int getRoom(int day) {
-    return (assignedRooms.get(day) == null) ? -1 : assignedRooms.get(day);
+    return assignedRooms.getOrDefault(day, -1);
   }
 
   public int getInitialRoom() {
@@ -194,13 +194,6 @@ public class Patient {
     admission += days;
     discharge += days;
     delay += days;
-  }
-
-  public void verifyLOS(String type) {
-    for (int i = admission; i < discharge; i++) {
-      if (getRoom(i) == -1)
-        System.out.println("err (" + type + ")");
-    }
   }
 
 }

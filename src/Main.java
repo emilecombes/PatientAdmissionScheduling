@@ -1,13 +1,15 @@
 import model.*;
 import util.*;
 
+import java.io.IOException;
+
 // Run validator with: ./or_pas_validator Instances/or_pas_dept2_short01.xml
 // ../out/solutions/or_pas_dept2_short01_sol.xml in ./data
 
 public class Main {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     int extend = 14;
-    String instance = "or_pas_dept6_long01";
+    String instance = "or_pas_dept2_short00";
 
     XMLParser xmlParser = new XMLParser(instance);
     xmlParser.buildDateConverter(extend);
@@ -27,7 +29,10 @@ public class Main {
     solver.init();
     solver.solve();
     xmlParser.writeSolution(solver);
-    System.out.println("\t\t\t\t\t\t" + solver.getCost());
+    System.out.println("\t\t\t\t\t\t" + solver.getPatientCost());
+
+    CSVParser csvParser = new CSVParser(instance, solver);
+    csvParser.buildMoveInfoCSV();
 
     System.out.println("Validator: ./or_pas_validator Instances/" + instance + ".xml ." +
         "./out/solutions/" + instance + "_sol.xml");

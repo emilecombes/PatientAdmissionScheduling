@@ -9,7 +9,7 @@ public class Solver {
   private final PatientList patientList;
   private final DepartmentList departmentList;
   private final Schedule schedule;
-  private int cost;
+  private int patientCost, loadCost;
   private final List<Map<String, Integer>> generatedMoves;
   private Map<String, Integer> lastMove;
 
@@ -33,8 +33,8 @@ public class Solver {
     return patientList;
   }
 
-  public int getCost() {
-    return cost;
+  public int getPatientCost() {
+    return patientCost;
   }
 
   public HashMap<String, Integer> getCostInfo() {
@@ -45,8 +45,7 @@ public class Solver {
     for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
       Patient patient = patientList.getPatient(i);
       if (patient.isInitial())
-        if (patient.getInitialRoom() != patient.getLastRoom())
-          transfer += getPenalty("transfer");
+        if (patient.getInitialRoom() != patient.getLastRoom()) transfer += getPenalty("transfer");
       roomCosts += patient.getTotalRoomCost();
       totalDelay += patient.getDelay() * getPenalty("delay");
     }
@@ -70,21 +69,45 @@ public class Solver {
     return horizon;
   }
 
+  public List<String> getMoveInfo() {
+    List<String> moveInfo = new ArrayList<>();
+    String[] columns =
+        {"id", "type", "first_patient", "second_patient", "first_room", "second_room",
+            "first_shift", "second_shift", "patient_savings", "load_savings", "patient_cost",
+            "load_cost"};
+
+    StringBuilder header = new StringBuilder();
+    for (String key : columns) header.append(key).append(',');
+    header.setLength(header.length() - 1);
+    header.append('\n');
+    moveInfo.add(header.toString());
+
+    for (int i = 0; i < generatedMoves.size(); i++) {
+      Map<String, Integer> move = generatedMoves.get(i);
+      StringBuilder info = new StringBuilder(String.valueOf(i) + ',');
+      for (String key : columns)
+        if (!key.equals("id")) info.append(move.getOrDefault(key, -1)).append(',');
+      info.setLength(info.length() - 1);
+      info.append('\n');
+      moveInfo.add(info.toString());
+    }
+    return moveInfo;
+  }
+
   public void printCosts() {
-    System.out.println("\nTotal cost: \t\t\t" + cost +
-        "\nCapacity violations: \t" + schedule.getCapacityViolations() +
-        "\nSoft cost: \t\t\t\t" +
-        (cost - (getPenalty("capacity_violation") * schedule.getCapacityViolations())));
+    System.out.println("\nTotal cost: \t\t\t" + patientCost + "\nCapacity violations: \t" +
+        schedule.getCapacityViolations() + "\nSoft cost: \t\t\t\t" +
+        (patientCost - (getPenalty("capacity_violation") * schedule.getCapacityViolations())));
   }
 
   public void init() {
-    cost = 0;
+    patientCost = 0;
     setFeasibleRooms();
     calculateRoomCosts();
     insertInitialPatients();
     assignRandomRooms();
-    cost += schedule.getDynamicGenderViolations() * getPenalty("gender");
-    cost += schedule.getCapacityViolations() * getPenalty("capacity_violation");
+    patientCost += schedule.getDynamicGenderViolations() * getPenalty("gender");
+    patientCost += schedule.getCapacityViolations() * getPenalty("capacity_violation");
   }
 
   public void setFeasibleRooms() {
@@ -99,8 +122,7 @@ public class Solver {
       Set<Integer> infeasibleRooms = new HashSet<>();
       for (int r : feasibleRooms) {
         Room room = departmentList.getRoom(r);
-        if (!room.hasAllFeatures(patient.getNeededProperties()))
-          infeasibleRooms.add(r);
+        if (!room.hasAllFeatures(patient.getNeededProperties())) infeasibleRooms.add(r);
       }
 
       feasibleRooms.removeAll(infeasibleRooms);
@@ -116,8 +138,7 @@ public class Solver {
 
         int propertyCost = 0;
         for (String property : patient.getPreferredProperties())
-          if (!room.hasFeature(property))
-            propertyCost += getPenalty("room_property");
+          if (!room.hasFeature(property)) propertyCost += getPenalty("room_property");
         patient.setRoomCost("room_property", r, propertyCost);
 
         int capacityCost;
@@ -152,8 +173,7 @@ public class Solver {
   public int getDynamicCancellationSavings(Patient patient, int day) {
     int room = patient.getRoom(day);
     int savings = 0;
-    if (schedule.getCapacityViolations(room, day) > 0)
-      savings += getPenalty("capacity_violation");
+    if (schedule.getCapacityViolations(room, day) > 0) savings += getPenalty("capacity_violation");
     if (schedule.hasSingleDynamicGenderViolation(room, day, patient.getGender()))
       savings += getPenalty("gender");
     return savings;
@@ -161,8 +181,7 @@ public class Solver {
 
   public int getDynamicAssignmentCost(Patient patient, int room, int day) {
     int cost = 0;
-    if (schedule.getCapacityMargin(room, day) == 0)
-      cost += getPenalty("capacity_violation");
+    if (schedule.getCapacityMargin(room, day) == 0) cost += getPenalty("capacity_violation");
     if (schedule.isFirstDynamicGenderViolation(room, day, patient.getGender()))
       cost += getPenalty("gender");
     return cost;
@@ -187,7 +206,7 @@ public class Solver {
       int room = p.getRoom(p.getAdmission());
       for (int i = p.getAdmission(); i < p.getDischarge(); i++)
         schedule.assignPatient(p, room, i);
-      cost += p.getRoomCost(room);
+      patientCost += p.getRoomCost(room);
     }
   }
 
@@ -196,17 +215,17 @@ public class Solver {
       int room = p.getNewRandomFeasibleRoom();
       for (int i = p.getAdmission(); i < p.getDischarge(); i++)
         schedule.assignPatient(p, room, i);
-      cost += p.getRoomCost(room);
+      patientCost += p.getRoomCost(room);
     }
   }
 
   public void solve() {
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < 100000; i++) {
       executeNewMove();
       int savings = lastMove.get("patient_savings");
       if (savings > 0) {
         lastMove.put("accepted", 1);
-        cost -= savings;
+        patientCost -= savings;
       } else {
         lastMove.put("accepted", 0);
         undoLastMove();
@@ -226,8 +245,8 @@ public class Solver {
   }
 
   public void undoChangeRoom() {
-    Patient patient = patientList.getPatient(lastMove.get("patient"));
-    int originalRoom = lastMove.get("original_room");
+    Patient patient = patientList.getPatient(lastMove.get("first_patient"));
+    int originalRoom = lastMove.get("first_room");
     for (int i = patient.getAdmission(); i < patient.getDischarge(); i++) {
       schedule.cancelPatient(patient, i);
       schedule.assignPatient(patient, originalRoom, i);
@@ -250,8 +269,8 @@ public class Solver {
   }
 
   public void undoShiftAdmission() {
-    Patient patient = patientList.getPatient(lastMove.get("patient"));
-    int shift = lastMove.get("shift");
+    Patient patient = patientList.getPatient(lastMove.get("first_patient"));
+    int shift = lastMove.get("first_shift");
     int room = patient.getLastRoom();
     for (int i = patient.getAdmission(); i < patient.getDischarge(); i++)
       schedule.cancelPatient(patient, i);
@@ -284,9 +303,9 @@ public class Solver {
     lastMove = generateMove();
     int[] savings;
     savings = switch (lastMove.get("type")) {
-      case 0 -> executeChangeRoom(lastMove.get("patient"), lastMove.get("new_room"));
+      case 0 -> executeChangeRoom(lastMove.get("first_patient"), lastMove.get("second_room"));
       case 1 -> executeSwapRoom(lastMove.get("first_patient"), lastMove.get("second_patient"));
-      case 2 -> executeShiftAdmission(lastMove.get("patient"), lastMove.get("shift"));
+      case 2 -> executeShiftAdmission(lastMove.get("first_patient"), lastMove.get("first_shift"));
       case 3 -> executeSwapAdmission(lastMove.get("first_patient"), lastMove.get("second_patient"));
       default -> new int[]{0, 0};
     };
@@ -321,18 +340,14 @@ public class Solver {
     int patientSavings = -shift * getPenalty("delay");
 
     for (int i = 0; i < Math.min(patient.getStayLength(), Math.abs(shift)); i++) {
-      int cancelDay = (shift > 0)
-          ? patient.getAdmission() + i
-          : patient.getDischarge() - 1 - i;
+      int cancelDay = (shift > 0) ? patient.getAdmission() + i : patient.getDischarge() - 1 - i;
       patientSavings += getDynamicCancellationSavings(patient, cancelDay);
       schedule.cancelPatient(patient, cancelDay);
     }
 
     patient.shiftAdmission(shift);
-    for(int i = 0; i < Math.min(patient.getStayLength(), Math.abs(shift)); i++) {
-      int assignmentDay = (shift > 0)
-          ? patient.getDischarge() - 1 - i
-          : patient.getAdmission() + i;
+    for (int i = 0; i < Math.min(patient.getStayLength(), Math.abs(shift)); i++) {
+      int assignmentDay = (shift > 0) ? patient.getDischarge() - 1 - i : patient.getAdmission() + i;
       patientSavings -= getDynamicAssignmentCost(patient, room, assignmentDay);
       schedule.assignPatient(patient, room, assignmentDay);
     }
@@ -343,10 +358,10 @@ public class Solver {
   public int[] executeSwapAdmission(int fPat, int sPat) {
     Patient firstPatient = patientList.getPatient(fPat);
     Patient secondPatient = patientList.getPatient(sPat);
-    int patientSavings = firstPatient.getCurrentRoomCost()
-        - firstPatient.getRoomCost(secondPatient.getLastRoom())
-        + secondPatient.getCurrentRoomCost()
-        - secondPatient.getRoomCost(firstPatient.getLastRoom());
+    int patientSavings =
+        firstPatient.getCurrentRoomCost() - firstPatient.getRoomCost(secondPatient.getLastRoom()) +
+            secondPatient.getCurrentRoomCost() -
+            secondPatient.getRoomCost(firstPatient.getLastRoom());
     // Since both patients can be admitted on the other AD, the total delay cost stays the same
     int firstShift = secondPatient.getAdmission() - firstPatient.getAdmission();
     int secondShift = firstPatient.getAdmission() - secondPatient.getAdmission();
@@ -379,9 +394,9 @@ public class Solver {
     Patient patient = patientList.getRandomPatient();
     int room = patient.getNewRandomFeasibleRoom();
     move.put("type", 0);
-    move.put("patient", patient.getId());
-    move.put("original_room", patient.getLastRoom());
-    move.put("new_room", room);
+    move.put("first_patient", patient.getId());
+    move.put("first_room", patient.getLastRoom());
+    move.put("second_room", room);
     return move;
   }
 
@@ -403,8 +418,9 @@ public class Solver {
     Patient patient = patientList.getRandomShiftPatient();
     int shift = patient.getRandomShift();
     move.put("type", 2);
-    move.put("patient", patient.getId());
-    move.put("shift", shift);
+    move.put("first_patient", patient.getId());
+    move.put("first_room", patient.getLastRoom());
+    move.put("first_shift", shift);
     return move;
   }
 
@@ -416,6 +432,10 @@ public class Solver {
     move.put("type", 3);
     move.put("first_patient", firstPatient.getId());
     move.put("second_patient", secondPatient.getId());
+    move.put("first_room", firstPatient.getLastRoom());
+    move.put("second_room", secondPatient.getLastRoom());
+    move.put("first_shift", secondPatient.getAdmission() - firstPatient.getAdmission());
+    move.put("second_shift", firstPatient.getAdmission() - secondPatient.getAdmission());
     return move;
   }
 
