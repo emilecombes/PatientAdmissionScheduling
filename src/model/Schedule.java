@@ -151,8 +151,12 @@ public class Schedule {
   }
 
 
-  public void incrementAverageDailyLoad(int day, int delta) {
+  public void incrementAverageDailyLoad(int day, double delta) {
     averageDailyLoads[day] += delta;
+  }
+
+  public void decrementAverageDailyLoad(int day, double delta) {
+    averageDailyLoads[day] -= delta;
   }
 
 

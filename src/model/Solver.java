@@ -339,21 +339,18 @@ public class Solver {
       schedule.calculateDailyLoadCost(i);
       loadSavings -= schedule.getDailyLoadCost(i);
     }
-
     int firstDepartment = departmentList.getRoom(originalRoom).getDepartmentId();
     int secondDepartment = departmentList.getRoom(room).getDepartmentId();
     if (firstDepartment != secondDepartment)
       for (int dep : new int[]{firstDepartment, secondDepartment}) {
-        int totalAddedCare = patient.getTotalNeededCare();
-        if(dep == firstDepartment) totalAddedCare *= -1;
-        int delta = totalAddedCare / departmentList.getDepartment(dep).getSize();
+        double totalAddedCare = patient.getTotalNeededCare();
+        if (dep == firstDepartment) totalAddedCare *= -1;
+        double delta = totalAddedCare / departmentList.getDepartment(dep).getSize();
         schedule.incrementAverageDepartmentLoad(dep, delta);
         loadSavings += schedule.getDepartmentLoadCost(dep);
         schedule.calculateDepartmentLoadCost(dep);
         loadSavings -= schedule.getDepartmentLoadCost(dep);
       }
-
-
     return new int[]{patientSavings, loadSavings};
   }
 
@@ -366,23 +363,44 @@ public class Solver {
   }
 
   public int[] executeShiftAdmission(int pat, int shift) {
+    if (shift == 0) return new int[]{0, 0};
     Patient patient = patientList.getPatient(pat);
     int room = patient.getLastRoom();
-    int patientSavings = -shift * getPenalty("delay");
 
+    int patientSavings = -shift * getPenalty("delay");
     for (int i = 0; i < Math.min(patient.getStayLength(), Math.abs(shift)); i++) {
       int cancelDay = (shift > 0) ? patient.getAdmission() + i : patient.getDischarge() - 1 - i;
       patientSavings += getDynamicCancellationSavings(patient, cancelDay);
       schedule.cancelPatient(patient, cancelDay);
     }
-
     patient.shiftAdmission(shift);
     for (int i = 0; i < Math.min(patient.getStayLength(), Math.abs(shift)); i++) {
       int assignmentDay = (shift > 0) ? patient.getDischarge() - 1 - i : patient.getAdmission() + i;
       patientSavings -= getDynamicAssignmentCost(patient, room, assignmentDay);
       schedule.assignPatient(patient, room, assignmentDay);
     }
+
     int loadSavings = 0;
+    int dep = departmentList.getRoom(room).getDepartmentId();
+    int size = departmentList.getDepartment(dep).getSize();
+    loadSavings += schedule.getDepartmentLoadCost(dep);
+    schedule.calculateDepartmentLoadCost(dep);
+    loadSavings -= schedule.getDepartmentLoadCost(dep);
+
+    Set<Integer> affectedDays = new HashSet<>();
+    for (int i = patient.getAdmission(); i < patient.getDischarge(); i++) {
+      affectedDays.add(i);
+      affectedDays.add(i + shift);
+      loadSavings += schedule.getDailyLoadCost(i);
+      double delta = (double) patient.getNeededCare(i) / size;
+      schedule.decrementAverageDailyLoad(i - shift, delta);
+      schedule.incrementAverageDailyLoad(i, delta);
+    }
+    for(int i : affectedDays){
+      schedule.calculateDailyLoadCost(i);
+      loadSavings -= schedule.getDailyLoadCost(i);
+    }
+
     return new int[]{patientSavings, loadSavings};
   }
 
