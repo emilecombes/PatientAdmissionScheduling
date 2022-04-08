@@ -10,6 +10,7 @@ public class Patient {
   private final int originalAD, stayLength, maxAdm;
   private final Set<String> preferredProps, neededProps;
   private final List<Integer> neededCare;
+  private final int totalNeededCare;
 
   private final LinkedHashMap<Integer, Integer> assignedRooms;
   private final Map<String, Map<Integer, Integer>> specificRoomCosts;
@@ -36,7 +37,12 @@ public class Patient {
     this.neededProps = np;
     this.preferredProps = pp;
     this.neededCare = new ArrayList<>();
-    for (int i = 0; i < stayLength; i++) neededCare.add(1);
+    int total = 0;
+    for (int i = 0; i < stayLength; i++) {
+      neededCare.add(1);
+      total += neededCare.get(i);
+    }
+    totalNeededCare = total;
     assignedRooms = new LinkedHashMap<>();
     roomCosts = new HashMap<>();
     specificRoomCosts = new HashMap<>();
@@ -88,6 +94,10 @@ public class Patient {
 
   public int getNeededCare(int day) {
     return neededCare.get(day - admission);
+  }
+
+  public int getTotalNeededCare() {
+
   }
 
   public int getStayLength() {

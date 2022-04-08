@@ -106,8 +106,8 @@ public class Solver {
     calculateRoomCosts();
     insertInitialPatients();
     assignRandomRooms();
-    patientCost += schedule.getDynamicGenderViolations() * getPenalty("gender");
-    patientCost += schedule.getCapacityViolations() * getPenalty("capacity_violation");
+    addDynamicPatientCosts();
+    calculateLoadCost();
   }
 
   public void setFeasibleRooms() {
@@ -219,6 +219,15 @@ public class Solver {
     }
   }
 
+  public void addDynamicPatientCosts() {
+    patientCost += schedule.getDynamicGenderViolations() * getPenalty("gender");
+    patientCost += schedule.getCapacityViolations() * getPenalty("capacity_violation");
+  }
+
+  public void calculateLoadCost() {
+
+  }
+
   public void solve() {
     for (int i = 0; i < 100000; i++) {
       executeNewMove();
@@ -315,14 +324,36 @@ public class Solver {
 
   public int[] executeChangeRoom(int pat, int room) {
     Patient patient = patientList.getPatient(pat);
-    int patientSavings = patient.getRoomCost(patient.getLastRoom()) - patient.getRoomCost(room);
+    int originalRoom = patient.getLastRoom();
+    int patientSavings = patient.getRoomCost(originalRoom) - patient.getRoomCost(room);
     for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
       patientSavings += getDynamicCancellationSavings(patient, day);
       schedule.cancelPatient(patient, day);
       patientSavings -= getDynamicAssignmentCost(patient, room, day);
       schedule.assignPatient(patient, room, day);
     }
+
     int loadSavings = 0;
+    for (int i = patient.getAdmission(); i < patient.getDischarge(); i++) {
+      loadSavings += schedule.getDailyLoadCost(i);
+      schedule.calculateDailyLoadCost(i);
+      loadSavings -= schedule.getDailyLoadCost(i);
+    }
+
+    int firstDepartment = departmentList.getRoom(originalRoom).getDepartmentId();
+    int secondDepartment = departmentList.getRoom(room).getDepartmentId();
+    if (firstDepartment != secondDepartment)
+      for (int dep : new int[]{firstDepartment, secondDepartment}) {
+        int totalAddedCare = patient.getTotalNeededCare();
+        if(dep == firstDepartment) totalAddedCare *= -1;
+        int delta = totalAddedCare / departmentList.getDepartment(dep).getSize();
+        schedule.incrementAverageDepartmentLoad(dep, delta);
+        loadSavings += schedule.getDepartmentLoadCost(dep);
+        schedule.calculateDepartmentLoadCost(dep);
+        loadSavings -= schedule.getDepartmentLoadCost(dep);
+      }
+
+
     return new int[]{patientSavings, loadSavings};
   }
 

@@ -7,24 +7,37 @@ import java.util.*;
 public class Schedule {
   private final DepartmentList departmentList;
   private final PatientList patientList;
+  private final int horizonLength;
+  private final int departmentCount;
+
   private final Set<Integer>[][] schedule;
   private final Map<Integer, List<Map<String, Integer>>> dynamicGenderCount;
 
-  private int[][] loadMatrix;
+  private final int[][] loadMatrix;
+  private final double[] averageDailyLoads;
+  private final double[] dailyLoads;
+  private final double[] averageDepartmentLoads;
+  private final double[] departmentLoads;
 
   public Schedule(DepartmentList dl, PatientList pl) {
     departmentList = dl;
     patientList = pl;
-    schedule = new Set[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
+    horizonLength = DateConverter.getTotalHorizon();
+    departmentCount = departmentList.getNumberOfDepartments();
+    schedule = new Set[departmentList.getNumberOfRooms()][horizonLength];
     dynamicGenderCount = new HashMap<>();
-    loadMatrix = new int[departmentList.getNumberOfDepartments()][DateConverter.getTotalHorizon()];
+    loadMatrix = new int[departmentCount][horizonLength];
+    averageDailyLoads = new double[horizonLength];
+    dailyLoads = new double[horizonLength];
+    averageDepartmentLoads = new double[departmentCount];
+    departmentLoads = new double[departmentCount];
 
     for (int i = 0; i < departmentList.getNumberOfRooms(); i++) {
-      for (int j = 0; j < DateConverter.getTotalHorizon(); j++)
+      for (int j = 0; j < horizonLength; j++)
         schedule[i][j] = new HashSet<>();
       if (departmentList.getRoom(i).hasGenderPolicy("SameGender")) {
         dynamicGenderCount.put(i, new ArrayList<>());
-        for (int j = 0; j < DateConverter.getTotalHorizon(); j++) {
+        for (int j = 0; j < horizonLength; j++) {
           dynamicGenderCount.get(i).add(new HashMap<>());
           dynamicGenderCount.get(i).get(j).put("Male", 0);
           dynamicGenderCount.get(i).get(j).put("Female", 0);
@@ -37,10 +50,11 @@ public class Schedule {
     return schedule[room][day];
   }
 
+
   public int getCapacityViolations() {
     int violations = 0;
     for (int room = 0; room < departmentList.getNumberOfRooms(); room++)
-      for (int day = 0; day < DateConverter.getTotalHorizon(); day++)
+      for (int day = 0; day < horizonLength; day++)
         violations += getCapacityViolations(room, day);
     return violations;
   }
@@ -65,7 +79,7 @@ public class Schedule {
   public int getDynamicGenderViolations() {
     int violations = 0;
     for (int r : dynamicGenderCount.keySet())
-      for (int d = 0; d < DateConverter.getTotalHorizon(); d++)
+      for (int d = 0; d < horizonLength; d++)
         if (getDynamicGenderViolations(r, d) > 0)
           violations++;
     return violations;
@@ -93,10 +107,59 @@ public class Schedule {
     dynamicGenderCount.get(room).get(day).put(gender, getGenderCount(room, day, gender) - 1);
   }
 
+
+  public double getDepartmentLoadCost(int dep) {
+    return departmentLoads[dep];
+  }
+
+  public double getAverageDepartmentLoad(int dep) {
+    return averageDepartmentLoads[dep];
+  }
+
+  public void calculateAverageDepartmentLoad(int dep) {
+    double total = 0;
+    for (int i = 0; i < horizonLength; i++)
+      total += loadMatrix[dep][i];
+    averageDepartmentLoads[dep] = total / horizonLength;
+  }
+
+  public void calculateDepartmentLoadCost(int dep) {
+    double cost = 0;
+    for (int i = 0; i < horizonLength; i++)
+      cost += Math.pow(averageDepartmentLoads[dep] - loadMatrix[dep][i], 2);
+    departmentLoads[dep] = cost;
+  }
+
+  public void incrementAverageDepartmentLoad(int dep, double delta) {
+    averageDepartmentLoads[dep] += delta;
+  }
+
+
+  public double getDailyLoadCost(int day) {
+    return dailyLoads[day];
+  }
+
+  public double getAverageDailyLoad(int day) {
+    return averageDailyLoads[day];
+  }
+
+  public void calculateDailyLoadCost(int day) {
+    double cost = 0;
+    for (int i = 0; i < departmentCount; i++)
+      cost += Math.pow(averageDailyLoads[day] - loadMatrix[i][day], 2);
+    dailyLoads[day] = cost;
+  }
+
+
+  public void incrementAverageDailyLoad(int day, int delta) {
+    averageDailyLoads[day] += delta;
+  }
+
+
   public List<Integer> getSwapRoomPatients(Patient patient, boolean overlapping) {
     // This is weird code
     int start = (overlapping) ? patient.getAdmission() : 0;
-    int end = (overlapping) ? patient.getDischarge() : DateConverter.getTotalHorizon();
+    int end = (overlapping) ? patient.getDischarge() : horizonLength;
 
     Set<Integer> candidates = new HashSet<>();
     Set<Integer> rooms = patient.getFeasibleRooms();
@@ -135,7 +198,8 @@ public class Schedule {
     schedule[room][day].add(pat.getId());
     if (dynamicGenderCount.containsKey(room)) incrementGenderCount(room, day, pat.getGender());
     int depId = departmentList.getDepartment(departmentList.getRoom(room).getDepartment()).getId();
-    loadMatrix[depId][day] += pat.getNeededCare(day);
+    double delta = (double) pat.getNeededCare(day) / departmentList.getDepartment(depId).getSize();
+    loadMatrix[depId][day] += delta;
   }
 
   public void cancelPatient(Patient pat, int day) {
@@ -144,6 +208,7 @@ public class Schedule {
     schedule[room][day].remove(pat.getId());
     if (dynamicGenderCount.containsKey(room)) decrementGenderCount(room, day, pat.getGender());
     int depId = departmentList.getDepartment(departmentList.getRoom(room).getDepartment()).getId();
-    loadMatrix[depId][day] -= pat.getNeededCare(day);
+    double delta = (double) pat.getNeededCare(day) / departmentList.getDepartment(depId).getSize();
+    loadMatrix[depId][day] -= delta;
   }
 }

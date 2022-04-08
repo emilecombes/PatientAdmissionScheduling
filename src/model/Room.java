@@ -3,7 +3,7 @@ package model;
 import java.util.Set;
 
 public class Room {
-  private final int id, capacity;
+  private final int id, capacity, departmentId;
   private final String name, genderPolicy, department;
   private final Set<String> features;
 
@@ -14,6 +14,7 @@ public class Room {
     this.genderPolicy = gender;
     this.department = dep;
     this.features = features;
+    this.departmentId = DepartmentList.getDepartmentId(department);
   }
 
   public String getName() {
@@ -26,6 +27,10 @@ public class Room {
 
   public String getDepartment() {
     return department;
+  }
+
+  public int getDepartmentId() {
+    return departmentId;
   }
 
   public int getCapacity() {
