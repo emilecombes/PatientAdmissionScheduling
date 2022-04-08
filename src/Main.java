@@ -7,7 +7,7 @@ import util.*;
 public class Main {
   public static void main(String[] args) {
     int extend = 14;
-    String instance = "or_pas_dept2_short01";
+    String instance = "or_pas_dept6_long01";
 
     XMLParser xmlParser = new XMLParser(instance);
     xmlParser.buildDateConverter(extend);
@@ -28,5 +28,8 @@ public class Main {
     solver.solve();
     xmlParser.writeSolution(solver);
     System.out.println("\t\t\t\t\t\t" + solver.getCost());
+
+    System.out.println("Validator: ./or_pas_validator Instances/" + instance + ".xml ." +
+        "./out/solutions/" + instance + "_sol.xml");
   }
 }
