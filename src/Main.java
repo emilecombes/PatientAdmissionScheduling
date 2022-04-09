@@ -29,8 +29,8 @@ public class Main {
     solver.init();
     solver.solve("load_savings");
     xmlParser.writeSolution(solver);
-    System.out.println("\t\tPatient cost:" + solver.getPatientCost());
-    System.out.println("\t\t\tLoad cost: " + solver.getLoadCost());
+    System.out.println("Total cost:\t\t\t" + solver.getPatientCost());
+    System.out.println("Load cost:\t\t\t\t" + solver.getLoadCost());
 
     CSVParser csvParser = new CSVParser(instance, solver);
     csvParser.buildMoveInfoCSV();

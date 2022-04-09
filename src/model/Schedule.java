@@ -2,6 +2,7 @@ package model;
 
 import util.DateConverter;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Schedule {
@@ -176,6 +177,10 @@ public class Schedule {
     return departmentLoads[dep];
   }
 
+  public int getTotalDepartmentLoadCost() {
+    return (int) Arrays.stream(departmentLoads).sum();
+  }
+
   public void calculateDepartmentLoadCost(int dep) {
     double cost = 0;
     for (int i = 0; i < horizonLength; i++)
@@ -193,6 +198,10 @@ public class Schedule {
 
   public double getDailyLoadCost(int day) {
     return dailyLoads[day];
+  }
+
+  public int getTotalDailyLoadCost() {
+    return (int) Arrays.stream(dailyLoads).sum();
   }
 
   public void calculateDailyLoadCost(int day) {

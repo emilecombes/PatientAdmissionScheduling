@@ -100,8 +100,9 @@ public class Solver {
 
   public void printCosts() {
     System.out.println("\nTotal cost: \t\t\t" + patientCost + "\nCapacity violations: \t" +
-        schedule.getCapacityViolations() + "\nSoft cost: \t\t\t\t" +
-        (patientCost - (getPenalty("capacity_violation") * schedule.getCapacityViolations())));
+        schedule.getCapacityViolations() + "\nPatient cost: \t\t\t" +
+        (patientCost - (getPenalty("capacity_violation") * schedule.getCapacityViolations())) +
+        "\nLoad cost: \t\t\t\t" + loadCost);
   }
 
 
@@ -204,6 +205,7 @@ public class Solver {
       schedule.calculateDailyLoadCost(i);
     for (int i = 0; i < departmentList.getNumberOfDepartments(); i++)
       schedule.calculateDepartmentLoadCost(i);
+    loadCost = schedule.getTotalDailyLoadCost() + schedule.getTotalDepartmentLoadCost();
   }
 
 
@@ -395,9 +397,8 @@ public class Solver {
     patient.shiftAdmission(shift);
     for (int i = patient.getAdmission(); i < patient.getDischarge(); i++) {
       affectedDays.add(i);
-      int assignmentDay = (shift > 0) ? patient.getDischarge() - 1 - i : patient.getAdmission() + i;
-      patientSavings -= getDynamicAssignmentCost(patient, room, assignmentDay);
-      schedule.assignPatient(patient, room, assignmentDay);
+      patientSavings -= getDynamicAssignmentCost(patient, room, i);
+      schedule.assignPatient(patient, room, i);
     }
 
     double loadSavings = 0;
