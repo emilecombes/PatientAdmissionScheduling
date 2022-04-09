@@ -27,9 +27,10 @@ public class Main {
     solver.setPenalty("capacity_violation", 1000);
 
     solver.init();
-    solver.solve();
+    solver.solve("load_savings");
     xmlParser.writeSolution(solver);
-    System.out.println("\t\t\t\t\t\t" + solver.getPatientCost());
+    System.out.println("\t\tPatient cost:" + solver.getPatientCost());
+    System.out.println("\t\t\tLoad cost: " + solver.getLoadCost());
 
     CSVParser csvParser = new CSVParser(instance, solver);
     csvParser.buildMoveInfoCSV();

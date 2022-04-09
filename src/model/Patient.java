@@ -97,7 +97,7 @@ public class Patient {
   }
 
   public int getTotalNeededCare() {
-
+    return totalNeededCare;
   }
 
   public int getStayLength() {

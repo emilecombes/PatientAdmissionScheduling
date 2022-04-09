@@ -15,7 +15,10 @@ public class Department {
     this.auxSpecialisms = auxSpec;
 
     int s = 0;
-    for (int r : rooms.keySet()) s += rooms.get(r).getCapacity();
+    for (int r : rooms.keySet()) {
+      rooms.get(r).setDepartmentId(id);
+      s += rooms.get(r).getCapacity();
+    }
     size = s;
   }
 

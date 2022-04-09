@@ -50,120 +50,6 @@ public class Schedule {
     return schedule[room][day];
   }
 
-
-  public int getCapacityViolations() {
-    int violations = 0;
-    for (int room = 0; room < departmentList.getNumberOfRooms(); room++)
-      for (int day = 0; day < horizonLength; day++)
-        violations += getCapacityViolations(room, day);
-    return violations;
-  }
-
-  public int getCapacityViolations(int room, int day) {
-    return Math.max(0, schedule[room][day].size() - departmentList.getRoom(room).getCapacity());
-  }
-
-  public int getCapacityMargin(int room, int day) {
-    return Math.max(0, departmentList.getRoom(room).getCapacity() - schedule[room][day].size());
-  }
-
-  public int getGenderCount(int room, int day, String gender) {
-    return dynamicGenderCount.get(room).get(day).get(gender);
-  }
-
-  public int getOtherGenderCount(int room, int day, String gender) {
-    String otherGender = (gender.equals("Male")) ? "Female" : "Male";
-    return getGenderCount(room, day, otherGender);
-  }
-
-  public int getDynamicGenderViolations() {
-    int violations = 0;
-    for (int r : dynamicGenderCount.keySet())
-      for (int d = 0; d < horizonLength; d++)
-        if (getDynamicGenderViolations(r, d) > 0)
-          violations++;
-    return violations;
-  }
-
-  public int getDynamicGenderViolations(int room, int day) {
-    return Math.min(getGenderCount(room, day, "Male"), getGenderCount(room, day, "Female"));
-  }
-
-  public boolean hasSingleDynamicGenderViolation(int room, int day, String gender) {
-    if (!dynamicGenderCount.containsKey(room)) return false;
-    return getDynamicGenderViolations(room, day) == 1 && getGenderCount(room, day, gender) == 1;
-  }
-
-  public boolean isFirstDynamicGenderViolation(int room, int day, String gender) {
-    if (!dynamicGenderCount.containsKey(room)) return false;
-    return getDynamicGenderViolations(room, day) == 0 && getOtherGenderCount(room, day, gender) > 0;
-  }
-
-  public void incrementGenderCount(int room, int day, String gender) {
-    dynamicGenderCount.get(room).get(day).put(gender, getGenderCount(room, day, gender) + 1);
-  }
-
-  public void decrementGenderCount(int room, int day, String gender) {
-    dynamicGenderCount.get(room).get(day).put(gender, getGenderCount(room, day, gender) - 1);
-  }
-
-
-  public double getDepartmentLoadCost(int dep) {
-    return departmentLoads[dep];
-  }
-
-  public double getAverageDepartmentLoad(int dep) {
-    return averageDepartmentLoads[dep];
-  }
-
-  public void calculateAverageDepartmentLoad(int dep) {
-    double total = 0;
-    for (int i = 0; i < horizonLength; i++)
-      total += loadMatrix[dep][i];
-    averageDepartmentLoads[dep] = total / horizonLength;
-  }
-
-  public void calculateDepartmentLoadCost(int dep) {
-    double cost = 0;
-    for (int i = 0; i < horizonLength; i++)
-      cost += Math.pow(averageDepartmentLoads[dep] - loadMatrix[dep][i], 2);
-    departmentLoads[dep] = cost;
-  }
-
-  public void incrementAverageDepartmentLoad(int dep, double delta) {
-    averageDepartmentLoads[dep] += delta;
-  }
-
-  public void decrementAverageDepartmentLoad(int dep, double delta) {
-    averageDepartmentLoads[dep] -= delta;
-  }
-
-
-  public double getDailyLoadCost(int day) {
-    return dailyLoads[day];
-  }
-
-  public double getAverageDailyLoad(int day) {
-    return averageDailyLoads[day];
-  }
-
-  public void calculateDailyLoadCost(int day) {
-    double cost = 0;
-    for (int i = 0; i < departmentCount; i++)
-      cost += Math.pow(averageDailyLoads[day] - loadMatrix[i][day], 2);
-    dailyLoads[day] = cost;
-  }
-
-
-  public void incrementAverageDailyLoad(int day, double delta) {
-    averageDailyLoads[day] += delta;
-  }
-
-  public void decrementAverageDailyLoad(int day, double delta) {
-    averageDailyLoads[day] -= delta;
-  }
-
-
   public List<Integer> getSwapRoomPatients(Patient patient, boolean overlapping) {
     // This is weird code
     int start = (overlapping) ? patient.getAdmission() : 0;
@@ -225,4 +111,103 @@ public class Schedule {
     decrementAverageDailyLoad(day, delta / horizonLength);
     decrementAverageDepartmentLoad(dep, delta / departmentCount);
   }
+
+
+  // Patient cost related functions
+  public int getCapacityViolations() {
+    int violations = 0;
+    for (int room = 0; room < departmentList.getNumberOfRooms(); room++)
+      for (int day = 0; day < horizonLength; day++)
+        violations += getCapacityViolations(room, day);
+    return violations;
+  }
+
+  public int getCapacityViolations(int room, int day) {
+    return Math.max(0, schedule[room][day].size() - departmentList.getRoom(room).getCapacity());
+  }
+
+  public int getCapacityMargin(int room, int day) {
+    return Math.max(0, departmentList.getRoom(room).getCapacity() - schedule[room][day].size());
+  }
+
+  public int getGenderCount(int room, int day, String gender) {
+    return dynamicGenderCount.get(room).get(day).get(gender);
+  }
+
+  public int getOtherGenderCount(int room, int day, String gender) {
+    String otherGender = (gender.equals("Male")) ? "Female" : "Male";
+    return getGenderCount(room, day, otherGender);
+  }
+
+  public int getDynamicGenderViolations() {
+    int violations = 0;
+    for (int r : dynamicGenderCount.keySet())
+      for (int d = 0; d < horizonLength; d++)
+        if (getDynamicGenderViolations(r, d) > 0)
+          violations++;
+    return violations;
+  }
+
+  public int getDynamicGenderViolations(int room, int day) {
+    return Math.min(getGenderCount(room, day, "Male"), getGenderCount(room, day, "Female"));
+  }
+
+  public boolean hasSingleDynamicGenderViolation(int room, int day, String gender) {
+    if (!dynamicGenderCount.containsKey(room)) return false;
+    return getDynamicGenderViolations(room, day) == 1 && getGenderCount(room, day, gender) == 1;
+  }
+
+  public boolean isFirstDynamicGenderViolation(int room, int day, String gender) {
+    if (!dynamicGenderCount.containsKey(room)) return false;
+    return getDynamicGenderViolations(room, day) == 0 && getOtherGenderCount(room, day, gender) > 0;
+  }
+
+  public void incrementGenderCount(int room, int day, String gender) {
+    dynamicGenderCount.get(room).get(day).put(gender, getGenderCount(room, day, gender) + 1);
+  }
+
+  public void decrementGenderCount(int room, int day, String gender) {
+    dynamicGenderCount.get(room).get(day).put(gender, getGenderCount(room, day, gender) - 1);
+  }
+
+
+  // Load cost related functions
+  public double getDepartmentLoadCost(int dep) {
+    return departmentLoads[dep];
+  }
+
+  public void calculateDepartmentLoadCost(int dep) {
+    double cost = 0;
+    for (int i = 0; i < horizonLength; i++)
+      cost += Math.pow(averageDepartmentLoads[dep] - loadMatrix[dep][i], 2);
+    departmentLoads[dep] = cost;
+  }
+
+  public void incrementAverageDepartmentLoad(int dep, double delta) {
+    averageDepartmentLoads[dep] += delta;
+  }
+
+  public void decrementAverageDepartmentLoad(int dep, double delta) {
+    averageDepartmentLoads[dep] -= delta;
+  }
+
+  public double getDailyLoadCost(int day) {
+    return dailyLoads[day];
+  }
+
+  public void calculateDailyLoadCost(int day) {
+    double cost = 0;
+    for (int i = 0; i < departmentCount; i++)
+      cost += Math.pow(averageDailyLoads[day] - loadMatrix[i][day], 2);
+    dailyLoads[day] = cost;
+  }
+
+  public void incrementAverageDailyLoad(int day, double delta) {
+    averageDailyLoads[day] += delta;
+  }
+
+  public void decrementAverageDailyLoad(int day, double delta) {
+    averageDailyLoads[day] -= delta;
+  }
+
 }
