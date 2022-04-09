@@ -112,6 +112,10 @@ public class Patient {
     return discharge;
   }
 
+  public Set<Integer> getAdmittedDays() {
+    return assignedRooms.keySet();
+  }
+
   public int getDelay() {
     return delay;
   }
