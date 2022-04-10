@@ -257,6 +257,7 @@ public class Schedule {
   }
 
   public void calculateDepartmentLoadCost(int dep) {
+    if (dep == -1) return;
     double cost = 0;
     for (int i = 0; i < horizonLength; i++)
       cost += Math.pow(averageDepartmentLoads[dep] - loadMatrix[dep][i], 2);

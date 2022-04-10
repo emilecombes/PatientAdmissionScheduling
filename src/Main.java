@@ -9,7 +9,7 @@ import java.io.IOException;
 public class Main {
   public static void main(String[] args) throws IOException {
     int extend = 14;
-    String instance = "or_pas_dept2_short00";
+    String instance = "or_pas_dept4_short01";
 
     XMLParser xmlParser = new XMLParser(instance);
     xmlParser.buildDateConverter(extend);
