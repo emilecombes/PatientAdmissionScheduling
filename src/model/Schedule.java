@@ -51,41 +51,58 @@ public class Schedule {
     return schedule[room][day];
   }
 
-  public List<Integer> getSwapRoomPatients(Patient patient, boolean overlapping) {
-    // This is weird code
-    int start = (overlapping) ? patient.getAdmission() : 0;
-    int end = (overlapping) ? patient.getDischarge() : horizonLength;
-
-    Set<Integer> candidates = new HashSet<>();
-    Set<Integer> rooms = patient.getFeasibleRooms();
-    rooms.remove(patient.getLastRoom());
-    for (int room : rooms)
-      for (int i = start; i < end; i++)
-        candidates.addAll(getPatients(room, i));
-
-    Set<Integer> feasiblePatients = new HashSet<>();
+  public Set<Integer> getSwappablePatients(int searchRoom, int swapRoom, int day) {
+    Set<Integer> candidates = new HashSet<>(getPatients(searchRoom, day));
+    Set<Integer> badCandidates = new HashSet<>();
     for (int pat : candidates)
-      if (patientList.getPatient(pat).hasFeasibleRoom(patient.getLastRoom()))
-        if (overlapping) feasiblePatients.add(pat);
-        else if (patientList.getPatient(pat).isAdmissibleOn(patient.getAdmission()) &&
-            patient.isAdmissibleOn(patientList.getPatient(pat).getAdmission()))
-          feasiblePatients.add(pat);
-
-    return new ArrayList<>(feasiblePatients);
+      if (!patientList.getPatient(pat).hasFeasibleRoom(swapRoom))
+        badCandidates.add(pat);
+    candidates.removeAll(badCandidates);
+    return candidates;
   }
 
+
   public Patient getSwapRoomPatient(Patient firstPatient) {
-    List<Integer> feasiblePatients = getSwapRoomPatients(firstPatient, true);
-    if (feasiblePatients.isEmpty()) return null;
-    int patient = feasiblePatients.get((int) (Math.random() * feasiblePatients.size()));
-    return patientList.getPatient(patient);
+    int swapRoom = firstPatient.getLastRoom();
+    Set<Integer> rooms = firstPatient.getFeasibleRooms();
+    rooms.remove(swapRoom);
+
+    Set<Integer> candidates = new HashSet<>();
+    for (int day = firstPatient.getAdmission(); day < firstPatient.getDischarge(); day++)
+      for (int searchRoom : rooms)
+        candidates.addAll(getSwappablePatients(searchRoom, swapRoom, day));
+
+    if (candidates.isEmpty()) return null;
+    List<Integer> swapPatients = new ArrayList<>(candidates);
+    Collections.shuffle(swapPatients);
+    return patientList.getPatient(swapPatients.get(0));
   }
 
   public Patient getSwapAdmissionPatient(Patient firstPatient) {
-    List<Integer> feasiblePatients = getSwapRoomPatients(firstPatient, false);
-    if (feasiblePatients.isEmpty()) return null;
-    int patient = feasiblePatients.get((int) (Math.random() * feasiblePatients.size()));
-    return patientList.getPatient(patient);
+    int firstAdmission = firstPatient.getAdmission();
+    int swapRoom = firstPatient.getLastRoom();
+    Set<Integer> rooms = firstPatient.getFeasibleRooms();
+    rooms.remove(swapRoom);
+
+    Set<Integer> candidates = new HashSet<>();
+    for (int day = 0; day < horizonLength; day++)
+      for (int searchRoom : rooms)
+        candidates.addAll(getSwappablePatients(searchRoom, swapRoom, day));
+
+    Set<Integer> badCandidates = new HashSet<>();
+    for (int candidate : candidates) {
+      Patient secondPatient = patientList.getPatient(candidate);
+      int secondAdmission = secondPatient.getAdmission();
+      if (!firstPatient.isAdmissibleOn(secondAdmission) ||
+          !secondPatient.isAdmissibleOn(firstAdmission))
+        badCandidates.add(candidate);
+    }
+    candidates.removeAll(badCandidates);
+
+    if (candidates.isEmpty()) return null;
+    List<Integer> swapPatients = new ArrayList<>(candidates);
+    Collections.shuffle(swapPatients);
+    return patientList.getPatient(swapPatients.get(0));
   }
 
   public void assignPatient(Patient pat, int room, int day) {

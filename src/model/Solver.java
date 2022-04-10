@@ -286,7 +286,7 @@ public class Solver {
     Map<String, Integer> move = new HashMap<>();
     Patient firstPatient = patientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapRoomPatient(firstPatient);
-    if (secondPatient == null) return generateSwapRoom();
+    if (secondPatient == null) return generateMove();
     move.put("type", 1);
     move.put("first_patient", firstPatient.getId());
     move.put("second_patient", secondPatient.getId());
@@ -310,7 +310,7 @@ public class Solver {
     Map<String, Integer> move = new HashMap<>();
     Patient firstPatient = patientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapAdmissionPatient(firstPatient);
-    if (secondPatient == null) return generateSwapAdmission();
+    if (secondPatient == null) return generateMove();
     move.put("type", 3);
     move.put("first_patient", firstPatient.getId());
     move.put("second_patient", secondPatient.getId());
