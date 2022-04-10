@@ -60,8 +60,8 @@ public class Schedule {
     for (int i = 0; i < departmentCount; i++)
       for (int j = 0; j < horizonLength; j++) {
         tempMatrix[i][j] /= departmentList.getDepartment(i).getSize();
-        int act = (int)(10000 * loadMatrix[i][j]);
-        int tmp = (int)(10000 * tempMatrix[i][j]);
+        int act = (int)(Math.round(10000 * loadMatrix[i][j]));
+        int tmp = (int)(Math.round(10000 * tempMatrix[i][j]));
         if(act != tmp)
           System.err.println("Value in loadmatrix is wrong (" + loadMatrix[i][j] + "≠" + tempMatrix[i][j] + ")");
       }
@@ -74,8 +74,8 @@ public class Schedule {
         avg += loadMatrix[i][j];
       }
       avg /= horizonLength;
-      int act = (int)(10000*avg);
-      int tmp = (int)(10000*averageDepartmentLoads[i]);
+      int act = (int)Math.round((10000*avg));
+      int tmp = (int)Math.round((10000*averageDepartmentLoads[i]));
       if(act != tmp){
         System.err.println("Wrong avg dep load (" + averageDepartmentLoads[i] + "≠" + avg + ")");
       }
@@ -86,8 +86,8 @@ public class Schedule {
         avg += loadMatrix[i][j];
       }
       avg /= departmentCount;
-      int act = (int)(10000*avg);
-      int tmp = (int)(10000*averageDailyLoads[j]);
+      int act = (int)Math.round((10000*avg));
+      int tmp = (int)Math.round((10000*averageDailyLoads[j]));
       if(act != tmp){
         System.err.println("Wrong avg daily load (" + averageDailyLoads[j] + "≠" + avg + ")");
       }
