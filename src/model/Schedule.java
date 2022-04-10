@@ -47,7 +47,8 @@ public class Schedule {
     }
   }
 
-  public void checkLoadMatrix() {
+  public boolean checkLoadMatrix(int solverCost) {
+    boolean error = false;
     // Build matrix from patients
     double[][] tempMatrix = new double[departmentCount][horizonLength];
     for (int pat = 0; pat < patientList.getNumberOfPatients(); pat++) {
@@ -60,38 +61,51 @@ public class Schedule {
     for (int i = 0; i < departmentCount; i++)
       for (int j = 0; j < horizonLength; j++) {
         tempMatrix[i][j] /= departmentList.getDepartment(i).getSize();
-        int act = (int)(Math.round(10000 * loadMatrix[i][j]));
-        int tmp = (int)(Math.round(10000 * tempMatrix[i][j]));
-        if(act != tmp)
-          System.err.println("Value in loadmatrix is wrong (" + loadMatrix[i][j] + "≠" + tempMatrix[i][j] + ")");
+        int act = (int) (Math.round(10000 * loadMatrix[i][j]));
+        int tmp = (int) (Math.round(10000 * tempMatrix[i][j]));
+        if (Math.abs(act - tmp) > 1) {
+          error = true;
+          System.err.println(
+              "Value in loadmatrix is wrong (" + loadMatrix[i][j] + "≠" + tempMatrix[i][j] + ")");
+        }
       }
 
-
     // Calculate averages
-    for(int i = 0; i < departmentCount; i++){
+    for (int i = 0; i < departmentCount; i++) {
       double avg = 0;
-      for(int j = 0; j< horizonLength; j++){
+      for (int j = 0; j < horizonLength; j++) {
         avg += loadMatrix[i][j];
       }
       avg /= horizonLength;
-      int act = (int)Math.round((10000*avg));
-      int tmp = (int)Math.round((10000*averageDepartmentLoads[i]));
-      if(act != tmp){
+      int act = (int) Math.round((10000 * avg));
+      int tmp = (int) Math.round((10000 * averageDepartmentLoads[i]));
+      if (Math.abs(act - tmp) > 1) {
+        error = true;
         System.err.println("Wrong avg dep load (" + averageDepartmentLoads[i] + "≠" + avg + ")");
       }
     }
-    for(int j = 0; j < horizonLength; j++){
+    for (int j = 0; j < horizonLength; j++) {
       double avg = 0;
-      for (int i = 0; i < departmentCount; i++){
+      for (int i = 0; i < departmentCount; i++) {
         avg += loadMatrix[i][j];
       }
       avg /= departmentCount;
-      int act = (int)Math.round((10000*avg));
-      int tmp = (int)Math.round((10000*averageDailyLoads[j]));
-      if(act != tmp){
+      int act = (int) Math.round((10000 * avg));
+      int tmp = (int) Math.round((10000 * averageDailyLoads[j]));
+      if (Math.abs(act-tmp) > 1) {
+        error = true;
         System.err.println("Wrong avg daily load (" + averageDailyLoads[j] + "≠" + avg + ")");
       }
     }
+
+    // Compare costs
+    int correctCost =
+        (int) (Math.round(Arrays.stream(departmentLoads).sum() + Arrays.stream(dailyLoads).sum()));
+    if (Math.abs(correctCost-solverCost) > 2) {
+      error = true;
+      System.err.println("Costs don't match (" + correctCost + "≠" + solverCost + ")");
+    }
+    return error;
   }
 
 
