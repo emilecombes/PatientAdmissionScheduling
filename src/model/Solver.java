@@ -510,21 +510,12 @@ public class Solver {
 
   public void undoShiftAdmission() {
     Patient patient = patientList.getPatient(lastMove.get("first_patient"));
-    int shift = lastMove.get("first_shift");
-    int room = patient.getLastRoom();
-    int department = departmentList.getRoom(room).getDepartmentId();
-
     Set<Integer> affectedDays = new HashSet<>(patient.getAdmittedDays());
-    for (int i = patient.getAdmission(); i < patient.getDischarge(); i++)
-      schedule.cancelPatient(patient, i);
-    patient.shiftAdmission(-shift);
+    readmitPatient(patient, lastMove.get("first_room"), -lastMove.get("first_shift"));
     affectedDays.addAll(patient.getAdmittedDays());
-    for (int i = patient.getAdmission(); i < patient.getDischarge(); i++)
-      schedule.assignPatient(patient, room, i);
 
-    schedule.calculateDepartmentLoadCost(department);
-    for (int day : affectedDays)
-      schedule.calculateDailyLoadCost(day);
+    for (int day : affectedDays) schedule.calculateDailyLoadCost(day);
+    schedule.calculateDepartmentLoadCost(lastMove.get("first_department"));
   }
 
   public void undoSwapAdmission() {
@@ -540,8 +531,7 @@ public class Solver {
     readmitPatient(secondPatient, lastMove.get("second_room"), lastMove.get("first_shift"));
     affectedDays.addAll(firstPatient.getAdmittedDays());
     affectedDays.addAll(secondPatient.getAdmittedDays());
-    for (int dep : departments)
-      schedule.calculateDepartmentLoadCost(dep);
+    for (int dep : departments) schedule.calculateDepartmentLoadCost(dep);
     for (int day : affectedDays)
       schedule.calculateDailyLoadCost(day);
   }
