@@ -2,6 +2,7 @@ package model;
 
 import util.DateConverter;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Schedule {
@@ -45,6 +46,54 @@ public class Schedule {
       }
     }
   }
+
+  public void checkLoadMatrix() {
+    // Build matrix from patients
+    double[][] tempMatrix = new double[departmentCount][horizonLength];
+    for (int pat = 0; pat < patientList.getNumberOfPatients(); pat++) {
+      Patient patient = patientList.getPatient(pat);
+      for (int i = patient.getAdmission(); i < patient.getDischarge(); i++) {
+        int dep = departmentList.getRoom(patient.getRoom(i)).getDepartmentId();
+        tempMatrix[dep][i] += patient.getNeededCare(i);
+      }
+    }
+    for (int i = 0; i < departmentCount; i++)
+      for (int j = 0; j < horizonLength; j++) {
+        tempMatrix[i][j] /= departmentList.getDepartment(i).getSize();
+        int act = (int)(10000 * loadMatrix[i][j]);
+        int tmp = (int)(10000 * tempMatrix[i][j]);
+        if(act != tmp)
+          System.err.println("Value in loadmatrix is wrong (" + loadMatrix[i][j] + "≠" + tempMatrix[i][j] + ")");
+      }
+
+
+    // Calculate averages
+    for(int i = 0; i < departmentCount; i++){
+      double avg = 0;
+      for(int j = 0; j< horizonLength; j++){
+        avg += loadMatrix[i][j];
+      }
+      avg /= horizonLength;
+      int act = (int)(10000*avg);
+      int tmp = (int)(10000*averageDepartmentLoads[i]);
+      if(act != tmp){
+        System.err.println("Wrong avg dep load (" + averageDepartmentLoads[i] + "≠" + avg + ")");
+      }
+    }
+    for(int j = 0; j < horizonLength; j++){
+      double avg = 0;
+      for (int i = 0; i < departmentCount; i++){
+        avg += loadMatrix[i][j];
+      }
+      avg /= departmentCount;
+      int act = (int)(10000*avg);
+      int tmp = (int)(10000*averageDailyLoads[j]);
+      if(act != tmp){
+        System.err.println("Wrong avg daily load (" + averageDailyLoads[j] + "≠" + avg + ")");
+      }
+    }
+  }
+
 
   public Set<Integer> getPatients(int room, int day) {
     return schedule[room][day];
