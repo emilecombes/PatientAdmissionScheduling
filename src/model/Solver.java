@@ -53,7 +53,7 @@ public class Solver {
     costs.put("delay", totalDelay);
     costs.put("gender", gender);
     costs.put("total", transfer + roomCosts + totalDelay + gender);
-
+    costs.put("load", loadCost - patientCost);
     return costs;
   }
 
@@ -197,7 +197,9 @@ public class Solver {
       schedule.calculateDailyLoadCost(i);
     for (int i = 0; i < departmentList.getNumberOfDepartments(); i++)
       schedule.calculateDepartmentLoadCost(i);
-    loadCost = schedule.getTotalDailyLoadCost() + schedule.getTotalDepartmentLoadCost();
+    loadCost = schedule.getTotalDailyLoadCost()
+        + schedule.getTotalDepartmentLoadCost()
+        + patientCost;
   }
 
 
@@ -207,19 +209,18 @@ public class Solver {
       System.err.println("Invalid objective");
       return;
     }
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < 100000; i++) {
       executeNewMove();
-      int savings = lastMove.get(objective);
-      if (savings > 0) {
+      if (lastMove.get(objective) > 0) {
         lastMove.put("accepted", 1);
-        if (objective.equals("patient_savings")) patientCost -= savings;
-        else loadCost -= savings;
+        patientCost -= lastMove.get("patient_savings");
+        loadCost -= lastMove.get("load_savings");
       } else {
         lastMove.put("accepted", 0);
         undoLastMove();
       }
       generatedMoves.add(lastMove);
-      if (i % 100000 == 0) printCosts();
+      if (i % 10000 == 0) printCosts();
     }
   }
 
@@ -376,7 +377,8 @@ public class Solver {
     Patient patient = patientList.getPatient(lastMove.get("first_patient"));
     int patientSavings = getNewAssignmentSavings(patient, lastMove.get("second_room"), 0);
     double loadSavings =
-        getDepartmentLoadSavings() + getDailyLoadSavings(patient.getAdmittedDays());
+        getDepartmentLoadSavings() + getDailyLoadSavings(patient.getAdmittedDays()) +
+            patientSavings;
     lastMove.put("patient_savings", patientSavings);
     lastMove.put("load_savings", (int) (Math.round(loadSavings)));
   }
@@ -389,10 +391,9 @@ public class Solver {
     affectedDays.addAll(secondPatient.getAdmittedDays());
     int patientSavings = getNewAssignmentSavings(firstPatient, lastMove.get("second_room"), 0)
         + getNewAssignmentSavings(secondPatient, lastMove.get("first_room"), 0);
-    affectedDays.addAll(firstPatient.getAdmittedDays());
-    affectedDays.addAll(secondPatient.getAdmittedDays());
 
-    double loadSavings = getDepartmentLoadSavings() + getDailyLoadSavings(affectedDays);
+    double loadSavings =
+        getDepartmentLoadSavings() + getDailyLoadSavings(affectedDays) + patientSavings;
     lastMove.put("patient_savings", patientSavings);
     lastMove.put("load_savings", (int) (Math.round(loadSavings)));
   }
@@ -405,7 +406,8 @@ public class Solver {
         getNewAssignmentSavings(patient, lastMove.get("first_room"), lastMove.get("first_shift"));
     affectedDays.addAll(patient.getAdmittedDays());
 
-    double loadSavings = getDepartmentLoadSavings() + getDailyLoadSavings(affectedDays);
+    double loadSavings =
+        getDepartmentLoadSavings() + getDailyLoadSavings(affectedDays) + patientSavings;
     lastMove.put("patient_savings", patientSavings);
     lastMove.put("load_savings", (int) (Math.round(loadSavings)));
   }
@@ -423,7 +425,8 @@ public class Solver {
     affectedDays.addAll(firstPatient.getAdmittedDays());
     affectedDays.addAll(secondPatient.getAdmittedDays());
 
-    double loadSavings = getDailyLoadSavings(affectedDays) + getDepartmentLoadSavings();
+    double loadSavings =
+        getDailyLoadSavings(affectedDays) + getDepartmentLoadSavings() + patientSavings;
     lastMove.put("patient_savings", patientSavings);
     lastMove.put("load_savings", (int) (Math.round(loadSavings)));
   }
@@ -475,7 +478,7 @@ public class Solver {
   public void undoShiftAdmission() {
     Patient patient = patientList.getPatient(lastMove.get("first_patient"));
     Set<Integer> affectedDays = new HashSet<>(patient.getAdmittedDays());
-    readmitPatient(patient, lastMove.get("first_room"), -lastMove.get("first_shift"));
+    readmitPatient(patient, lastMove.get("first_room"), (-lastMove.get("first_shift")));
     affectedDays.addAll(patient.getAdmittedDays());
     recalculateLoadCosts(affectedDays);
   }

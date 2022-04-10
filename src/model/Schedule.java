@@ -199,6 +199,7 @@ public class Schedule {
   }
 
   public int getCapacityViolations(int room, int day) {
+    if(room == -1) return 0;
     return Math.max(0, schedule[room][day].size() - departmentList.getRoom(room).getCapacity());
   }
 
