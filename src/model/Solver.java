@@ -530,29 +530,19 @@ public class Solver {
   public void undoSwapAdmission() {
     Patient firstPatient = patientList.getPatient(lastMove.get("first_patient"));
     Patient secondPatient = patientList.getPatient(lastMove.get("second_patient"));
-    Set<Integer> affectedDepartments = new HashSet<>();
-    affectedDepartments.add(lastMove.get("first_department"));
-    affectedDepartments.add(lastMove.get("second_department"));
-
-    Set<Integer> affectedDays = new HashSet<>(firstPatient.getAdmittedDays());
-    for (int day = firstPatient.getAdmission(); day < firstPatient.getDischarge(); day++)
-      schedule.cancelPatient(firstPatient, day);
-    firstPatient.shiftAdmission(lastMove.get("second_shift"));
+    Set<Integer> departments = new HashSet<>();
+    departments.add(lastMove.get("first_department"));
+    departments.add(lastMove.get("second_department"));
+    Set<Integer> affectedDays = new HashSet<>();
     affectedDays.addAll(firstPatient.getAdmittedDays());
-    for (int day = firstPatient.getAdmission(); day < firstPatient.getDischarge(); day++)
-      schedule.assignPatient(firstPatient, lastMove.get("first_room"), day);
-
     affectedDays.addAll(secondPatient.getAdmittedDays());
-    for (int day = secondPatient.getAdmission(); day < secondPatient.getDischarge(); day++)
-      schedule.cancelPatient(secondPatient, day);
-    secondPatient.shiftAdmission(lastMove.get("first_shift"));
+    readmitPatient(firstPatient, lastMove.get("first_room"), lastMove.get("second_shift"));
+    readmitPatient(secondPatient, lastMove.get("second_room"), lastMove.get("first_shift"));
+    affectedDays.addAll(firstPatient.getAdmittedDays());
     affectedDays.addAll(secondPatient.getAdmittedDays());
-    for (int day = secondPatient.getAdmission(); day < secondPatient.getDischarge(); day++)
-      schedule.assignPatient(secondPatient, lastMove.get("second_room"), day);
-
+    for (int dep : departments)
+      schedule.calculateDepartmentLoadCost(dep);
     for (int day : affectedDays)
       schedule.calculateDailyLoadCost(day);
-    for (int dep : affectedDepartments)
-      schedule.calculateDepartmentLoadCost(dep);
   }
 }
