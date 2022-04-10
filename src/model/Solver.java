@@ -214,6 +214,7 @@ public class Solver {
         lastMove.put("accepted", 1);
         if (type.equals("patient_savings")) patientCost -= savings;
         else loadCost -= savings;
+        schedule.checkLoadMatrix();
       } else {
         lastMove.put("accepted", 0);
         undoLastMove();

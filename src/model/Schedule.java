@@ -2,7 +2,6 @@ package model;
 
 import util.DateConverter;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Schedule {
@@ -14,7 +13,7 @@ public class Schedule {
   private final Set<Integer>[][] schedule;
   private final Map<Integer, List<Map<String, Integer>>> dynamicGenderCount;
 
-  private final int[][] loadMatrix;
+  private final double[][] loadMatrix;
   private final double[] averageDailyLoads;
   private final double[] dailyLoads;
   private final double[] averageDepartmentLoads;
@@ -27,7 +26,7 @@ public class Schedule {
     departmentCount = departmentList.getNumberOfDepartments();
     schedule = new Set[departmentList.getNumberOfRooms()][horizonLength];
     dynamicGenderCount = new HashMap<>();
-    loadMatrix = new int[departmentCount][horizonLength];
+    loadMatrix = new double[departmentCount][horizonLength];
     averageDailyLoads = new double[horizonLength];
     dailyLoads = new double[horizonLength];
     averageDepartmentLoads = new double[departmentCount];
@@ -60,7 +59,6 @@ public class Schedule {
     candidates.removeAll(badCandidates);
     return candidates;
   }
-
 
   public Patient getSwapRoomPatient(Patient firstPatient) {
     int swapRoom = firstPatient.getLastRoom();
@@ -110,8 +108,8 @@ public class Schedule {
     int dep = departmentList.getDepartment(departmentList.getRoom(room).getDepartment()).getId();
     double delta = (double) pat.getNeededCare(day) / departmentList.getDepartment(dep).getSize();
     loadMatrix[dep][day] += delta;
-    incrementAverageDailyLoad(day, delta / horizonLength);
-    incrementAverageDepartmentLoad(dep, delta / departmentCount);
+    incrementAverageDailyLoad(day, delta / departmentCount);
+    incrementAverageDepartmentLoad(dep, delta / horizonLength);
   }
 
   public void cancelPatient(Patient pat, int day) {
@@ -123,8 +121,8 @@ public class Schedule {
     int dep = departmentList.getDepartment(departmentList.getRoom(room).getDepartment()).getId();
     double delta = (double) pat.getNeededCare(day) / departmentList.getDepartment(dep).getSize();
     loadMatrix[dep][day] -= delta;
-    decrementAverageDailyLoad(day, delta / horizonLength);
-    decrementAverageDepartmentLoad(dep, delta / departmentCount);
+    decrementAverageDailyLoad(day, delta / departmentCount);
+    decrementAverageDepartmentLoad(dep, delta / horizonLength);
   }
 
 
