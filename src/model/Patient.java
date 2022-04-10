@@ -112,6 +112,14 @@ public class Patient {
     return discharge;
   }
 
+  public int getOriginalAD() {
+    return originalAD;
+  }
+
+  public int getMaxAdm() {
+    return maxAdm;
+  }
+
   public Set<Integer> getAdmittedDays() {
     return assignedRooms.keySet();
   }

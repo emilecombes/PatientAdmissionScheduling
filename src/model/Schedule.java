@@ -85,16 +85,13 @@ public class Schedule {
     rooms.remove(swapRoom);
 
     Set<Integer> candidates = new HashSet<>();
-    for (int day = 0; day < horizonLength; day++)
+    for (int day = firstPatient.getOriginalAD(); day <= firstPatient.getMaxAdm(); day++)
       for (int searchRoom : rooms)
         candidates.addAll(getSwappablePatients(searchRoom, swapRoom, day));
 
     Set<Integer> badCandidates = new HashSet<>();
     for (int candidate : candidates) {
-      Patient secondPatient = patientList.getPatient(candidate);
-      int secondAdmission = secondPatient.getAdmission();
-      if (!firstPatient.isAdmissibleOn(secondAdmission) ||
-          !secondPatient.isAdmissibleOn(firstAdmission))
+      if (!patientList.getPatient(candidate).isAdmissibleOn(firstAdmission))
         badCandidates.add(candidate);
     }
     candidates.removeAll(badCandidates);
