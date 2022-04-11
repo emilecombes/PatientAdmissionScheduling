@@ -49,6 +49,7 @@ public class Solver {
     roomCosts -= transfer;
     int gender = schedule.getDynamicGenderViolations() * getPenalty("gender");
     int capacity = schedule.getCapacityViolations() * getPenalty("capacity_violation");
+    int load = schedule.getTotalDailyLoadCost() + schedule.getTotalDepartmentLoadCost() + capacity;
     costs.put("capacity_violations", capacity);
     costs.put("transfer", transfer);
     costs.put("patient_room", roomCosts);
@@ -56,8 +57,8 @@ public class Solver {
     costs.put("gender", gender);
     costs.put("total_patient", patientCost);
     costs.put("patient", patientCost - capacity);
-    costs.put("total_load", loadCost);
-    costs.put("load", loadCost - capacity);
+    costs.put("total_load", load);
+    costs.put("load", load - capacity);
     return costs;
   }
 
@@ -219,27 +220,42 @@ public class Solver {
 
   // Start Search Procedure
   public void solve(String objective) {
-    if (!objective.equals("patient_savings") && !objective.equals("load_savings")) {
-      System.err.println("Invalid objective");
-      return;
-    }
-    for (int i = 0; i < 100000; i++) {
-      executeNewMove();
-      if (lastMove.get(objective) > 0) {
-        lastMove.put("accepted", 1);
-        patientCost -= lastMove.get("patient_savings");
-        loadCost -= lastMove.get("load_savings");
-      } else {
-        lastMove.put("accepted", 0);
-        undoLastMove();
+    double temp = 155;
+    double stopTemp = 1.55;
+    double alpha = 0.999;
+    int iterations = 1000;
+    int i;
+    int n = 0;
+
+    while (temp > stopTemp) {
+      i = 0;
+      while (i < iterations) {
+        executeNewMove();
+        if (lastMove.get(objective) > 0)
+          acceptMove();
+        else if (Math.random() < Math.exp(lastMove.get(objective) / temp))
+          acceptMove();
+        else
+          undoLastMove();
+        generatedMoves.add(lastMove);
+        i++;
       }
-      generatedMoves.add(lastMove);
-      if (i % 10000 == 0) printCosts();
+      if (n % 1000 == 0) {
+        System.out.println(n++ + ", TEMP: " + temp);
+        printCosts();
+      }
+      temp *= alpha;
     }
-    validateLastMove("end");
+  }
+
+  public void acceptMove() {
+    lastMove.put("accepted", 1);
+    patientCost -= lastMove.get("patient_savings");
+    loadCost -= lastMove.get("load_savings");
   }
 
   public void validateLastMove(String caller) {
+    validateLoadCost();
     validatePatients();
     validateSchedule();
     Map<String, Integer> move = lastMove;
@@ -262,6 +278,19 @@ public class Solver {
         System.out.println();
       }
     }
+  }
+
+  public void validateLoadCost() {
+    int realLoadCost = schedule.getTotalDailyLoadCost()
+        + schedule.getTotalDepartmentLoadCost()
+        + schedule.getCapacityViolations() * getPenalty("capacity_violation");
+    if (Math.abs(realLoadCost - loadCost) > 100)
+      System.out.println("Load costs out of sync after type "
+          + lastMove.get("type") + " move with "
+          + lastMove.get("load_savings") + " savings."
+          + "\nReal load cost: " + realLoadCost
+          + ", Local load cost: " + loadCost);
+
   }
 
   public void validatePatients() {
@@ -489,7 +518,7 @@ public class Solver {
     int patientSavings = assignmentSavings[0] + assignmentSavings[1];
     double loadSavings = getDepartmentLoadSavings()
         + getDailyLoadSavings(affectedDays)
-        + patientSavings;
+        + assignmentSavings[1];
 
     addSavingsToMove(assignmentSavings[1], patientSavings, loadSavings);
   }
@@ -517,13 +546,14 @@ public class Solver {
     int patientSavings = assignmentSavings[0] + assignmentSavings[1];
     double loadSavings = getDailyLoadSavings(affectedDays)
         + getDepartmentLoadSavings()
-        + patientSavings;
+        + assignmentSavings[1];
 
     addSavingsToMove(assignmentSavings[1], patientSavings, loadSavings);
   }
 
   // Undo Move
   public void undoLastMove() {
+    lastMove.put("accepted", 0);
     switch (lastMove.get("type")) {
       case 0 -> undoChangeRoom();
       case 1 -> undoSwapRoom();
