@@ -96,10 +96,6 @@ public class Patient {
     return neededCare.get(day - admission);
   }
 
-  public int getTotalNeededCare() {
-    return totalNeededCare;
-  }
-
   public int getStayLength() {
     return stayLength;
   }

@@ -33,27 +33,31 @@ public class Solver {
     return patientList;
   }
 
-  public HashMap<String, Integer> getCostInfo() {
-    HashMap<String, Integer> costs = new HashMap<>();
+  public Map<String, Integer> getCostInfo() {
+    Map<String, Integer> costs = new LinkedHashMap<>();
     int roomCosts = 0;
     int transfer = 0;
     int totalDelay = 0;
     for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
       Patient patient = patientList.getPatient(i);
       if (patient.isInitial())
-        if (patient.getInitialRoom() != patient.getLastRoom()) transfer += getPenalty("transfer");
+        if (patient.getInitialRoom() != patient.getLastRoom())
+          transfer += getPenalty("transfer");
       roomCosts += patient.getTotalRoomCost();
       totalDelay += patient.getDelay() * getPenalty("delay");
     }
     roomCosts -= transfer;
     int gender = schedule.getDynamicGenderViolations() * getPenalty("gender");
-    costs.put("capacity_violations", schedule.getCapacityViolations());
+    int capacity = schedule.getCapacityViolations() * getPenalty("capacity_violation");
+    costs.put("capacity_violations", capacity);
     costs.put("transfer", transfer);
     costs.put("patient_room", roomCosts);
     costs.put("delay", totalDelay);
     costs.put("gender", gender);
-    costs.put("total", transfer + roomCosts + totalDelay + gender);
-    costs.put("load", loadCost - patientCost);
+    costs.put("total_patient", patientCost);
+    costs.put("patient", patientCost - capacity);
+    costs.put("total_load", loadCost);
+    costs.put("load", loadCost - capacity);
     return costs;
   }
 
@@ -221,7 +225,6 @@ public class Solver {
     }
     for (int i = 0; i < 100000; i++) {
       executeNewMove();
-      validateLastMove("After execution");
       if (lastMove.get(objective) > 0) {
         lastMove.put("accepted", 1);
         patientCost -= lastMove.get("patient_savings");
@@ -229,14 +232,16 @@ public class Solver {
       } else {
         lastMove.put("accepted", 0);
         undoLastMove();
-        validateLastMove("After undo");
       }
       generatedMoves.add(lastMove);
       if (i % 10000 == 0) printCosts();
     }
+    validateLastMove("end");
   }
 
   public void validateLastMove(String caller) {
+    validatePatients();
+    validateSchedule();
     Map<String, Integer> move = lastMove;
     int type = lastMove.get("type");
     Set<Patient> patients = new HashSet<>();
@@ -250,13 +255,36 @@ public class Solver {
           types[m.get("type")] = true;
         }
         for (int i = 0; i < 4; i++) {
-          if(types[i])System.out.println("Type " + i + " executed");
+          if (types[i]) System.out.println("Type " + i + " executed");
         }
         System.out.println("Wrong admission date (type " + type + " move)");
         System.out.println("Called " + caller);
         System.out.println();
       }
     }
+  }
+
+  public void validatePatients() {
+    for (int pat = 0; pat < patientList.getNumberOfPatients(); pat++) {
+      Patient patient = patientList.getPatient(pat);
+      if (patient.getAdmittedDays().size() != patient.getStayLength())
+        System.out.println("Size of admitted days is wrong");
+      for (int day = patient.getAdmission(); day < patient.getDischarge(); day++)
+        if (!schedule.getPatients(patient.getRoom(day), day).contains(pat))
+          System.out.println("Schedule doesn't contain patient");
+      if(patient.getDischarge() - patient.getAdmission() != patient.getStayLength())
+        System.out.println("Distance between AD & DD is wrong");
+      if(patient.getAdmission() < patient.getOriginalAD() || patient.getAdmission() > patient.getMaxAdm())
+        System.out.println("Wrong admission date");
+    }
+  }
+
+  public void validateSchedule() {
+    for(int day = 0; day < DateConverter.getTotalHorizon(); day++)
+      for(int r = 0; r < departmentList.getNumberOfRooms(); r++)
+        for(int p : schedule.getPatients(r, day))
+          if(patientList.getPatient(p).getRoom(day) != r)
+            System.out.println("Wrong assignment in schedule");
   }
 
 
@@ -340,9 +368,7 @@ public class Solver {
 
   // Move Execution
   public void executeNewMove() {
-    if (lastMove != null) validateLastMove("Called before execution");
     lastMove = generateMove();
-    validateLastMove("Called after generation");
     switch (lastMove.get("type")) {
       case 0 -> executeChangeRoom();
       case 1 -> executeSwapRoom();
@@ -488,14 +514,12 @@ public class Solver {
 
   // Undo Move
   public void undoLastMove() {
-    validateLastMove("Called before undo");
     switch (lastMove.get("type")) {
       case 0 -> undoChangeRoom();
       case 1 -> undoSwapRoom();
       case 2 -> undoShiftAdmission();
       case 3 -> undoSwapAdmission();
     }
-    validateLastMove("Called after undo");
   }
 
   public void readmitPatient(Patient patient, int room, int shift) {

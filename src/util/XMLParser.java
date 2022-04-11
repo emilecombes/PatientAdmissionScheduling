@@ -226,7 +226,7 @@ public class XMLParser {
     }
 
     // Write costs
-    HashMap<String, Integer> costs = solver.getCostInfo();
+    Map<String, Integer> costs = solver.getCostInfo();
     Element costsElement = doc.createElement("costs");
     root.appendChild(costsElement);
     for (String key : costs.keySet()) {
