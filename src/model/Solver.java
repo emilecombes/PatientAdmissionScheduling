@@ -91,22 +91,28 @@ public class Solver {
   }
 
   public void printCosts() {
-    System.out.println("\nTotal cost: \t\t\t" + patientCost + "\nCapacity violations: \t" +
-        schedule.getCapacityViolations() + "\nPatient cost: \t\t\t" +
-        (patientCost - (getPenalty("capacity_violation") * schedule.getCapacityViolations())) +
-        "\nLoad cost: \t\t\t\t" + loadCost);
+    int violationCost = schedule.getCapacityViolations() * getPenalty("capacity_violation");
+    System.out.println(
+        "\nCapacity Violations\t:" + violationCost
+        + "\nTotal Patient Cost\t:" + patientCost
+        + "\nPatient Cost\t\t:" + (patientCost - violationCost)
+        + "\nTotal Load Cost\t\t:" + loadCost
+        + "\nLoad Cost\t\t\t:" + (loadCost - violationCost)
+    );
   }
 
 
   // Initialize Schedule & Solver
   public void init() {
     patientCost = 0;
+    loadCost = 0;
     setFeasibleRooms();
     calculateRoomCosts();
     insertInitialPatients();
     assignRandomRooms();
-    addDynamicPatientCosts();
+    addDynamicGenderCost();
     calculateLoadCost();
+    addCapacityViolationCost();
   }
 
   public void setFeasibleRooms() {
@@ -187,9 +193,8 @@ public class Solver {
     }
   }
 
-  public void addDynamicPatientCosts() {
+  public void addDynamicGenderCost() {
     patientCost += schedule.getDynamicGenderViolations() * getPenalty("gender");
-    patientCost += schedule.getCapacityViolations() * getPenalty("capacity_violation");
   }
 
   public void calculateLoadCost() {
@@ -197,9 +202,14 @@ public class Solver {
       schedule.calculateDailyLoadCost(i);
     for (int i = 0; i < departmentList.getNumberOfDepartments(); i++)
       schedule.calculateDepartmentLoadCost(i);
-    loadCost = schedule.getTotalDailyLoadCost()
-        + schedule.getTotalDepartmentLoadCost()
-        + patientCost;
+
+    loadCost = schedule.getTotalDailyLoadCost() + schedule.getTotalDepartmentLoadCost();
+  }
+
+  public void addCapacityViolationCost() {
+    int cap = schedule.getCapacityViolations() * getPenalty("capacity_violation");
+    loadCost += cap;
+    patientCost += cap;
   }
 
 
@@ -314,51 +324,42 @@ public class Solver {
     }
   }
 
-  public int getNewAssignmentSavings(Patient patient, int room, int shift) {
-    if (patient.getLastRoom() == room && shift == 0) return 0;
+  public int[] getAssignmentSavings(Patient patient, int room, int shift) {
+    if (patient.getLastRoom() == room && shift == 0)
+      return new int[]{0, 0};
+    int capacityViolations = schedule.getCapacityViolations();
+    int patientSavings = patient.getCurrentRoomCost() - patient.getRoomCost(room);
 
-    int savings = patient.getCurrentRoomCost() - patient.getRoomCost(room);
     for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
-      savings += getDynamicCancellationSavings(patient, day);
+      if (schedule.hasSingleDynamicGenderViolation(patient.getLastRoom(), day, patient.getGender()))
+        patientSavings += getPenalty("gender");
       schedule.cancelPatient(patient, day);
     }
+
+    patientSavings -= shift * getPenalty("delay");
     patient.shiftAdmission(shift);
-    savings -= getPenalty("delay") * shift;
+
     for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
-      savings -= getDynamicAssignmentCost(patient, room, day);
+      if (schedule.isFirstDynamicGenderViolation(room, day, patient.getGender()))
+        patientSavings -= getPenalty("gender");
       schedule.assignPatient(patient, room, day);
     }
-    return savings;
-  }
 
-  public int getDynamicCancellationSavings(Patient patient, int day) {
-    int room = patient.getRoom(day);
-    int savings = 0;
-    if (schedule.getCapacityViolations(room, day) > 0) savings += getPenalty("capacity_violation");
-    if (schedule.hasSingleDynamicGenderViolation(room, day, patient.getGender()))
-      savings += getPenalty("gender");
-    return savings;
-  }
-
-  public int getDynamicAssignmentCost(Patient patient, int room, int day) {
-    int cost = 0;
-    if (schedule.getCapacityMargin(room, day) == 0) cost += getPenalty("capacity_violation");
-    if (schedule.isFirstDynamicGenderViolation(room, day, patient.getGender()))
-      cost += getPenalty("gender");
-    return cost;
+    int capacitySavings = (capacityViolations - schedule.getCapacityViolations())
+        * getPenalty("capacity_violation");
+    return new int[]{patientSavings, capacitySavings};
   }
 
   public double getDepartmentLoadSavings() {
-    int firstDepartment = lastMove.get("first_department");
-    int secondDepartment = lastMove.getOrDefault("second_department", -1);
+    Set<Integer> departments = new HashSet<>();
+    departments.add(lastMove.get("first_department"));
+    if (lastMove.get("type") != 2) departments.add(lastMove.get("second_department"));
+
     double savings = 0;
-    savings += schedule.getDepartmentLoadCost(firstDepartment);
-    schedule.calculateDepartmentLoadCost(firstDepartment);
-    savings -= schedule.getDepartmentLoadCost(firstDepartment);
-    if (secondDepartment != -1 && secondDepartment != firstDepartment) {
-      savings += schedule.getDepartmentLoadCost(secondDepartment);
-      schedule.calculateDepartmentLoadCost(secondDepartment);
-      savings -= schedule.getDepartmentLoadCost(secondDepartment);
+    for (int dep : departments) {
+      savings += schedule.getDepartmentLoadCost(dep);
+      schedule.calculateDepartmentLoadCost(dep);
+      savings -= schedule.getDepartmentLoadCost(dep);
     }
     return savings;
   }
@@ -375,10 +376,13 @@ public class Solver {
 
   public void executeChangeRoom() {
     Patient patient = patientList.getPatient(lastMove.get("first_patient"));
-    int patientSavings = getNewAssignmentSavings(patient, lastMove.get("second_room"), 0);
-    double loadSavings =
-        getDepartmentLoadSavings() + getDailyLoadSavings(patient.getAdmittedDays()) +
-            patientSavings;
+
+    int[] assignmentSavings = getAssignmentSavings(patient, lastMove.get("second_room"), 0);
+
+    int patientSavings = assignmentSavings[0] + assignmentSavings[1];
+    double loadSavings = getDepartmentLoadSavings()
+        + getDailyLoadSavings(patient.getAdmittedDays())
+        + assignmentSavings[1];
     lastMove.put("patient_savings", patientSavings);
     lastMove.put("load_savings", (int) (Math.round(loadSavings)));
   }
@@ -387,13 +391,24 @@ public class Solver {
     Patient firstPatient = patientList.getPatient(lastMove.get("first_patient"));
     Patient secondPatient = patientList.getPatient(lastMove.get("second_patient"));
     Set<Integer> affectedDays = new HashSet<>();
+
     affectedDays.addAll(firstPatient.getAdmittedDays());
     affectedDays.addAll(secondPatient.getAdmittedDays());
-    int patientSavings = getNewAssignmentSavings(firstPatient, lastMove.get("second_room"), 0)
-        + getNewAssignmentSavings(secondPatient, lastMove.get("first_room"), 0);
+    int[] firstAssignmentSavings = getAssignmentSavings(
+        firstPatient, lastMove.get("second_room"), 0
+    );
+    int[] secondAssignmentSavings = getAssignmentSavings(
+        secondPatient, lastMove.get("first_room"), 0
+    );
+    int[] assignmentSavings = new int[]{
+        firstAssignmentSavings[0] + secondAssignmentSavings[0],
+        firstAssignmentSavings[1] + secondAssignmentSavings[1]
+    };
 
-    double loadSavings =
-        getDepartmentLoadSavings() + getDailyLoadSavings(affectedDays) + patientSavings;
+    int patientSavings = assignmentSavings[0] + assignmentSavings[1];
+    double loadSavings = getDepartmentLoadSavings()
+        + getDailyLoadSavings(affectedDays)
+        + assignmentSavings[1];
     lastMove.put("patient_savings", patientSavings);
     lastMove.put("load_savings", (int) (Math.round(loadSavings)));
   }
@@ -401,13 +416,17 @@ public class Solver {
   public void executeShiftAdmission() {
     Patient patient = patientList.getPatient(lastMove.get("first_patient"));
     Set<Integer> affectedDays = new HashSet<>();
+
     affectedDays.addAll(patient.getAdmittedDays());
-    int patientSavings =
-        getNewAssignmentSavings(patient, lastMove.get("first_room"), lastMove.get("first_shift"));
+    int[] assignmentSavings = getAssignmentSavings(
+        patient, lastMove.get("first_room"), lastMove.get("first_shift")
+    );
     affectedDays.addAll(patient.getAdmittedDays());
 
-    double loadSavings =
-        getDepartmentLoadSavings() + getDailyLoadSavings(affectedDays) + patientSavings;
+    int patientSavings = assignmentSavings[0] + assignmentSavings[1];
+    double loadSavings = getDepartmentLoadSavings()
+        + getDailyLoadSavings(affectedDays)
+        + patientSavings;
     lastMove.put("patient_savings", patientSavings);
     lastMove.put("load_savings", (int) (Math.round(loadSavings)));
   }
@@ -416,17 +435,26 @@ public class Solver {
     Patient firstPatient = patientList.getPatient(lastMove.get("first_patient"));
     Patient secondPatient = patientList.getPatient(lastMove.get("second_patient"));
     Set<Integer> affectedDays = new HashSet<>();
+
     affectedDays.addAll(firstPatient.getAdmittedDays());
     affectedDays.addAll(secondPatient.getAdmittedDays());
-    int patientSavings = getNewAssignmentSavings(
+    int[] firstAssignmentSavings = getAssignmentSavings(
         firstPatient, lastMove.get("second_room"), lastMove.get("first_shift")
-    ) + getNewAssignmentSavings(
-        secondPatient, lastMove.get("first_room"), lastMove.get("second_shift"));
+    );
+    int[] secondAssignmentSavings = getAssignmentSavings(
+        secondPatient, lastMove.get("first_room"), lastMove.get("second_shift")
+    );
+    int[] assignmentSavings = new int[]{
+        firstAssignmentSavings[0] + secondAssignmentSavings[0],
+        firstAssignmentSavings[1] + secondAssignmentSavings[1]
+    };
     affectedDays.addAll(firstPatient.getAdmittedDays());
     affectedDays.addAll(secondPatient.getAdmittedDays());
 
-    double loadSavings =
-        getDailyLoadSavings(affectedDays) + getDepartmentLoadSavings() + patientSavings;
+    int patientSavings = assignmentSavings[0] + assignmentSavings[1];
+    double loadSavings = getDailyLoadSavings(affectedDays)
+        + getDepartmentLoadSavings()
+        + patientSavings;
     lastMove.put("patient_savings", patientSavings);
     lastMove.put("load_savings", (int) (Math.round(loadSavings)));
   }

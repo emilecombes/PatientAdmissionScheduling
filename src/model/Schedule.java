@@ -13,6 +13,7 @@ public class Schedule {
 
   private final Set<Integer>[][] schedule;
   private final Map<Integer, List<Map<String, Integer>>> dynamicGenderCount;
+  private int capacityViolations;
 
   private final double[][] loadMatrix;
   private final double[] averageDailyLoads;
@@ -27,6 +28,8 @@ public class Schedule {
     departmentCount = departmentList.getNumberOfDepartments();
     schedule = new Set[departmentList.getNumberOfRooms()][horizonLength];
     dynamicGenderCount = new HashMap<>();
+    capacityViolations = 0;
+
     loadMatrix = new double[departmentCount][horizonLength];
     averageDailyLoads = new double[horizonLength];
     dailyLoads = new double[horizonLength];
@@ -92,7 +95,7 @@ public class Schedule {
       avg /= departmentCount;
       int act = (int) Math.round((10000 * avg));
       int tmp = (int) Math.round((10000 * averageDailyLoads[j]));
-      if (Math.abs(act-tmp) > 1) {
+      if (Math.abs(act - tmp) > 1) {
         error = true;
         System.err.println("Wrong avg daily load (" + averageDailyLoads[j] + "≠" + avg + ")");
       }
@@ -101,7 +104,7 @@ public class Schedule {
     // Compare costs
     int correctCost =
         (int) (Math.round(Arrays.stream(departmentLoads).sum() + Arrays.stream(dailyLoads).sum()));
-    if (Math.abs(correctCost-solverCost) > 2) {
+    if (Math.abs(correctCost - solverCost) > 2) {
       error = true;
       System.err.println("Costs don't match (" + correctCost + "≠" + solverCost + ")");
     }
@@ -166,7 +169,10 @@ public class Schedule {
   public void assignPatient(Patient pat, int room, int day) {
     pat.assignRoom(room, day);
     schedule[room][day].add(pat.getId());
-    if (dynamicGenderCount.containsKey(room)) incrementGenderCount(room, day, pat.getGender());
+    if (dynamicGenderCount.containsKey(room))
+      incrementGenderCount(room, day, pat.getGender());
+    if (schedule[room][day].size() > departmentList.getRoom(room).getCapacity())
+      capacityViolations++;
 
     int dep = departmentList.getDepartment(departmentList.getRoom(room).getDepartment()).getId();
     double delta = (double) pat.getNeededCare(day) / departmentList.getDepartment(dep).getSize();
@@ -179,7 +185,10 @@ public class Schedule {
     int room = pat.getRoom(day);
     pat.cancelRoom(day);
     schedule[room][day].remove(pat.getId());
-    if (dynamicGenderCount.containsKey(room)) decrementGenderCount(room, day, pat.getGender());
+    if (dynamicGenderCount.containsKey(room))
+      decrementGenderCount(room, day, pat.getGender());
+    if (schedule[room][day].size() >= departmentList.getRoom(room).getCapacity())
+      capacityViolations--;
 
     int dep = departmentList.getDepartment(departmentList.getRoom(room).getDepartment()).getId();
     double delta = (double) pat.getNeededCare(day) / departmentList.getDepartment(dep).getSize();
@@ -191,20 +200,7 @@ public class Schedule {
 
   // Patient cost related functions
   public int getCapacityViolations() {
-    int violations = 0;
-    for (int room = 0; room < departmentList.getNumberOfRooms(); room++)
-      for (int day = 0; day < horizonLength; day++)
-        violations += getCapacityViolations(room, day);
-    return violations;
-  }
-
-  public int getCapacityViolations(int room, int day) {
-    if(room == -1) return 0;
-    return Math.max(0, schedule[room][day].size() - departmentList.getRoom(room).getCapacity());
-  }
-
-  public int getCapacityMargin(int room, int day) {
-    return Math.max(0, departmentList.getRoom(room).getCapacity() - schedule[room][day].size());
+    return capacityViolations;
   }
 
   public int getGenderCount(int room, int day, String gender) {
@@ -230,12 +226,14 @@ public class Schedule {
   }
 
   public boolean hasSingleDynamicGenderViolation(int room, int day, String gender) {
-    if (!dynamicGenderCount.containsKey(room)) return false;
+    if (!dynamicGenderCount.containsKey(room))
+      return false;
     return getDynamicGenderViolations(room, day) == 1 && getGenderCount(room, day, gender) == 1;
   }
 
   public boolean isFirstDynamicGenderViolation(int room, int day, String gender) {
-    if (!dynamicGenderCount.containsKey(room)) return false;
+    if (!dynamicGenderCount.containsKey(room))
+      return false;
     return getDynamicGenderViolations(room, day) == 0 && getOtherGenderCount(room, day, gender) > 0;
   }
 
