@@ -155,7 +155,8 @@ public class Schedule {
 
     Set<Integer> badCandidates = new HashSet<>();
     for (int candidate : candidates) {
-      if (!patientList.getPatient(candidate).isAdmissibleOn(firstAdmission))
+      if (!patientList.getPatient(candidate).isAdmissibleOn(firstAdmission)
+          || !firstPatient.isAdmissibleOn(patientList.getPatient(candidate).getAdmission()))
         badCandidates.add(candidate);
     }
     candidates.removeAll(badCandidates);

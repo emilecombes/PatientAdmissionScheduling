@@ -94,10 +94,10 @@ public class Solver {
     int violationCost = schedule.getCapacityViolations() * getPenalty("capacity_violation");
     System.out.println(
         "\nCapacity Violations\t:" + violationCost
-        + "\nTotal Patient Cost\t:" + patientCost
-        + "\nPatient Cost\t\t:" + (patientCost - violationCost)
-        + "\nTotal Load Cost\t\t:" + loadCost
-        + "\nLoad Cost\t\t\t:" + (loadCost - violationCost)
+            + "\nTotal Patient Cost\t:" + patientCost
+            + "\nPatient Cost\t\t:" + (patientCost - violationCost)
+            + "\nTotal Load Cost\t\t:" + loadCost
+            + "\nLoad Cost\t\t\t:" + (loadCost - violationCost)
     );
   }
 
@@ -221,6 +221,7 @@ public class Solver {
     }
     for (int i = 0; i < 100000; i++) {
       executeNewMove();
+      validateLastMove("After execution");
       if (lastMove.get(objective) > 0) {
         lastMove.put("accepted", 1);
         patientCost -= lastMove.get("patient_savings");
@@ -228,9 +229,33 @@ public class Solver {
       } else {
         lastMove.put("accepted", 0);
         undoLastMove();
+        validateLastMove("After undo");
       }
       generatedMoves.add(lastMove);
       if (i % 10000 == 0) printCosts();
+    }
+  }
+
+  public void validateLastMove(String caller) {
+    Map<String, Integer> move = lastMove;
+    int type = lastMove.get("type");
+    Set<Patient> patients = new HashSet<>();
+    patients.add(patientList.getPatient(lastMove.get("first_patient")));
+    if (type == 1 || type == 3)
+      patients.add(patientList.getPatient(lastMove.get("second_patient")));
+    for (Patient patient : patients) {
+      if (!patient.isAdmissibleOn(patient.getAdmission())) {
+        boolean[] types = {false, false, false, false};
+        for (Map<String, Integer> m : generatedMoves) {
+          types[m.get("type")] = true;
+        }
+        for (int i = 0; i < 4; i++) {
+          if(types[i])System.out.println("Type " + i + " executed");
+        }
+        System.out.println("Wrong admission date (type " + type + " move)");
+        System.out.println("Called " + caller);
+        System.out.println();
+      }
     }
   }
 
@@ -315,7 +340,9 @@ public class Solver {
 
   // Move Execution
   public void executeNewMove() {
+    if (lastMove != null) validateLastMove("Called before execution");
     lastMove = generateMove();
+    validateLastMove("Called after generation");
     switch (lastMove.get("type")) {
       case 0 -> executeChangeRoom();
       case 1 -> executeSwapRoom();
@@ -461,12 +488,14 @@ public class Solver {
 
   // Undo Move
   public void undoLastMove() {
+    validateLastMove("Called before undo");
     switch (lastMove.get("type")) {
       case 0 -> undoChangeRoom();
       case 1 -> undoSwapRoom();
       case 2 -> undoShiftAdmission();
       case 3 -> undoSwapAdmission();
     }
+    validateLastMove("Called after undo");
   }
 
   public void readmitPatient(Patient patient, int room, int shift) {
