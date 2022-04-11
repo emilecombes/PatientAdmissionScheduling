@@ -272,18 +272,19 @@ public class Solver {
       for (int day = patient.getAdmission(); day < patient.getDischarge(); day++)
         if (!schedule.getPatients(patient.getRoom(day), day).contains(pat))
           System.out.println("Schedule doesn't contain patient");
-      if(patient.getDischarge() - patient.getAdmission() != patient.getStayLength())
+      if (patient.getDischarge() - patient.getAdmission() != patient.getStayLength())
         System.out.println("Distance between AD & DD is wrong");
-      if(patient.getAdmission() < patient.getOriginalAD() || patient.getAdmission() > patient.getMaxAdm())
+      if (patient.getAdmission() < patient.getOriginalAD() ||
+          patient.getAdmission() > patient.getMaxAdm())
         System.out.println("Wrong admission date");
     }
   }
 
   public void validateSchedule() {
-    for(int day = 0; day < DateConverter.getTotalHorizon(); day++)
-      for(int r = 0; r < departmentList.getNumberOfRooms(); r++)
-        for(int p : schedule.getPatients(r, day))
-          if(patientList.getPatient(p).getRoom(day) != r)
+    for (int day = 0; day < DateConverter.getTotalHorizon(); day++)
+      for (int r = 0; r < departmentList.getNumberOfRooms(); r++)
+        for (int p : schedule.getPatients(r, day))
+          if (patientList.getPatient(p).getRoom(day) != r)
             System.out.println("Wrong assignment in schedule");
   }
 
@@ -427,6 +428,15 @@ public class Solver {
     return savings;
   }
 
+  public void addSavingsToMove(int capacitySavings, int patientSavings, double loadSavings) {
+    lastMove.put("capacity_violations", schedule.getCapacityViolations());
+    lastMove.put("capacity_violation_savings", capacitySavings);
+    lastMove.put("patient_cost", patientCost);
+    lastMove.put("load_cost", loadCost);
+    lastMove.put("patient_savings", patientSavings);
+    lastMove.put("load_savings", (int) (Math.round(loadSavings)));
+  }
+
   public void executeChangeRoom() {
     Patient patient = patientList.getPatient(lastMove.get("first_patient"));
 
@@ -436,8 +446,8 @@ public class Solver {
     double loadSavings = getDepartmentLoadSavings()
         + getDailyLoadSavings(patient.getAdmittedDays())
         + assignmentSavings[1];
-    lastMove.put("patient_savings", patientSavings);
-    lastMove.put("load_savings", (int) (Math.round(loadSavings)));
+
+    addSavingsToMove(assignmentSavings[1], patientSavings, loadSavings);
   }
 
   public void executeSwapRoom() {
@@ -462,8 +472,8 @@ public class Solver {
     double loadSavings = getDepartmentLoadSavings()
         + getDailyLoadSavings(affectedDays)
         + assignmentSavings[1];
-    lastMove.put("patient_savings", patientSavings);
-    lastMove.put("load_savings", (int) (Math.round(loadSavings)));
+
+    addSavingsToMove(assignmentSavings[1], patientSavings, loadSavings);
   }
 
   public void executeShiftAdmission() {
@@ -480,8 +490,8 @@ public class Solver {
     double loadSavings = getDepartmentLoadSavings()
         + getDailyLoadSavings(affectedDays)
         + patientSavings;
-    lastMove.put("patient_savings", patientSavings);
-    lastMove.put("load_savings", (int) (Math.round(loadSavings)));
+
+    addSavingsToMove(assignmentSavings[1], patientSavings, loadSavings);
   }
 
   public void executeSwapAdmission() {
@@ -508,8 +518,8 @@ public class Solver {
     double loadSavings = getDailyLoadSavings(affectedDays)
         + getDepartmentLoadSavings()
         + patientSavings;
-    lastMove.put("patient_savings", patientSavings);
-    lastMove.put("load_savings", (int) (Math.round(loadSavings)));
+
+    addSavingsToMove(assignmentSavings[1], patientSavings, loadSavings);
   }
 
   // Undo Move
