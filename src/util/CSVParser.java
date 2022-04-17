@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class CSVParser {
-  private String outputPath = "./out/solutions/csv/";
+  private String outputPath = "solutions/csv/";
   private String instance;
   private Solver solver;
 

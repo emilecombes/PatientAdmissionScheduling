@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- root element -->
+<xs:element name="OrPasu_instance"> 
+<xs:complexType>
+<xs:sequence>
+<xs:element ref="descriptor"/>
+<xs:element ref="specialisms"/>
+<xs:element ref="features"/>
+<xs:element ref="departments"/>
+<xs:element ref="rooms"/>
+<xs:element ref="treatments" minOccurs="0"/>
+<xs:element ref="or_slots" minOccurs="0"/>
+<xs:element ref="patients"/>
+</xs:sequence>
+<xs:attribute name="name" type="xs:string" use="required"/>
+</xs:complexType>
+</xs:element>
+
+<!-- descriptor -->
+<xs:element name="descriptor">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="Departments" type="xs:positiveInteger"/>
+<xs:element name="Rooms" type="xs:positiveInteger"/>
+<xs:element name="Features" type="xs:positiveInteger"/>
+<xs:element name="Patients" type="xs:positiveInteger"/>
+<xs:element name="Specialisms" type="xs:positiveInteger"/>
+<xs:element name="Horizon">
+  <xs:complexType>
+    <xs:attribute name="start_day" type="xs:date" use="required"/>
+    <xs:attribute name="num_days" type="xs:positiveInteger" use="required"/>
+  </xs:complexType>
+</xs:element>
+<xs:element name="Treatments" type="xs:positiveInteger" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<!-- Specialisms -->
+<xs:element name="specialisms">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="specialism" minOccurs="1" maxOccurs="unbounded"  type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<!-- Features -->
+<xs:element name="features">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="feature" minOccurs="1" maxOccurs="unbounded"  type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<!-- Departments -->
+<xs:element name="departments">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="department" minOccurs="1" maxOccurs="unbounded">
+	<xs:complexType>
+	  <xs:sequence>
+	    <xs:element name="main_specialisms">
+	      <xs:complexType>
+		<xs:sequence>
+		  <xs:element name="main_specialism" type="xs:IDREF" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	      </xs:complexType>
+	    </xs:element>
+	    <xs:element name="aux_specialisms">
+	      <xs:complexType>
+		<xs:sequence>
+		  <xs:element name="aux_specialism" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	      </xs:complexType>
+	    </xs:element>
+	  </xs:sequence>
+	  <xs:attribute name="name" type="xs:ID" use="required"/>
+	  <xs:attribute name="min_age">
+	    <xs:simpleType>
+	      <xs:restriction base="xs:positiveInteger">
+		<xs:minInclusive value = "1"/>
+		<xs:maxInclusive value = "120"/>
+	      </xs:restriction>
+	    </xs:simpleType>
+	  </xs:attribute>
+	  <xs:attribute name="max_age">
+	    <xs:simpleType>
+	      <xs:restriction base="xs:positiveInteger">
+		<xs:minInclusive value = "1"/>
+		<xs:maxInclusive value = "120"/>
+	      </xs:restriction>
+	    </xs:simpleType>
+	  </xs:attribute>
+	</xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+
+<!-- Rooms -->
+<xs:element name="rooms">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="room" minOccurs="1" maxOccurs="unbounded">
+	<xs:complexType>
+	  <xs:sequence>
+	    <xs:element name="features">
+	      <xs:complexType>
+		<xs:sequence>
+		  <xs:element name="feature" type="xs:IDREF" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	      </xs:complexType>
+	    </xs:element>
+	  </xs:sequence>
+	  <xs:attribute name="name" type="xs:ID" use="required"/>
+	  <xs:attribute name="capacity" type="xs:positiveInteger" use="required"/>
+	  <xs:attribute name="department" type="xs:IDREF" use="required"/>
+	  <xs:attribute name="gender_policy">
+	    <xs:simpleType> 
+	      <xs:restriction base="xs:token">
+		<xs:enumeration value="SameGender"/>
+		<xs:enumeration value="MaleOnly"/>
+		<xs:enumeration value="FemaleOnly"/>
+		<xs:enumeration value="Any"/>
+ 	      </xs:restriction>
+	    </xs:simpleType> 
+	  </xs:attribute>
+	</xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<!-- Treatments -->
+<xs:element name="treatments">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="treatment" minOccurs="1" maxOccurs="unbounded">
+	<xs:complexType>
+	  <xs:attribute name="name" type="xs:ID" use="required"/>
+	  <xs:attribute name="specialism" type="xs:IDREF" use="required"/>
+	  <xs:attribute name="surgery" type="xs:boolean" use="required"/>
+	  <xs:attribute name="length" type="xs:positiveInteger"/> <!-- used only for surgeries-->
+	</xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<!-- OR_Slots -->
+<xs:element name="or_slots">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="day" minOccurs="1" maxOccurs="unbounded">
+	<xs:complexType>
+	  <xs:sequence>
+	    <xs:element name="specialism_assignment"  minOccurs="0" maxOccurs="unbounded">
+	      <xs:complexType>
+		<xs:attribute name="name" type="xs:IDREF" use="required"/>
+		<xs:attribute name="number_or_slots" type="xs:positiveInteger" use="required"/>
+	      </xs:complexType>
+	    </xs:element>
+	  </xs:sequence>
+	  <xs:attribute name="name" type="xs:date" use="required"/>
+	</xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="slot_length" type="xs:nonNegativeInteger" use="required"/>
+  </xs:complexType>
+</xs:element>
+
+<!-- Patients -->
+<xs:element name="patients">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="patient" minOccurs="1" maxOccurs="unbounded">
+	<xs:complexType>
+	  <xs:sequence>
+	    <xs:element name="room_properties">
+	      <xs:complexType>
+		<xs:sequence>
+		  <xs:element name="room_property"  minOccurs="0" maxOccurs="unbounded">
+		    <xs:complexType>
+		      <xs:attribute name="name" type="xs:IDREF" use="required"/>
+		      <xs:attribute name="type" use="required">
+			<xs:simpleType> 
+			  <xs:restriction base="xs:string">
+			    <xs:enumeration value="needed"/>
+			    <xs:enumeration value="preferred"/>
+			  </xs:restriction>
+			</xs:simpleType> 
+		      </xs:attribute>
+		    </xs:complexType>
+		  </xs:element>
+		</xs:sequence>
+	      </xs:complexType>
+	    </xs:element>
+	  </xs:sequence>
+	  <xs:attribute name="name" type="xs:ID" use="required"/>
+	  <xs:attribute name="age" use="required">
+	    <xs:simpleType>
+	      <xs:restriction base="xs:positiveInteger">
+		<xs:minInclusive value = "1"/>
+		<xs:maxInclusive value = "120"/>
+	      </xs:restriction>
+	    </xs:simpleType>
+	  </xs:attribute>
+	  <xs:attribute name="gender">
+	    <xs:simpleType> 
+	      <xs:restriction base="xs:token">
+		<xs:enumeration value="Male"/>
+		<xs:enumeration value="Female"/>
+ 	      </xs:restriction>
+	    </xs:simpleType> 
+	  </xs:attribute>
+	  <xs:attribute name="treatment" type="xs:IDREF" use="required"/>
+	  <xs:attribute name="registration" type="xs:date" use="required"/>
+	  <xs:attribute name="admission" type="xs:date" use="required"/>
+	  <xs:attribute name="room" type="xs:IDREF"/>
+	  <xs:attribute name="surgery_day" type="xs:date"/>
+	  <xs:attribute name="discharge" type="xs:date" use="required"/>
+	  <xs:attribute name="variability" type="xs:boolean" use="required"/>
+	  <xs:attribute name="max_admission" type="xs:date"/>
+	  <xs:attribute name="preferred_capacity" type="xs:positiveInteger"/>
+	</xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+</xs:schema>

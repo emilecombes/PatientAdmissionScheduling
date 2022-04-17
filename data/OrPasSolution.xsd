@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- root element -->
+<xs:element name="OrPasu_main_out"> 				
+<xs:complexType>
+<xs:sequence>
+<xs:element ref="planning_horizon"/>
+<xs:element ref="patients_scheduling"/>
+<xs:element ref="costs"/>
+</xs:sequence>
+<xs:attribute name="name" type="xs:string" use="required"/>
+<xs:attribute name="instance" type="xs:string" use="required"/>	
+</xs:complexType>
+</xs:element>
+
+<!-- planning_horizon -->
+<xs:element name="planning_horizon">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="start_day" type="xs:date"/>
+      <xs:element name="num_days" type="xs:positiveInteger"/>
+      <xs:element name="current_day" type="xs:date"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+<!-- patients_scheduling -->
+<xs:element name="patients_scheduling">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="patient" minOccurs="1" maxOccurs="unbounded">
+	<xs:complexType>
+	  <xs:sequence>
+	    <xs:element name="stay" minOccurs="1" maxOccurs="unbounded">
+	      <xs:complexType>
+		<xs:attribute name="day" type="xs:date" use="required"/>
+		<xs:attribute name="room" type="xs:IDREF"/>
+	      </xs:complexType>
+	    </xs:element>
+	  </xs:sequence>	
+	  <xs:attribute name="name" type="xs:ID" use="required"/>
+	  <xs:attribute name="status" use="required">
+	    <xs:simpleType> 
+	      <xs:restriction base="xs:token">
+		<xs:enumeration value="discharged"/>
+		<xs:enumeration value="arrived"/>
+		<xs:enumeration value="registered"/>
+	      </xs:restriction>
+	    </xs:simpleType> 
+	  </xs:attribute>
+	  <xs:attribute name="delay" type="xs:positiveInteger"/>
+	</xs:complexType>
+      </xs:element>
+    </xs:sequence>	
+  </xs:complexType>
+</xs:element>
+
+<!-- costs -->
+<xs:element name="costs">
+  <xs:complexType>
+    <xs:sequence>
+     <xs:element name="patient_room">
+       <xs:complexType>		
+	 <xs:sequence>			
+	   <xs:element name="properties">	
+	     <xs:complexType>
+	       <xs:attribute name="violations" type="xs:nonNegativeInteger" use="required"/>
+	       <xs:attribute name="weight" type="xs:nonNegativeInteger" use="required"/>
+	     </xs:complexType>
+	   </xs:element>
+	   <xs:element name="preference">	
+	     <xs:complexType>
+	       <xs:attribute name="violations" type="xs:nonNegativeInteger" use="required"/>
+	       <xs:attribute name="weight" type="xs:nonNegativeInteger" use="required"/>
+	     </xs:complexType>
+	   </xs:element>
+	   <xs:element name="specialism">	
+	     <xs:complexType>
+	       <xs:attribute name="violations" type="xs:nonNegativeInteger" use="required"/>
+	       <xs:attribute name="weight" type="xs:nonNegativeInteger" use="required"/>
+	     </xs:complexType>
+	   </xs:element>
+	   <xs:element name="gender">	
+	     <xs:complexType>
+	       <xs:attribute name="violations" type="xs:nonNegativeInteger" use="required"/>
+	       <xs:attribute name="weight" type="xs:nonNegativeInteger" use="required"/>
+	     </xs:complexType>
+	   </xs:element>
+	 </xs:sequence>
+	 <xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+       </xs:complexType>
+     </xs:element>
+     <xs:element name="gender" type="xs:nonNegativeInteger"/>
+     <xs:element name="transfer" type="xs:nonNegativeInteger"/>
+     <xs:element name="delay" type="xs:nonNegativeInteger"/>
+     <xs:element name="overcrowd_risk" type="xs:nonNegativeInteger"/>
+     <xs:element name="or_overtime_cost" type="xs:nonNegativeInteger"/>
+     <xs:element name="idle_room_cost" type="xs:nonNegativeInteger"/>
+     <xs:element name="idle_operating_room_cost" type="xs:nonNegativeInteger"/>
+     <xs:element name="capacity_violations">
+     <xs:complexType>
+       <xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>     
+       <xs:attribute name="room_utilization" type="xs:double" use="required"/>
+     </xs:complexType>
+     </xs:element>
+     <xs:element name="or_violations">
+       <xs:complexType>    
+	 <xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>     
+	 <xs:attribute name="or_utilization" type="xs:double" use="required"/>
+       </xs:complexType>
+     </xs:element>
+    </xs:sequence>
+    <xs:attribute name="objectives" type="xs:nonNegativeInteger" use="required"/>
+    <xs:attribute name="violations" type="xs:nonNegativeInteger" use="required"/>	
+    <xs:attribute name="time" type="xs:double" use="required"/>	
+  </xs:complexType>
+</xs:element>
+
+</xs:schema>

@@ -181,7 +181,7 @@ public class XMLParser {
   }
 
   public void writeSolution(Solver solver) {
-    String outputFile = "out/solutions/" + inputInstance + "_sol.xml";
+    String outputFile = "solutions/xml/" + inputInstance + "_sol.xml";
     PatientList patientList = solver.getPatientList();
 
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

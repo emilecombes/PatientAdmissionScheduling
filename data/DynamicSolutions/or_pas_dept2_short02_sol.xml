@@ -1,0 +1,1753 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OrPasu_main_out xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.diegm.uniud.it/ceschia/uploads/VRCLP/XML/OrPasu_main_out.xsd" name="sol-OR_PASU140425-094612" instance="OR_PASU140425-094612">
+  <planning_horizon>
+    <start_day>2014-05-02</start_day>
+    <num_days>28</num_days>
+    <current_day>2014-05-16</current_day>
+  </planning_horizon>
+  <patients_scheduling>
+    <patient name="Pat_0" status="discharged">
+      <stay day="2014-05-02" room="R_6"/>
+    </patient>
+    <patient name="Pat_1" status="discharged">
+      <stay day="2014-05-02" room="R_23"/>
+      <stay day="2014-05-03" room="R_23"/>
+      <stay day="2014-05-04" room="R_23"/>
+      <stay day="2014-05-05" room="R_23"/>
+    </patient>
+    <patient name="Pat_2" status="discharged">
+      <stay day="2014-05-06" room="R_8"/>
+      <stay day="2014-05-07" room="R_8"/>
+      <stay day="2014-05-08" room="R_8"/>
+    </patient>
+    <patient name="Pat_3" status="discharged">
+      <stay day="2014-05-02" room="R_23"/>
+      <stay day="2014-05-03" room="R_23"/>
+      <stay day="2014-05-04" room="R_23"/>
+    </patient>
+    <patient name="Pat_4" status="discharged">
+      <stay day="2014-05-03" room="R_21"/>
+      <stay day="2014-05-04" room="R_21"/>
+    </patient>
+    <patient name="Pat_6" status="discharged">
+      <stay day="2014-05-06" room="R_3"/>
+      <stay day="2014-05-07" room="R_3"/>
+      <stay day="2014-05-08" room="R_3"/>
+    </patient>
+    <patient name="Pat_8" status="discharged">
+      <stay day="2014-05-02" room="R_23"/>
+      <stay day="2014-05-03" room="R_23"/>
+      <stay day="2014-05-04" room="R_23"/>
+      <stay day="2014-05-05" room="R_23"/>
+    </patient>
+    <patient name="Pat_9" status="registered" delay="6">
+      <stay day="2014-05-19" room="R_0"/>
+      <stay day="2014-05-20" room="R_0"/>
+    </patient>
+    <patient name="Pat_11" status="discharged">
+      <stay day="2014-05-02" room="R_16"/>
+    </patient>
+    <patient name="Pat_12" status="discharged">
+      <stay day="2014-05-02" room="R_9"/>
+      <stay day="2014-05-03" room="R_9"/>
+      <stay day="2014-05-04" room="R_9"/>
+      <stay day="2014-05-05" room="R_9"/>
+      <stay day="2014-05-06" room="R_9"/>
+    </patient>
+    <patient name="Pat_13" status="discharged">
+      <stay day="2014-05-02" room="R_5"/>
+      <stay day="2014-05-03" room="R_5"/>
+    </patient>
+    <patient name="Pat_17" status="discharged">
+      <stay day="2014-05-02" room="R_15"/>
+      <stay day="2014-05-03" room="R_15"/>
+    </patient>
+    <patient name="Pat_18" status="discharged">
+      <stay day="2014-05-02" room="R_17"/>
+    </patient>
+    <patient name="Pat_19" status="discharged">
+      <stay day="2014-05-02" room="R_18"/>
+    </patient>
+    <patient name="Pat_21" status="discharged">
+      <stay day="2014-05-02" room="R_1"/>
+    </patient>
+    <patient name="Pat_22" status="registered" delay="13">
+      <stay day="2014-05-28" room="R_22"/>
+    </patient>
+    <patient name="Pat_23" status="discharged">
+      <stay day="2014-05-02" room="R_18"/>
+    </patient>
+    <patient name="Pat_24" status="discharged">
+      <stay day="2014-05-02" room="R_21"/>
+    </patient>
+    <patient name="Pat_25" status="discharged">
+      <stay day="2014-05-02" room="R_16"/>
+    </patient>
+    <patient name="Pat_27" status="discharged">
+      <stay day="2014-05-02" room="R_16"/>
+      <stay day="2014-05-03" room="R_16"/>
+      <stay day="2014-05-04" room="R_16"/>
+    </patient>
+    <patient name="Pat_28" status="discharged">
+      <stay day="2014-05-06" room="R_23"/>
+      <stay day="2014-05-07" room="R_23"/>
+      <stay day="2014-05-08" room="R_23"/>
+    </patient>
+    <patient name="Pat_29" status="discharged">
+      <stay day="2014-05-06" room="R_23"/>
+      <stay day="2014-05-07" room="R_23"/>
+      <stay day="2014-05-08" room="R_23"/>
+      <stay day="2014-05-09" room="R_23"/>
+      <stay day="2014-05-10" room="R_23"/>
+    </patient>
+    <patient name="Pat_30" status="discharged">
+      <stay day="2014-05-12" room="R_20"/>
+      <stay day="2014-05-13" room="R_20"/>
+      <stay day="2014-05-14" room="R_20"/>
+      <stay day="2014-05-15" room="R_20"/>
+    </patient>
+    <patient name="Pat_34" status="discharged">
+      <stay day="2014-05-15" room="R_23"/>
+    </patient>
+    <patient name="Pat_39" status="discharged">
+      <stay day="2014-05-02" room="R_0"/>
+      <stay day="2014-05-03" room="R_0"/>
+      <stay day="2014-05-04" room="R_0"/>
+      <stay day="2014-05-05" room="R_0"/>
+      <stay day="2014-05-06" room="R_0"/>
+    </patient>
+    <patient name="Pat_43" status="registered" delay="9">
+      <stay day="2014-05-21" room="R_5"/>
+      <stay day="2014-05-22" room="R_5"/>
+      <stay day="2014-05-23" room="R_5"/>
+      <stay day="2014-05-24" room="R_5"/>
+    </patient>
+    <patient name="Pat_45" status="discharged">
+      <stay day="2014-05-02" room="R_10"/>
+      <stay day="2014-05-03" room="R_10"/>
+      <stay day="2014-05-04" room="R_10"/>
+      <stay day="2014-05-05" room="R_10"/>
+      <stay day="2014-05-06" room="R_10"/>
+      <stay day="2014-05-07" room="R_10"/>
+      <stay day="2014-05-08" room="R_10"/>
+      <stay day="2014-05-09" room="R_10"/>
+      <stay day="2014-05-10" room="R_10"/>
+      <stay day="2014-05-11" room="R_10"/>
+    </patient>
+    <patient name="Pat_48" status="discharged">
+      <stay day="2014-05-08" room="R_4"/>
+    </patient>
+    <patient name="Pat_49" status="discharged">
+      <stay day="2014-05-02" room="R_20"/>
+    </patient>
+    <patient name="Pat_53" status="discharged">
+      <stay day="2014-05-02" room="R_14"/>
+      <stay day="2014-05-03" room="R_14"/>
+      <stay day="2014-05-04" room="R_14"/>
+      <stay day="2014-05-05" room="R_14"/>
+      <stay day="2014-05-06" room="R_14"/>
+    </patient>
+    <patient name="Pat_54" status="discharged">
+      <stay day="2014-05-02" room="R_8"/>
+    </patient>
+    <patient name="Pat_55" status="discharged">
+      <stay day="2014-05-15" room="R_17"/>
+    </patient>
+    <patient name="Pat_59" status="discharged">
+      <stay day="2014-05-09" room="R_16"/>
+    </patient>
+    <patient name="Pat_60" status="discharged">
+      <stay day="2014-05-07" room="R_1"/>
+      <stay day="2014-05-08" room="R_1"/>
+    </patient>
+    <patient name="Pat_61" status="discharged">
+      <stay day="2014-05-12" room="R_2"/>
+      <stay day="2014-05-13" room="R_2"/>
+      <stay day="2014-05-14" room="R_2"/>
+      <stay day="2014-05-15" room="R_2"/>
+    </patient>
+    <patient name="Pat_62" status="discharged">
+      <stay day="2014-05-05" room="R_16"/>
+      <stay day="2014-05-06" room="R_16"/>
+      <stay day="2014-05-07" room="R_16"/>
+    </patient>
+    <patient name="Pat_64" status="discharged">
+      <stay day="2014-05-07" room="R_10"/>
+    </patient>
+    <patient name="Pat_65" status="discharged">
+      <stay day="2014-05-12" room="R_16"/>
+      <stay day="2014-05-13" room="R_16"/>
+      <stay day="2014-05-14" room="R_16"/>
+    </patient>
+    <patient name="Pat_66" status="discharged">
+      <stay day="2014-05-08" room="R_5"/>
+    </patient>
+    <patient name="Pat_67" status="discharged">
+      <stay day="2014-05-02" room="R_10"/>
+      <stay day="2014-05-03" room="R_10"/>
+      <stay day="2014-05-04" room="R_10"/>
+      <stay day="2014-05-05" room="R_10"/>
+      <stay day="2014-05-06" room="R_10"/>
+      <stay day="2014-05-07" room="R_10"/>
+      <stay day="2014-05-08" room="R_10"/>
+      <stay day="2014-05-09" room="R_10"/>
+      <stay day="2014-05-10" room="R_10"/>
+      <stay day="2014-05-11" room="R_10"/>
+      <stay day="2014-05-12" room="R_10"/>
+    </patient>
+    <patient name="Pat_69" status="discharged">
+      <stay day="2014-05-02" room="R_18"/>
+    </patient>
+    <patient name="Pat_70" status="discharged">
+      <stay day="2014-05-12" room="R_23"/>
+    </patient>
+    <patient name="Pat_71" status="discharged">
+      <stay day="2014-05-03" room="R_18"/>
+      <stay day="2014-05-04" room="R_18"/>
+    </patient>
+    <patient name="Pat_73" status="discharged">
+      <stay day="2014-05-02" room="R_3"/>
+      <stay day="2014-05-03" room="R_3"/>
+      <stay day="2014-05-04" room="R_3"/>
+      <stay day="2014-05-05" room="R_3"/>
+    </patient>
+    <patient name="Pat_74" status="discharged">
+      <stay day="2014-05-05" room="R_18"/>
+      <stay day="2014-05-06" room="R_18"/>
+      <stay day="2014-05-07" room="R_18"/>
+    </patient>
+    <patient name="Pat_76" status="discharged">
+      <stay day="2014-05-07" room="R_20"/>
+      <stay day="2014-05-08" room="R_20"/>
+      <stay day="2014-05-09" room="R_20"/>
+    </patient>
+    <patient name="Pat_77" status="discharged">
+      <stay day="2014-05-15" room="R_19"/>
+    </patient>
+    <patient name="Pat_79" status="discharged">
+      <stay day="2014-05-08" room="R_17"/>
+      <stay day="2014-05-09" room="R_17"/>
+      <stay day="2014-05-10" room="R_17"/>
+      <stay day="2014-05-11" room="R_17"/>
+      <stay day="2014-05-12" room="R_17"/>
+    </patient>
+    <patient name="Pat_80" status="discharged">
+      <stay day="2014-05-02" room="R_15"/>
+      <stay day="2014-05-03" room="R_15"/>
+      <stay day="2014-05-04" room="R_15"/>
+      <stay day="2014-05-05" room="R_15"/>
+    </patient>
+    <patient name="Pat_81" status="discharged">
+      <stay day="2014-05-02" room="R_12"/>
+    </patient>
+    <patient name="Pat_82" status="discharged">
+      <stay day="2014-05-02" room="R_8"/>
+      <stay day="2014-05-03" room="R_8"/>
+      <stay day="2014-05-04" room="R_8"/>
+    </patient>
+    <patient name="Pat_83" status="discharged">
+      <stay day="2014-05-08" room="R_15"/>
+      <stay day="2014-05-09" room="R_15"/>
+      <stay day="2014-05-10" room="R_15"/>
+      <stay day="2014-05-11" room="R_15"/>
+      <stay day="2014-05-12" room="R_15"/>
+    </patient>
+    <patient name="Pat_84" status="discharged">
+      <stay day="2014-05-09" room="R_23"/>
+      <stay day="2014-05-10" room="R_23"/>
+      <stay day="2014-05-11" room="R_23"/>
+      <stay day="2014-05-12" room="R_23"/>
+      <stay day="2014-05-13" room="R_23"/>
+    </patient>
+    <patient name="Pat_86" status="discharged">
+      <stay day="2014-05-06" room="R_18"/>
+      <stay day="2014-05-07" room="R_18"/>
+    </patient>
+    <patient name="Pat_87" status="discharged">
+      <stay day="2014-05-05" room="R_15"/>
+      <stay day="2014-05-06" room="R_15"/>
+      <stay day="2014-05-07" room="R_15"/>
+      <stay day="2014-05-08" room="R_15"/>
+      <stay day="2014-05-09" room="R_15"/>
+      <stay day="2014-05-10" room="R_15"/>
+      <stay day="2014-05-11" room="R_15"/>
+      <stay day="2014-05-12" room="R_15"/>
+      <stay day="2014-05-13" room="R_15"/>
+      <stay day="2014-05-14" room="R_15"/>
+      <stay day="2014-05-15" room="R_15"/>
+    </patient>
+    <patient name="Pat_88" status="discharged">
+      <stay day="2014-05-07" room="R_12"/>
+      <stay day="2014-05-08" room="R_12"/>
+    </patient>
+    <patient name="Pat_89" status="discharged">
+      <stay day="2014-05-02" room="R_16"/>
+      <stay day="2014-05-03" room="R_16"/>
+    </patient>
+    <patient name="Pat_91" status="discharged">
+      <stay day="2014-05-02" room="R_23"/>
+      <stay day="2014-05-03" room="R_23"/>
+      <stay day="2014-05-04" room="R_23"/>
+      <stay day="2014-05-05" room="R_23"/>
+      <stay day="2014-05-06" room="R_23"/>
+      <stay day="2014-05-07" room="R_23"/>
+      <stay day="2014-05-08" room="R_23"/>
+    </patient>
+    <patient name="Pat_92" status="discharged">
+      <stay day="2014-05-02" room="R_22"/>
+      <stay day="2014-05-03" room="R_22"/>
+      <stay day="2014-05-04" room="R_22"/>
+      <stay day="2014-05-05" room="R_22"/>
+      <stay day="2014-05-06" room="R_22"/>
+      <stay day="2014-05-07" room="R_22"/>
+      <stay day="2014-05-08" room="R_22"/>
+      <stay day="2014-05-09" room="R_22"/>
+      <stay day="2014-05-10" room="R_22"/>
+    </patient>
+    <patient name="Pat_95" status="discharged">
+      <stay day="2014-05-02" room="R_8"/>
+    </patient>
+    <patient name="Pat_96" status="discharged">
+      <stay day="2014-05-05" room="R_16"/>
+      <stay day="2014-05-06" room="R_16"/>
+      <stay day="2014-05-07" room="R_16"/>
+      <stay day="2014-05-08" room="R_16"/>
+      <stay day="2014-05-09" room="R_16"/>
+    </patient>
+    <patient name="Pat_97" status="discharged">
+      <stay day="2014-05-05" room="R_8"/>
+      <stay day="2014-05-06" room="R_8"/>
+      <stay day="2014-05-07" room="R_8"/>
+      <stay day="2014-05-08" room="R_8"/>
+      <stay day="2014-05-09" room="R_8"/>
+    </patient>
+    <patient name="Pat_98" status="discharged">
+      <stay day="2014-05-05" room="R_18"/>
+    </patient>
+    <patient name="Pat_99" status="discharged">
+      <stay day="2014-05-05" room="R_4"/>
+    </patient>
+    <patient name="Pat_100" status="discharged">
+      <stay day="2014-05-13" room="R_16"/>
+      <stay day="2014-05-14" room="R_16"/>
+      <stay day="2014-05-15" room="R_16"/>
+    </patient>
+    <patient name="Pat_101" status="discharged">
+      <stay day="2014-05-02" room="R_23"/>
+      <stay day="2014-05-03" room="R_23"/>
+      <stay day="2014-05-04" room="R_23"/>
+      <stay day="2014-05-05" room="R_23"/>
+    </patient>
+    <patient name="Pat_103" status="discharged">
+      <stay day="2014-05-06" room="R_18"/>
+      <stay day="2014-05-07" room="R_18"/>
+    </patient>
+    <patient name="Pat_104" status="discharged">
+      <stay day="2014-05-06" room="R_16"/>
+      <stay day="2014-05-07" room="R_16"/>
+      <stay day="2014-05-08" room="R_16"/>
+      <stay day="2014-05-09" room="R_16"/>
+      <stay day="2014-05-10" room="R_16"/>
+      <stay day="2014-05-11" room="R_16"/>
+      <stay day="2014-05-12" room="R_16"/>
+      <stay day="2014-05-13" room="R_16"/>
+      <stay day="2014-05-14" room="R_16"/>
+      <stay day="2014-05-15" room="R_16"/>
+    </patient>
+    <patient name="Pat_105" status="discharged">
+      <stay day="2014-05-07" room="R_18"/>
+      <stay day="2014-05-08" room="R_18"/>
+    </patient>
+    <patient name="Pat_106" status="discharged">
+      <stay day="2014-05-02" room="R_18"/>
+      <stay day="2014-05-03" room="R_18"/>
+      <stay day="2014-05-04" room="R_18"/>
+    </patient>
+    <patient name="Pat_107" status="discharged">
+      <stay day="2014-05-03" room="R_17"/>
+      <stay day="2014-05-04" room="R_17"/>
+    </patient>
+    <patient name="Pat_108" status="discharged">
+      <stay day="2014-05-13" room="R_3"/>
+      <stay day="2014-05-14" room="R_3"/>
+      <stay day="2014-05-15" room="R_3"/>
+    </patient>
+    <patient name="Pat_109" status="discharged">
+      <stay day="2014-05-02" room="R_23"/>
+      <stay day="2014-05-03" room="R_23"/>
+      <stay day="2014-05-04" room="R_23"/>
+      <stay day="2014-05-05" room="R_23"/>
+    </patient>
+    <patient name="Pat_110" status="discharged">
+      <stay day="2014-05-10" room="R_1"/>
+      <stay day="2014-05-11" room="R_1"/>
+    </patient>
+    <patient name="Pat_113" status="discharged">
+      <stay day="2014-05-07" room="R_21"/>
+      <stay day="2014-05-08" room="R_21"/>
+    </patient>
+    <patient name="Pat_114" status="discharged">
+      <stay day="2014-05-06" room="R_1"/>
+      <stay day="2014-05-07" room="R_1"/>
+    </patient>
+    <patient name="Pat_115" status="discharged">
+      <stay day="2014-05-02" room="R_4"/>
+    </patient>
+    <patient name="Pat_116" status="discharged">
+      <stay day="2014-05-02" room="R_1"/>
+    </patient>
+    <patient name="Pat_117" status="discharged">
+      <stay day="2014-05-08" room="R_7"/>
+      <stay day="2014-05-09" room="R_7"/>
+      <stay day="2014-05-10" room="R_7"/>
+      <stay day="2014-05-11" room="R_7"/>
+      <stay day="2014-05-12" room="R_7"/>
+    </patient>
+    <patient name="Pat_118" status="discharged">
+      <stay day="2014-05-06" room="R_2"/>
+      <stay day="2014-05-07" room="R_2"/>
+      <stay day="2014-05-08" room="R_2"/>
+    </patient>
+    <patient name="Pat_119" status="discharged">
+      <stay day="2014-05-07" room="R_16"/>
+    </patient>
+    <patient name="Pat_120" status="discharged">
+      <stay day="2014-05-02" room="R_18"/>
+    </patient>
+    <patient name="Pat_121" status="discharged">
+      <stay day="2014-05-07" room="R_19"/>
+    </patient>
+    <patient name="Pat_122" status="discharged">
+      <stay day="2014-05-13" room="R_12"/>
+      <stay day="2014-05-14" room="R_12"/>
+      <stay day="2014-05-15" room="R_12"/>
+    </patient>
+    <patient name="Pat_123" status="discharged">
+      <stay day="2014-05-05" room="R_5"/>
+      <stay day="2014-05-06" room="R_5"/>
+      <stay day="2014-05-07" room="R_5"/>
+      <stay day="2014-05-08" room="R_19"/>
+      <stay day="2014-05-09" room="R_19"/>
+    </patient>
+    <patient name="Pat_124" status="discharged">
+      <stay day="2014-05-09" room="R_16"/>
+    </patient>
+    <patient name="Pat_125" status="discharged">
+      <stay day="2014-05-09" room="R_3"/>
+      <stay day="2014-05-10" room="R_3"/>
+      <stay day="2014-05-11" room="R_3"/>
+      <stay day="2014-05-12" room="R_3"/>
+    </patient>
+    <patient name="Pat_126" status="discharged">
+      <stay day="2014-05-08" room="R_20"/>
+      <stay day="2014-05-09" room="R_20"/>
+      <stay day="2014-05-10" room="R_20"/>
+      <stay day="2014-05-11" room="R_20"/>
+      <stay day="2014-05-12" room="R_20"/>
+      <stay day="2014-05-13" room="R_20"/>
+      <stay day="2014-05-14" room="R_20"/>
+      <stay day="2014-05-15" room="R_20"/>
+    </patient>
+    <patient name="Pat_127" status="discharged">
+      <stay day="2014-05-12" room="R_14"/>
+      <stay day="2014-05-13" room="R_14"/>
+    </patient>
+    <patient name="Pat_128" status="discharged">
+      <stay day="2014-05-05" room="R_8"/>
+    </patient>
+    <patient name="Pat_129" status="discharged">
+      <stay day="2014-05-05" room="R_2"/>
+      <stay day="2014-05-06" room="R_2"/>
+      <stay day="2014-05-07" room="R_2"/>
+    </patient>
+    <patient name="Pat_130" status="discharged">
+      <stay day="2014-05-14" room="R_18"/>
+      <stay day="2014-05-15" room="R_18"/>
+    </patient>
+    <patient name="Pat_131" status="discharged">
+      <stay day="2014-05-08" room="R_19"/>
+      <stay day="2014-05-09" room="R_19"/>
+      <stay day="2014-05-10" room="R_19"/>
+    </patient>
+    <patient name="Pat_132" status="discharged">
+      <stay day="2014-05-02" room="R_8"/>
+    </patient>
+    <patient name="Pat_133" status="discharged">
+      <stay day="2014-05-06" room="R_16"/>
+    </patient>
+    <patient name="Pat_134" status="discharged">
+      <stay day="2014-05-07" room="R_19"/>
+      <stay day="2014-05-08" room="R_19"/>
+      <stay day="2014-05-09" room="R_19"/>
+    </patient>
+    <patient name="Pat_135" status="registered" delay="9">
+      <stay day="2014-05-23" room="R_17"/>
+      <stay day="2014-05-24" room="R_17"/>
+    </patient>
+    <patient name="Pat_136" status="discharged">
+      <stay day="2014-05-09" room="R_18"/>
+      <stay day="2014-05-10" room="R_18"/>
+    </patient>
+    <patient name="Pat_137" status="discharged">
+      <stay day="2014-05-09" room="R_20"/>
+      <stay day="2014-05-10" room="R_20"/>
+      <stay day="2014-05-11" room="R_20"/>
+      <stay day="2014-05-12" room="R_20"/>
+      <stay day="2014-05-13" room="R_20"/>
+      <stay day="2014-05-14" room="R_20"/>
+      <stay day="2014-05-15" room="R_20"/>
+    </patient>
+    <patient name="Pat_138" status="discharged">
+      <stay day="2014-05-05" room="R_16"/>
+      <stay day="2014-05-06" room="R_16"/>
+      <stay day="2014-05-07" room="R_16"/>
+    </patient>
+    <patient name="Pat_139" status="discharged">
+      <stay day="2014-05-05" room="R_2"/>
+      <stay day="2014-05-06" room="R_2"/>
+      <stay day="2014-05-07" room="R_2"/>
+      <stay day="2014-05-08" room="R_2"/>
+      <stay day="2014-05-09" room="R_2"/>
+      <stay day="2014-05-10" room="R_2"/>
+      <stay day="2014-05-11" room="R_2"/>
+      <stay day="2014-05-12" room="R_2"/>
+    </patient>
+    <patient name="Pat_140" status="registered" delay="3">
+      <stay day="2014-05-17" room="R_12"/>
+      <stay day="2014-05-18" room="R_12"/>
+    </patient>
+    <patient name="Pat_141" status="discharged">
+      <stay day="2014-05-02" room="R_15"/>
+      <stay day="2014-05-03" room="R_15"/>
+      <stay day="2014-05-04" room="R_15"/>
+      <stay day="2014-05-05" room="R_15"/>
+      <stay day="2014-05-06" room="R_15"/>
+      <stay day="2014-05-07" room="R_15"/>
+      <stay day="2014-05-08" room="R_15"/>
+      <stay day="2014-05-09" room="R_15"/>
+      <stay day="2014-05-10" room="R_15"/>
+      <stay day="2014-05-11" room="R_15"/>
+      <stay day="2014-05-12" room="R_15"/>
+      <stay day="2014-05-13" room="R_15"/>
+      <stay day="2014-05-14" room="R_15"/>
+      <stay day="2014-05-15" room="R_15"/>
+    </patient>
+    <patient name="Pat_142" status="discharged">
+      <stay day="2014-05-09" room="R_21"/>
+      <stay day="2014-05-10" room="R_21"/>
+    </patient>
+    <patient name="Pat_143" status="registered" delay="2">
+      <stay day="2014-05-17" room="R_13"/>
+    </patient>
+    <patient name="Pat_144" status="discharged">
+      <stay day="2014-05-13" room="R_10"/>
+      <stay day="2014-05-14" room="R_10"/>
+      <stay day="2014-05-15" room="R_10"/>
+    </patient>
+    <patient name="Pat_145" status="discharged">
+      <stay day="2014-05-02" room="R_13"/>
+      <stay day="2014-05-03" room="R_13"/>
+      <stay day="2014-05-04" room="R_13"/>
+    </patient>
+    <patient name="Pat_146" status="discharged">
+      <stay day="2014-05-02" room="R_7"/>
+      <stay day="2014-05-03" room="R_7"/>
+      <stay day="2014-05-04" room="R_7"/>
+      <stay day="2014-05-05" room="R_7"/>
+      <stay day="2014-05-06" room="R_7"/>
+      <stay day="2014-05-07" room="R_7"/>
+      <stay day="2014-05-08" room="R_7"/>
+      <stay day="2014-05-09" room="R_7"/>
+      <stay day="2014-05-10" room="R_7"/>
+      <stay day="2014-05-11" room="R_7"/>
+      <stay day="2014-05-12" room="R_7"/>
+      <stay day="2014-05-13" room="R_7"/>
+      <stay day="2014-05-14" room="R_7"/>
+      <stay day="2014-05-15" room="R_7"/>
+    </patient>
+    <patient name="Pat_147" status="discharged">
+      <stay day="2014-05-05" room="R_6"/>
+      <stay day="2014-05-06" room="R_6"/>
+      <stay day="2014-05-07" room="R_6"/>
+      <stay day="2014-05-08" room="R_6"/>
+      <stay day="2014-05-09" room="R_6"/>
+      <stay day="2014-05-10" room="R_6"/>
+      <stay day="2014-05-11" room="R_6"/>
+      <stay day="2014-05-12" room="R_6"/>
+      <stay day="2014-05-13" room="R_6"/>
+      <stay day="2014-05-14" room="R_6"/>
+      <stay day="2014-05-15" room="R_6"/>
+    </patient>
+    <patient name="Pat_148" status="discharged">
+      <stay day="2014-05-09" room="R_23"/>
+      <stay day="2014-05-10" room="R_23"/>
+      <stay day="2014-05-11" room="R_23"/>
+    </patient>
+    <patient name="Pat_149" status="registered" delay="3">
+      <stay day="2014-05-17" room="R_8"/>
+      <stay day="2014-05-18" room="R_8"/>
+    </patient>
+    <patient name="Pat_150" status="registered" delay="19">
+      <stay day="2014-05-28" room="R_13"/>
+    </patient>
+    <patient name="Pat_151" status="registered" delay="5">
+      <stay day="2014-05-18" room="R_15"/>
+      <stay day="2014-05-19" room="R_15"/>
+      <stay day="2014-05-20" room="R_15"/>
+    </patient>
+    <patient name="Pat_152" status="discharged">
+      <stay day="2014-05-02" room="R_11"/>
+      <stay day="2014-05-03" room="R_11"/>
+      <stay day="2014-05-04" room="R_11"/>
+    </patient>
+    <patient name="Pat_153" status="discharged">
+      <stay day="2014-05-06" room="R_18"/>
+      <stay day="2014-05-07" room="R_18"/>
+    </patient>
+    <patient name="Pat_154" status="discharged">
+      <stay day="2014-05-06" room="R_16"/>
+    </patient>
+    <patient name="Pat_155" status="registered" delay="5">
+      <stay day="2014-05-20" room="R_12"/>
+    </patient>
+    <patient name="Pat_156" status="registered" delay="3">
+      <stay day="2014-05-17" room="R_15"/>
+      <stay day="2014-05-18" room="R_15"/>
+    </patient>
+    <patient name="Pat_157" status="discharged">
+      <stay day="2014-05-08" room="R_10"/>
+      <stay day="2014-05-09" room="R_10"/>
+      <stay day="2014-05-10" room="R_10"/>
+      <stay day="2014-05-11" room="R_10"/>
+      <stay day="2014-05-12" room="R_10"/>
+      <stay day="2014-05-13" room="R_10"/>
+      <stay day="2014-05-14" room="R_10"/>
+      <stay day="2014-05-15" room="R_10"/>
+    </patient>
+    <patient name="Pat_158" status="discharged">
+      <stay day="2014-05-02" room="R_15"/>
+      <stay day="2014-05-03" room="R_15"/>
+      <stay day="2014-05-04" room="R_15"/>
+      <stay day="2014-05-05" room="R_11"/>
+      <stay day="2014-05-06" room="R_11"/>
+      <stay day="2014-05-07" room="R_11"/>
+      <stay day="2014-05-08" room="R_11"/>
+      <stay day="2014-05-09" room="R_11"/>
+      <stay day="2014-05-10" room="R_11"/>
+      <stay day="2014-05-11" room="R_11"/>
+      <stay day="2014-05-12" room="R_11"/>
+      <stay day="2014-05-13" room="R_11"/>
+      <stay day="2014-05-14" room="R_11"/>
+      <stay day="2014-05-15" room="R_11"/>
+    </patient>
+    <patient name="Pat_159" status="discharged">
+      <stay day="2014-05-14" room="R_10"/>
+      <stay day="2014-05-15" room="R_10"/>
+    </patient>
+    <patient name="Pat_160" status="discharged">
+      <stay day="2014-05-05" room="R_13"/>
+    </patient>
+    <patient name="Pat_161" status="discharged">
+      <stay day="2014-05-09" room="R_23"/>
+    </patient>
+    <patient name="Pat_162" status="discharged">
+      <stay day="2014-05-05" room="R_23"/>
+      <stay day="2014-05-06" room="R_23"/>
+      <stay day="2014-05-07" room="R_23"/>
+      <stay day="2014-05-08" room="R_23"/>
+      <stay day="2014-05-09" room="R_23"/>
+      <stay day="2014-05-10" room="R_23"/>
+      <stay day="2014-05-11" room="R_23"/>
+      <stay day="2014-05-12" room="R_23"/>
+      <stay day="2014-05-13" room="R_23"/>
+      <stay day="2014-05-14" room="R_23"/>
+    </patient>
+    <patient name="Pat_163" status="discharged">
+      <stay day="2014-05-07" room="R_19"/>
+      <stay day="2014-05-08" room="R_19"/>
+      <stay day="2014-05-09" room="R_19"/>
+    </patient>
+    <patient name="Pat_164" status="registered" delay="2">
+      <stay day="2014-05-16" room="R_10"/>
+    </patient>
+    <patient name="Pat_165" status="registered" delay="2">
+      <stay day="2014-05-16" room="R_15"/>
+      <stay day="2014-05-17" room="R_15"/>
+    </patient>
+    <patient name="Pat_166" status="discharged">
+      <stay day="2014-05-07" room="R_23"/>
+    </patient>
+    <patient name="Pat_167" status="registered" delay="4">
+      <stay day="2014-05-18" room="R_15"/>
+      <stay day="2014-05-19" room="R_15"/>
+    </patient>
+    <patient name="Pat_168" status="discharged">
+      <stay day="2014-05-09" room="R_0"/>
+      <stay day="2014-05-10" room="R_0"/>
+      <stay day="2014-05-11" room="R_0"/>
+    </patient>
+    <patient name="Pat_169" status="discharged">
+      <stay day="2014-05-08" room="R_16"/>
+      <stay day="2014-05-09" room="R_16"/>
+      <stay day="2014-05-10" room="R_16"/>
+    </patient>
+    <patient name="Pat_170" status="discharged">
+      <stay day="2014-05-07" room="R_4"/>
+    </patient>
+    <patient name="Pat_171" status="discharged">
+      <stay day="2014-05-05" room="R_12"/>
+      <stay day="2014-05-06" room="R_12"/>
+    </patient>
+    <patient name="Pat_172" status="discharged">
+      <stay day="2014-05-07" room="R_20"/>
+    </patient>
+    <patient name="Pat_173" status="registered" delay="3">
+      <stay day="2014-05-17" room="R_11"/>
+      <stay day="2014-05-18" room="R_11"/>
+    </patient>
+    <patient name="Pat_174" status="discharged">
+      <stay day="2014-05-09" room="R_20"/>
+    </patient>
+    <patient name="Pat_175" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_12"/>
+    </patient>
+    <patient name="Pat_176" status="discharged">
+      <stay day="2014-05-03" room="R_12"/>
+      <stay day="2014-05-04" room="R_12"/>
+    </patient>
+    <patient name="Pat_177" status="registered" delay="3">
+      <stay day="2014-05-18" room="R_0"/>
+    </patient>
+    <patient name="Pat_178" status="discharged">
+      <stay day="2014-05-03" room="R_20"/>
+      <stay day="2014-05-04" room="R_20"/>
+      <stay day="2014-05-05" room="R_20"/>
+    </patient>
+    <patient name="Pat_179" status="discharged">
+      <stay day="2014-05-09" room="R_1"/>
+      <stay day="2014-05-10" room="R_1"/>
+      <stay day="2014-05-11" room="R_1"/>
+    </patient>
+    <patient name="Pat_180" status="discharged">
+      <stay day="2014-05-07" room="R_13"/>
+    </patient>
+    <patient name="Pat_181" status="discharged">
+      <stay day="2014-05-07" room="R_14"/>
+      <stay day="2014-05-08" room="R_14"/>
+      <stay day="2014-05-09" room="R_14"/>
+    </patient>
+    <patient name="Pat_182" status="discharged">
+      <stay day="2014-05-07" room="R_9"/>
+      <stay day="2014-05-08" room="R_9"/>
+      <stay day="2014-05-09" room="R_9"/>
+      <stay day="2014-05-10" room="R_9"/>
+      <stay day="2014-05-11" room="R_9"/>
+    </patient>
+    <patient name="Pat_183" status="discharged">
+      <stay day="2014-05-04" room="R_1"/>
+      <stay day="2014-05-05" room="R_1"/>
+    </patient>
+    <patient name="Pat_184" status="discharged">
+      <stay day="2014-05-07" room="R_8"/>
+    </patient>
+    <patient name="Pat_185" status="discharged">
+      <stay day="2014-05-06" room="R_10"/>
+      <stay day="2014-05-07" room="R_10"/>
+      <stay day="2014-05-08" room="R_10"/>
+      <stay day="2014-05-09" room="R_10"/>
+      <stay day="2014-05-10" room="R_10"/>
+      <stay day="2014-05-11" room="R_10"/>
+      <stay day="2014-05-12" room="R_10"/>
+      <stay day="2014-05-13" room="R_10"/>
+    </patient>
+    <patient name="Pat_186" status="arrived">
+      <stay day="2014-05-12" room="R_20"/>
+      <stay day="2014-05-13" room="R_20"/>
+      <stay day="2014-05-14" room="R_20"/>
+      <stay day="2014-05-15" room="R_20"/>
+      <stay day="2014-05-16" room="R_20"/>
+    </patient>
+    <patient name="Pat_187" status="discharged">
+      <stay day="2014-05-10" room="R_8"/>
+      <stay day="2014-05-11" room="R_8"/>
+      <stay day="2014-05-12" room="R_8"/>
+    </patient>
+    <patient name="Pat_188" status="discharged">
+      <stay day="2014-05-08" room="R_1"/>
+      <stay day="2014-05-09" room="R_1"/>
+    </patient>
+    <patient name="Pat_189" status="discharged">
+      <stay day="2014-05-06" room="R_1"/>
+      <stay day="2014-05-07" room="R_1"/>
+    </patient>
+    <patient name="Pat_190" status="discharged">
+      <stay day="2014-05-08" room="R_20"/>
+      <stay day="2014-05-09" room="R_20"/>
+      <stay day="2014-05-10" room="R_20"/>
+    </patient>
+    <patient name="Pat_191" status="discharged">
+      <stay day="2014-05-07" room="R_17"/>
+    </patient>
+    <patient name="Pat_192" status="discharged">
+      <stay day="2014-05-09" room="R_24"/>
+      <stay day="2014-05-10" room="R_24"/>
+    </patient>
+    <patient name="Pat_193" status="discharged">
+      <stay day="2014-05-06" room="R_13"/>
+    </patient>
+    <patient name="Pat_194" status="discharged">
+      <stay day="2014-05-05" room="R_2"/>
+    </patient>
+    <patient name="Pat_195" status="discharged">
+      <stay day="2014-05-09" room="R_4"/>
+      <stay day="2014-05-10" room="R_4"/>
+      <stay day="2014-05-11" room="R_4"/>
+      <stay day="2014-05-12" room="R_4"/>
+      <stay day="2014-05-13" room="R_4"/>
+      <stay day="2014-05-14" room="R_4"/>
+      <stay day="2014-05-15" room="R_4"/>
+    </patient>
+    <patient name="Pat_196" status="discharged">
+      <stay day="2014-05-12" room="R_21"/>
+      <stay day="2014-05-13" room="R_21"/>
+    </patient>
+    <patient name="Pat_197" status="discharged">
+      <stay day="2014-05-07" room="R_23"/>
+      <stay day="2014-05-08" room="R_23"/>
+      <stay day="2014-05-09" room="R_23"/>
+      <stay day="2014-05-10" room="R_23"/>
+      <stay day="2014-05-11" room="R_23"/>
+    </patient>
+    <patient name="Pat_198" status="discharged">
+      <stay day="2014-05-05" room="R_4"/>
+      <stay day="2014-05-06" room="R_4"/>
+      <stay day="2014-05-07" room="R_4"/>
+      <stay day="2014-05-08" room="R_4"/>
+      <stay day="2014-05-09" room="R_4"/>
+    </patient>
+    <patient name="Pat_199" status="discharged">
+      <stay day="2014-05-05" room="R_8"/>
+      <stay day="2014-05-06" room="R_8"/>
+      <stay day="2014-05-07" room="R_8"/>
+    </patient>
+    <patient name="Pat_200" status="discharged">
+      <stay day="2014-05-05" room="R_8"/>
+    </patient>
+    <patient name="Pat_201" status="discharged">
+      <stay day="2014-05-12" room="R_1"/>
+      <stay day="2014-05-13" room="R_1"/>
+    </patient>
+    <patient name="Pat_202" status="discharged">
+      <stay day="2014-05-05" room="R_21"/>
+      <stay day="2014-05-06" room="R_21"/>
+    </patient>
+    <patient name="Pat_203" status="discharged">
+      <stay day="2014-05-05" room="R_15"/>
+      <stay day="2014-05-06" room="R_15"/>
+      <stay day="2014-05-07" room="R_15"/>
+    </patient>
+    <patient name="Pat_204" status="discharged">
+      <stay day="2014-05-08" room="R_2"/>
+      <stay day="2014-05-09" room="R_2"/>
+      <stay day="2014-05-10" room="R_2"/>
+    </patient>
+    <patient name="Pat_205" status="registered" delay="4">
+      <stay day="2014-05-16" room="R_5"/>
+      <stay day="2014-05-17" room="R_5"/>
+      <stay day="2014-05-18" room="R_5"/>
+    </patient>
+    <patient name="Pat_206" status="registered" delay="17">
+      <stay day="2014-05-26" room="R_11"/>
+    </patient>
+    <patient name="Pat_207" status="discharged">
+      <stay day="2014-05-10" room="R_4"/>
+      <stay day="2014-05-11" room="R_4"/>
+      <stay day="2014-05-12" room="R_4"/>
+    </patient>
+    <patient name="Pat_208" status="discharged">
+      <stay day="2014-05-08" room="R_18"/>
+      <stay day="2014-05-09" room="R_18"/>
+    </patient>
+    <patient name="Pat_209" status="discharged">
+      <stay day="2014-05-15" room="R_24"/>
+    </patient>
+    <patient name="Pat_210" status="discharged">
+      <stay day="2014-05-05" room="R_7"/>
+    </patient>
+    <patient name="Pat_211" status="discharged">
+      <stay day="2014-05-05" room="R_17"/>
+      <stay day="2014-05-06" room="R_17"/>
+    </patient>
+    <patient name="Pat_212" status="discharged">
+      <stay day="2014-05-10" room="R_23"/>
+    </patient>
+    <patient name="Pat_213" status="discharged">
+      <stay day="2014-05-05" room="R_19"/>
+    </patient>
+    <patient name="Pat_214" status="registered" delay="5">
+      <stay day="2014-05-17" room="R_8"/>
+      <stay day="2014-05-18" room="R_8"/>
+      <stay day="2014-05-19" room="R_8"/>
+    </patient>
+    <patient name="Pat_215" status="discharged">
+      <stay day="2014-05-14" room="R_18"/>
+      <stay day="2014-05-15" room="R_18"/>
+    </patient>
+    <patient name="Pat_216" status="discharged">
+      <stay day="2014-05-06" room="R_20"/>
+      <stay day="2014-05-07" room="R_20"/>
+      <stay day="2014-05-08" room="R_20"/>
+    </patient>
+    <patient name="Pat_217" status="registered" delay="7">
+      <stay day="2014-05-20" room="R_15"/>
+      <stay day="2014-05-21" room="R_15"/>
+      <stay day="2014-05-22" room="R_15"/>
+    </patient>
+    <patient name="Pat_218" status="discharged">
+      <stay day="2014-05-07" room="R_0"/>
+      <stay day="2014-05-08" room="R_0"/>
+    </patient>
+    <patient name="Pat_219" status="discharged">
+      <stay day="2014-05-09" room="R_8"/>
+      <stay day="2014-05-10" room="R_8"/>
+      <stay day="2014-05-11" room="R_8"/>
+      <stay day="2014-05-12" room="R_8"/>
+      <stay day="2014-05-13" room="R_8"/>
+      <stay day="2014-05-14" room="R_8"/>
+      <stay day="2014-05-15" room="R_8"/>
+    </patient>
+    <patient name="Pat_220" status="discharged">
+      <stay day="2014-05-14" room="R_23"/>
+    </patient>
+    <patient name="Pat_221" status="discharged">
+      <stay day="2014-05-12" room="R_0"/>
+      <stay day="2014-05-13" room="R_0"/>
+    </patient>
+    <patient name="Pat_222" status="registered" delay="13">
+      <stay day="2014-05-26" room="R_21"/>
+      <stay day="2014-05-27" room="R_21"/>
+    </patient>
+    <patient name="Pat_223" status="discharged">
+      <stay day="2014-05-08" room="R_8"/>
+      <stay day="2014-05-09" room="R_8"/>
+      <stay day="2014-05-10" room="R_8"/>
+      <stay day="2014-05-11" room="R_8"/>
+      <stay day="2014-05-12" room="R_8"/>
+      <stay day="2014-05-13" room="R_8"/>
+      <stay day="2014-05-14" room="R_8"/>
+      <stay day="2014-05-15" room="R_8"/>
+    </patient>
+    <patient name="Pat_224" status="discharged">
+      <stay day="2014-05-06" room="R_8"/>
+    </patient>
+    <patient name="Pat_225" status="discharged">
+      <stay day="2014-05-13" room="R_23"/>
+    </patient>
+    <patient name="Pat_226" status="discharged">
+      <stay day="2014-05-12" room="R_9"/>
+      <stay day="2014-05-13" room="R_9"/>
+      <stay day="2014-05-14" room="R_9"/>
+      <stay day="2014-05-15" room="R_9"/>
+    </patient>
+    <patient name="Pat_227" status="discharged">
+      <stay day="2014-05-12" room="R_18"/>
+      <stay day="2014-05-13" room="R_18"/>
+      <stay day="2014-05-14" room="R_18"/>
+      <stay day="2014-05-15" room="R_18"/>
+    </patient>
+    <patient name="Pat_228" status="discharged">
+      <stay day="2014-05-06" room="R_15"/>
+      <stay day="2014-05-07" room="R_15"/>
+      <stay day="2014-05-08" room="R_15"/>
+      <stay day="2014-05-09" room="R_15"/>
+      <stay day="2014-05-10" room="R_15"/>
+      <stay day="2014-05-11" room="R_15"/>
+      <stay day="2014-05-12" room="R_15"/>
+      <stay day="2014-05-13" room="R_15"/>
+      <stay day="2014-05-14" room="R_15"/>
+      <stay day="2014-05-15" room="R_15"/>
+    </patient>
+    <patient name="Pat_229" status="discharged">
+      <stay day="2014-05-07" room="R_16"/>
+      <stay day="2014-05-08" room="R_16"/>
+      <stay day="2014-05-09" room="R_16"/>
+    </patient>
+    <patient name="Pat_230" status="discharged">
+      <stay day="2014-05-12" room="R_18"/>
+      <stay day="2014-05-13" room="R_18"/>
+    </patient>
+    <patient name="Pat_231" status="discharged">
+      <stay day="2014-05-09" room="R_12"/>
+      <stay day="2014-05-10" room="R_12"/>
+      <stay day="2014-05-11" room="R_12"/>
+    </patient>
+    <patient name="Pat_232" status="discharged">
+      <stay day="2014-05-06" room="R_19"/>
+      <stay day="2014-05-07" room="R_19"/>
+      <stay day="2014-05-08" room="R_19"/>
+      <stay day="2014-05-09" room="R_19"/>
+      <stay day="2014-05-10" room="R_19"/>
+    </patient>
+    <patient name="Pat_233" status="discharged">
+      <stay day="2014-05-07" room="R_1"/>
+      <stay day="2014-05-08" room="R_1"/>
+    </patient>
+    <patient name="Pat_234" status="discharged">
+      <stay day="2014-05-06" room="R_24"/>
+      <stay day="2014-05-07" room="R_24"/>
+    </patient>
+    <patient name="Pat_235" status="registered" delay="5">
+      <stay day="2014-05-20" room="R_22"/>
+    </patient>
+    <patient name="Pat_236" status="discharged">
+      <stay day="2014-05-13" room="R_23"/>
+    </patient>
+    <patient name="Pat_237" status="discharged">
+      <stay day="2014-05-08" room="R_16"/>
+    </patient>
+    <patient name="Pat_238" status="discharged">
+      <stay day="2014-05-08" room="R_1"/>
+      <stay day="2014-05-09" room="R_1"/>
+    </patient>
+    <patient name="Pat_239" status="discharged">
+      <stay day="2014-05-13" room="R_19"/>
+    </patient>
+    <patient name="Pat_240" status="discharged">
+      <stay day="2014-05-12" room="R_19"/>
+      <stay day="2014-05-13" room="R_19"/>
+      <stay day="2014-05-14" room="R_19"/>
+    </patient>
+    <patient name="Pat_241" status="registered" delay="2">
+      <stay day="2014-05-16" room="R_18"/>
+      <stay day="2014-05-17" room="R_18"/>
+    </patient>
+    <patient name="Pat_242" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_4"/>
+    </patient>
+    <patient name="Pat_243" status="discharged">
+      <stay day="2014-05-12" room="R_16"/>
+    </patient>
+    <patient name="Pat_244" status="discharged">
+      <stay day="2014-05-08" room="R_13"/>
+      <stay day="2014-05-09" room="R_13"/>
+      <stay day="2014-05-10" room="R_13"/>
+      <stay day="2014-05-11" room="R_13"/>
+      <stay day="2014-05-12" room="R_13"/>
+      <stay day="2014-05-13" room="R_13"/>
+      <stay day="2014-05-14" room="R_13"/>
+      <stay day="2014-05-15" room="R_13"/>
+    </patient>
+    <patient name="Pat_245" status="discharged">
+      <stay day="2014-05-07" room="R_7"/>
+    </patient>
+    <patient name="Pat_246" status="registered" delay="8">
+      <stay day="2014-05-20" room="R_15"/>
+      <stay day="2014-05-21" room="R_15"/>
+      <stay day="2014-05-22" room="R_15"/>
+      <stay day="2014-05-23" room="R_15"/>
+    </patient>
+    <patient name="Pat_247" status="discharged">
+      <stay day="2014-05-14" room="R_23"/>
+    </patient>
+    <patient name="Pat_248" status="discharged">
+      <stay day="2014-05-12" room="R_23"/>
+      <stay day="2014-05-13" room="R_23"/>
+      <stay day="2014-05-14" room="R_21"/>
+    </patient>
+    <patient name="Pat_249" status="registered" delay="13">
+      <stay day="2014-05-27" room="R_2"/>
+      <stay day="2014-05-28" room="R_2"/>
+    </patient>
+    <patient name="Pat_250" status="discharged">
+      <stay day="2014-05-08" room="R_8"/>
+      <stay day="2014-05-09" room="R_8"/>
+      <stay day="2014-05-10" room="R_8"/>
+      <stay day="2014-05-11" room="R_8"/>
+    </patient>
+    <patient name="Pat_251" status="registered" delay="8">
+      <stay day="2014-05-22" room="R_21"/>
+      <stay day="2014-05-23" room="R_21"/>
+    </patient>
+    <patient name="Pat_252" status="discharged">
+      <stay day="2014-05-07" room="R_2"/>
+    </patient>
+    <patient name="Pat_253" status="discharged">
+      <stay day="2014-05-13" room="R_2"/>
+      <stay day="2014-05-14" room="R_2"/>
+      <stay day="2014-05-15" room="R_2"/>
+    </patient>
+    <patient name="Pat_254" status="discharged">
+      <stay day="2014-05-14" room="R_14"/>
+      <stay day="2014-05-15" room="R_14"/>
+    </patient>
+    <patient name="Pat_255" status="discharged">
+      <stay day="2014-05-09" room="R_5"/>
+      <stay day="2014-05-10" room="R_5"/>
+      <stay day="2014-05-11" room="R_5"/>
+    </patient>
+    <patient name="Pat_256" status="discharged">
+      <stay day="2014-05-07" room="R_18"/>
+      <stay day="2014-05-08" room="R_18"/>
+    </patient>
+    <patient name="Pat_257" status="discharged">
+      <stay day="2014-05-08" room="R_23"/>
+    </patient>
+    <patient name="Pat_258" status="discharged">
+      <stay day="2014-05-13" room="R_19"/>
+    </patient>
+    <patient name="Pat_259" status="discharged">
+      <stay day="2014-05-08" room="R_2"/>
+      <stay day="2014-05-09" room="R_2"/>
+      <stay day="2014-05-10" room="R_2"/>
+    </patient>
+    <patient name="Pat_260" status="registered" delay="6">
+      <stay day="2014-05-21" room="R_4"/>
+    </patient>
+    <patient name="Pat_261" status="registered" delay="14">
+      <stay day="2014-05-27" room="R_0"/>
+      <stay day="2014-05-28" room="R_0"/>
+      <stay day="2014-05-29" room="R_0"/>
+    </patient>
+    <patient name="Pat_262" status="discharged">
+      <stay day="2014-05-08" room="R_18"/>
+      <stay day="2014-05-09" room="R_18"/>
+      <stay day="2014-05-10" room="R_18"/>
+    </patient>
+    <patient name="Pat_263" status="registered" delay="5">
+      <stay day="2014-05-18" room="R_17"/>
+      <stay day="2014-05-19" room="R_17"/>
+    </patient>
+    <patient name="Pat_264" status="registered" delay="6">
+      <stay day="2014-05-21" room="R_11"/>
+    </patient>
+    <patient name="Pat_265" status="discharged">
+      <stay day="2014-05-08" room="R_20"/>
+      <stay day="2014-05-09" room="R_20"/>
+      <stay day="2014-05-10" room="R_20"/>
+    </patient>
+    <patient name="Pat_266" status="registered" delay="14">
+      <stay day="2014-05-29" room="R_11"/>
+    </patient>
+    <patient name="Pat_267" status="discharged">
+      <stay day="2014-05-13" room="R_10"/>
+      <stay day="2014-05-14" room="R_10"/>
+      <stay day="2014-05-15" room="R_10"/>
+    </patient>
+    <patient name="Pat_268" status="registered" delay="4">
+      <stay day="2014-05-16" room="R_8"/>
+    </patient>
+    <patient name="Pat_269" status="discharged">
+      <stay day="2014-05-13" room="R_15"/>
+      <stay day="2014-05-14" room="R_15"/>
+      <stay day="2014-05-15" room="R_15"/>
+    </patient>
+    <patient name="Pat_270" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_15"/>
+    </patient>
+    <patient name="Pat_271" status="discharged">
+      <stay day="2014-05-15" room="R_16"/>
+    </patient>
+    <patient name="Pat_272" status="registered" delay="2">
+      <stay day="2014-05-16" room="R_23"/>
+      <stay day="2014-05-17" room="R_23"/>
+    </patient>
+    <patient name="Pat_273" status="discharged">
+      <stay day="2014-05-13" room="R_8"/>
+      <stay day="2014-05-14" room="R_8"/>
+      <stay day="2014-05-15" room="R_8"/>
+    </patient>
+    <patient name="Pat_274" status="discharged">
+      <stay day="2014-05-08" room="R_18"/>
+      <stay day="2014-05-09" room="R_18"/>
+    </patient>
+    <patient name="Pat_275" status="discharged">
+      <stay day="2014-05-13" room="R_18"/>
+      <stay day="2014-05-14" room="R_18"/>
+    </patient>
+    <patient name="Pat_276" status="discharged">
+      <stay day="2014-05-08" room="R_18"/>
+      <stay day="2014-05-09" room="R_18"/>
+    </patient>
+    <patient name="Pat_277" status="discharged">
+      <stay day="2014-05-09" room="R_2"/>
+      <stay day="2014-05-10" room="R_2"/>
+      <stay day="2014-05-11" room="R_2"/>
+      <stay day="2014-05-12" room="R_2"/>
+      <stay day="2014-05-13" room="R_2"/>
+    </patient>
+    <patient name="Pat_278" status="discharged">
+      <stay day="2014-05-12" room="R_19"/>
+    </patient>
+    <patient name="Pat_279" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_4"/>
+    </patient>
+    <patient name="Pat_280" status="registered" delay="13">
+      <stay day="2014-05-28" room="R_11"/>
+    </patient>
+    <patient name="Pat_281" status="discharged">
+      <stay day="2014-05-13" room="R_20"/>
+      <stay day="2014-05-14" room="R_20"/>
+      <stay day="2014-05-15" room="R_20"/>
+    </patient>
+    <patient name="Pat_282" status="discharged">
+      <stay day="2014-05-12" room="R_20"/>
+    </patient>
+    <patient name="Pat_283" status="registered" delay="5">
+      <stay day="2014-05-18" room="R_14"/>
+    </patient>
+    <patient name="Pat_284" status="registered" delay="14">
+      <stay day="2014-05-26" room="R_15"/>
+      <stay day="2014-05-27" room="R_15"/>
+      <stay day="2014-05-28" room="R_15"/>
+      <stay day="2014-05-29" room="R_15"/>
+    </patient>
+    <patient name="Pat_285" status="discharged">
+      <stay day="2014-05-12" room="R_19"/>
+    </patient>
+    <patient name="Pat_286" status="registered" delay="11">
+      <stay day="2014-05-23" room="R_11"/>
+      <stay day="2014-05-24" room="R_11"/>
+      <stay day="2014-05-25" room="R_11"/>
+    </patient>
+    <patient name="Pat_287" status="discharged">
+      <stay day="2014-05-13" room="R_4"/>
+      <stay day="2014-05-14" room="R_4"/>
+      <stay day="2014-05-15" room="R_4"/>
+    </patient>
+    <patient name="Pat_288" status="arrived">
+      <stay day="2014-05-12" room="R_8"/>
+      <stay day="2014-05-13" room="R_8"/>
+      <stay day="2014-05-14" room="R_8"/>
+      <stay day="2014-05-15" room="R_8"/>
+      <stay day="2014-05-16" room="R_8"/>
+    </patient>
+    <patient name="Pat_289" status="discharged">
+      <stay day="2014-05-09" room="R_1"/>
+      <stay day="2014-05-10" room="R_1"/>
+    </patient>
+    <patient name="Pat_290" status="discharged">
+      <stay day="2014-05-12" room="R_2"/>
+    </patient>
+    <patient name="Pat_291" status="discharged">
+      <stay day="2014-05-09" room="R_18"/>
+      <stay day="2014-05-10" room="R_18"/>
+    </patient>
+    <patient name="Pat_292" status="discharged">
+      <stay day="2014-05-12" room="R_19"/>
+      <stay day="2014-05-13" room="R_19"/>
+      <stay day="2014-05-14" room="R_19"/>
+    </patient>
+    <patient name="Pat_293" status="registered" delay="10">
+      <stay day="2014-05-24" room="R_14"/>
+      <stay day="2014-05-25" room="R_14"/>
+    </patient>
+    <patient name="Pat_294" status="discharged">
+      <stay day="2014-05-15" room="R_2"/>
+    </patient>
+    <patient name="Pat_295" status="registered" delay="3">
+      <stay day="2014-05-16" room="R_23"/>
+      <stay day="2014-05-17" room="R_23"/>
+      <stay day="2014-05-18" room="R_23"/>
+    </patient>
+    <patient name="Pat_296" status="registered" delay="7">
+      <stay day="2014-05-21" room="R_17"/>
+      <stay day="2014-05-22" room="R_17"/>
+    </patient>
+    <patient name="Pat_297" status="discharged">
+      <stay day="2014-05-12" room="R_22"/>
+      <stay day="2014-05-13" room="R_22"/>
+      <stay day="2014-05-14" room="R_22"/>
+      <stay day="2014-05-15" room="R_22"/>
+    </patient>
+    <patient name="Pat_298" status="discharged">
+      <stay day="2014-05-09" room="R_19"/>
+    </patient>
+    <patient name="Pat_299" status="registered" delay="4">
+      <stay day="2014-05-18" room="R_15"/>
+      <stay day="2014-05-19" room="R_15"/>
+    </patient>
+    <patient name="Pat_300" status="registered" delay="5">
+      <stay day="2014-05-19" room="R_22"/>
+    </patient>
+    <patient name="Pat_301" status="registered" delay="3">
+      <stay day="2014-05-17" room="R_23"/>
+      <stay day="2014-05-18" room="R_23"/>
+    </patient>
+    <patient name="Pat_302" status="discharged">
+      <stay day="2014-05-14" room="R_16"/>
+      <stay day="2014-05-15" room="R_16"/>
+    </patient>
+    <patient name="Pat_303" status="registered" delay="4">
+      <stay day="2014-05-19" room="R_14"/>
+    </patient>
+    <patient name="Pat_304" status="discharged">
+      <stay day="2014-05-14" room="R_23"/>
+      <stay day="2014-05-15" room="R_23"/>
+    </patient>
+    <patient name="Pat_305" status="registered" delay="14">
+      <stay day="2014-05-29" room="R_13"/>
+    </patient>
+    <patient name="Pat_306" status="registered" delay="7">
+      <stay day="2014-05-21" room="R_16"/>
+    </patient>
+    <patient name="Pat_307" status="discharged">
+      <stay day="2014-05-12" room="R_23"/>
+      <stay day="2014-05-13" room="R_23"/>
+      <stay day="2014-05-14" room="R_23"/>
+    </patient>
+    <patient name="Pat_308" status="registered" delay="4">
+      <stay day="2014-05-19" room="R_23"/>
+    </patient>
+    <patient name="Pat_309" status="registered" delay="3">
+      <stay day="2014-05-17" room="R_23"/>
+      <stay day="2014-05-18" room="R_23"/>
+    </patient>
+    <patient name="Pat_310" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_17"/>
+    </patient>
+    <patient name="Pat_311" status="discharged">
+      <stay day="2014-05-14" room="R_18"/>
+      <stay day="2014-05-15" room="R_18"/>
+    </patient>
+    <patient name="Pat_312" status="discharged">
+      <stay day="2014-05-13" room="R_1"/>
+      <stay day="2014-05-14" room="R_1"/>
+    </patient>
+    <patient name="Pat_313" status="discharged">
+      <stay day="2014-05-10" room="R_1"/>
+      <stay day="2014-05-11" room="R_1"/>
+      <stay day="2014-05-12" room="R_1"/>
+      <stay day="2014-05-13" room="R_1"/>
+      <stay day="2014-05-14" room="R_1"/>
+    </patient>
+    <patient name="Pat_314" status="registered" delay="3">
+      <stay day="2014-05-17" room="R_15"/>
+    </patient>
+    <patient name="Pat_315" status="discharged">
+      <stay day="2014-05-10" room="R_14"/>
+      <stay day="2014-05-11" room="R_14"/>
+    </patient>
+    <patient name="Pat_316" status="discharged">
+      <stay day="2014-05-12" room="R_12"/>
+    </patient>
+    <patient name="Pat_317" status="discharged">
+      <stay day="2014-05-14" room="R_1"/>
+      <stay day="2014-05-15" room="R_1"/>
+    </patient>
+    <patient name="Pat_318" status="discharged">
+      <stay day="2014-05-15" room="R_1"/>
+    </patient>
+    <patient name="Pat_319" status="registered" delay="10">
+      <stay day="2014-05-22" room="R_13"/>
+      <stay day="2014-05-23" room="R_13"/>
+      <stay day="2014-05-24" room="R_13"/>
+      <stay day="2014-05-25" room="R_13"/>
+    </patient>
+    <patient name="Pat_320" status="registered" delay="2">
+      <stay day="2014-05-17" room="R_0"/>
+    </patient>
+    <patient name="Pat_321" status="discharged">
+      <stay day="2014-05-14" room="R_19"/>
+    </patient>
+    <patient name="Pat_322" status="discharged">
+      <stay day="2014-05-12" room="R_18"/>
+      <stay day="2014-05-13" room="R_18"/>
+    </patient>
+    <patient name="Pat_323" status="discharged">
+      <stay day="2014-05-14" room="R_0"/>
+      <stay day="2014-05-15" room="R_0"/>
+    </patient>
+    <patient name="Pat_324" status="registered" delay="10">
+      <stay day="2014-05-23" room="R_0"/>
+      <stay day="2014-05-24" room="R_0"/>
+    </patient>
+    <patient name="Pat_325" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_18"/>
+    </patient>
+    <patient name="Pat_326" status="discharged">
+      <stay day="2014-05-12" room="R_10"/>
+    </patient>
+    <patient name="Pat_327" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_10"/>
+    </patient>
+    <patient name="Pat_328" status="registered" delay="3">
+      <stay day="2014-05-17" room="R_15"/>
+    </patient>
+    <patient name="Pat_329" status="discharged">
+      <stay day="2014-05-12" room="R_19"/>
+      <stay day="2014-05-13" room="R_19"/>
+      <stay day="2014-05-14" room="R_19"/>
+      <stay day="2014-05-15" room="R_19"/>
+    </patient>
+    <patient name="Pat_330" status="registered" delay="14">
+      <stay day="2014-05-26" room="R_15"/>
+      <stay day="2014-05-27" room="R_15"/>
+      <stay day="2014-05-28" room="R_15"/>
+    </patient>
+    <patient name="Pat_331" status="discharged">
+      <stay day="2014-05-12" room="R_5"/>
+      <stay day="2014-05-13" room="R_5"/>
+      <stay day="2014-05-14" room="R_5"/>
+      <stay day="2014-05-15" room="R_5"/>
+    </patient>
+    <patient name="Pat_332" status="registered" delay="5">
+      <stay day="2014-05-20" room="R_13"/>
+    </patient>
+    <patient name="Pat_333" status="discharged">
+      <stay day="2014-05-15" room="R_23"/>
+    </patient>
+    <patient name="Pat_334" status="discharged">
+      <stay day="2014-05-12" room="R_16"/>
+      <stay day="2014-05-13" room="R_16"/>
+      <stay day="2014-05-14" room="R_16"/>
+      <stay day="2014-05-15" room="R_16"/>
+    </patient>
+    <patient name="Pat_335" status="discharged">
+      <stay day="2014-05-14" room="R_2"/>
+    </patient>
+    <patient name="Pat_336" status="registered" delay="9">
+      <stay day="2014-05-21" room="R_22"/>
+    </patient>
+    <patient name="Pat_337" status="registered" delay="10">
+      <stay day="2014-05-23" room="R_12"/>
+      <stay day="2014-05-24" room="R_12"/>
+    </patient>
+    <patient name="Pat_338" status="registered" delay="6">
+      <stay day="2014-05-20" room="R_21"/>
+      <stay day="2014-05-21" room="R_21"/>
+    </patient>
+    <patient name="Pat_339" status="registered" delay="4">
+      <stay day="2014-05-18" room="R_21"/>
+      <stay day="2014-05-19" room="R_21"/>
+    </patient>
+    <patient name="Pat_340" status="registered" delay="7">
+      <stay day="2014-05-21" room="R_0"/>
+      <stay day="2014-05-22" room="R_0"/>
+    </patient>
+    <patient name="Pat_341" status="discharged">
+      <stay day="2014-05-15" room="R_19"/>
+    </patient>
+    <patient name="Pat_342" status="registered" delay="5">
+      <stay day="2014-05-17" room="R_8"/>
+      <stay day="2014-05-18" room="R_8"/>
+      <stay day="2014-05-19" room="R_8"/>
+    </patient>
+    <patient name="Pat_343" status="registered" delay="3">
+      <stay day="2014-05-17" room="R_9"/>
+      <stay day="2014-05-18" room="R_9"/>
+    </patient>
+    <patient name="Pat_344" status="discharged">
+      <stay day="2014-05-12" room="R_16"/>
+      <stay day="2014-05-13" room="R_16"/>
+      <stay day="2014-05-14" room="R_16"/>
+      <stay day="2014-05-15" room="R_16"/>
+    </patient>
+    <patient name="Pat_345" status="registered" delay="15">
+      <stay day="2014-05-29" room="R_22"/>
+    </patient>
+    <patient name="Pat_346" status="registered" delay="2">
+      <stay day="2014-05-17" room="R_14"/>
+    </patient>
+    <patient name="Pat_347" status="registered" delay="3">
+      <stay day="2014-05-16" room="R_24"/>
+    </patient>
+    <patient name="Pat_348" status="registered" delay="12">
+      <stay day="2014-05-25" room="R_0"/>
+      <stay day="2014-05-26" room="R_0"/>
+    </patient>
+    <patient name="Pat_349" status="discharged">
+      <stay day="2014-05-15" room="R_19"/>
+    </patient>
+    <patient name="Pat_350" status="registered" delay="13">
+      <stay day="2014-05-28" room="R_15"/>
+    </patient>
+    <patient name="Pat_351" status="discharged">
+      <stay day="2014-05-13" room="R_7"/>
+      <stay day="2014-05-14" room="R_7"/>
+      <stay day="2014-05-15" room="R_7"/>
+    </patient>
+    <patient name="Pat_352" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_14"/>
+    </patient>
+    <patient name="Pat_353" status="registered" delay="7">
+      <stay day="2014-05-20" room="R_15"/>
+      <stay day="2014-05-21" room="R_15"/>
+      <stay day="2014-05-22" room="R_15"/>
+    </patient>
+    <patient name="Pat_354" status="discharged">
+      <stay day="2014-05-12" room="R_16"/>
+    </patient>
+    <patient name="Pat_355" status="registered" delay="4">
+      <stay day="2014-05-16" room="R_15"/>
+    </patient>
+    <patient name="Pat_356" status="discharged">
+      <stay day="2014-05-13" room="R_1"/>
+      <stay day="2014-05-14" room="R_1"/>
+    </patient>
+    <patient name="Pat_357" status="registered" delay="3">
+      <stay day="2014-05-16" room="R_15"/>
+    </patient>
+    <patient name="Pat_358" status="discharged">
+      <stay day="2014-05-12" room="R_18"/>
+      <stay day="2014-05-13" room="R_18"/>
+    </patient>
+    <patient name="Pat_359" status="arrived">
+      <stay day="2014-05-15" room="R_1"/>
+      <stay day="2014-05-16" room="R_1"/>
+    </patient>
+    <patient name="Pat_360" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_8"/>
+    </patient>
+    <patient name="Pat_361" status="discharged">
+      <stay day="2014-05-12" room="R_20"/>
+      <stay day="2014-05-13" room="R_20"/>
+      <stay day="2014-05-14" room="R_20"/>
+      <stay day="2014-05-15" room="R_20"/>
+    </patient>
+    <patient name="Pat_362" status="registered" delay="3">
+      <stay day="2014-05-17" room="R_22"/>
+    </patient>
+    <patient name="Pat_363" status="registered" delay="6">
+      <stay day="2014-05-21" room="R_10"/>
+    </patient>
+    <patient name="Pat_364" status="discharged">
+      <stay day="2014-05-15" room="R_1"/>
+    </patient>
+    <patient name="Pat_365" status="discharged">
+      <stay day="2014-05-15" room="R_21"/>
+    </patient>
+    <patient name="Pat_366" status="registered" delay="3">
+      <stay day="2014-05-16" room="R_3"/>
+      <stay day="2014-05-17" room="R_3"/>
+      <stay day="2014-05-18" room="R_3"/>
+    </patient>
+    <patient name="Pat_367" status="registered" delay="2">
+      <stay day="2014-05-16" room="R_23"/>
+    </patient>
+    <patient name="Pat_368" status="registered" delay="14">
+      <stay day="2014-05-28" room="R_21"/>
+      <stay day="2014-05-29" room="R_21"/>
+    </patient>
+    <patient name="Pat_369" status="registered" delay="7">
+      <stay day="2014-05-22" room="R_22"/>
+    </patient>
+    <patient name="Pat_370" status="discharged">
+      <stay day="2014-05-13" room="R_16"/>
+    </patient>
+    <patient name="Pat_371" status="discharged">
+      <stay day="2014-05-12" room="R_23"/>
+    </patient>
+    <patient name="Pat_372" status="discharged">
+      <stay day="2014-05-13" room="R_2"/>
+      <stay day="2014-05-14" room="R_2"/>
+      <stay day="2014-05-15" room="R_2"/>
+    </patient>
+    <patient name="Pat_373" status="discharged">
+      <stay day="2014-05-13" room="R_24"/>
+      <stay day="2014-05-14" room="R_24"/>
+    </patient>
+    <patient name="Pat_374" status="registered" delay="10">
+      <stay day="2014-05-23" room="R_22"/>
+      <stay day="2014-05-24" room="R_22"/>
+      <stay day="2014-05-25" room="R_22"/>
+    </patient>
+    <patient name="Pat_375" status="registered" delay="5">
+      <stay day="2014-05-19" room="R_5"/>
+      <stay day="2014-05-20" room="R_5"/>
+    </patient>
+    <patient name="Pat_376" status="registered" delay="12">
+      <stay day="2014-05-27" room="R_22"/>
+    </patient>
+    <patient name="Pat_377" status="registered" delay="3">
+      <stay day="2014-05-16" room="R_23"/>
+      <stay day="2014-05-17" room="R_23"/>
+      <stay day="2014-05-18" room="R_23"/>
+    </patient>
+    <patient name="Pat_378" status="discharged">
+      <stay day="2014-05-14" room="R_19"/>
+    </patient>
+    <patient name="Pat_379" status="registered" delay="5">
+      <stay day="2014-05-20" room="R_17"/>
+    </patient>
+    <patient name="Pat_380" status="registered" delay="4">
+      <stay day="2014-05-19" room="R_11"/>
+    </patient>
+    <patient name="Pat_381" status="discharged">
+      <stay day="2014-05-14" room="R_23"/>
+    </patient>
+    <patient name="Pat_382" status="registered" delay="11">
+      <stay day="2014-05-25" room="R_17"/>
+      <stay day="2014-05-26" room="R_17"/>
+    </patient>
+    <patient name="Pat_383" status="registered" delay="6">
+      <stay day="2014-05-20" room="R_23"/>
+      <stay day="2014-05-21" room="R_23"/>
+    </patient>
+    <patient name="Pat_384" status="discharged">
+      <stay day="2014-05-15" room="R_23"/>
+    </patient>
+    <patient name="Pat_385" status="discharged">
+      <stay day="2014-05-13" room="R_17"/>
+      <stay day="2014-05-14" room="R_17"/>
+    </patient>
+    <patient name="Pat_386" status="discharged">
+      <stay day="2014-05-13" room="R_18"/>
+      <stay day="2014-05-14" room="R_18"/>
+    </patient>
+    <patient name="Pat_387" status="registered" delay="3">
+      <stay day="2014-05-16" room="R_11"/>
+    </patient>
+    <patient name="Pat_388" status="registered" delay="8">
+      <stay day="2014-05-22" room="R_14"/>
+      <stay day="2014-05-23" room="R_14"/>
+    </patient>
+    <patient name="Pat_389" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_8"/>
+    </patient>
+    <patient name="Pat_390" status="registered" delay="6">
+      <stay day="2014-05-21" room="R_13"/>
+    </patient>
+    <patient name="Pat_391" status="discharged">
+      <stay day="2014-05-15" room="R_19"/>
+    </patient>
+    <patient name="Pat_392" status="registered" delay="6">
+      <stay day="2014-05-21" room="R_23"/>
+    </patient>
+    <patient name="Pat_393" status="registered" delay="8">
+      <stay day="2014-05-22" room="R_15"/>
+    </patient>
+    <patient name="Pat_394" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_9"/>
+    </patient>
+    <patient name="Pat_395" status="discharged">
+      <stay day="2014-05-15" room="R_19"/>
+    </patient>
+    <patient name="Pat_396" status="registered" delay="10">
+      <stay day="2014-05-24" room="R_21"/>
+      <stay day="2014-05-25" room="R_21"/>
+    </patient>
+    <patient name="Pat_397" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_23"/>
+    </patient>
+    <patient name="Pat_398" status="discharged">
+      <stay day="2014-05-15" room="R_23"/>
+    </patient>
+    <patient name="Pat_399" status="registered" delay="4">
+      <stay day="2014-05-18" room="R_6"/>
+      <stay day="2014-05-19" room="R_6"/>
+    </patient>
+    <patient name="Pat_400" status="registered" delay="8">
+      <stay day="2014-05-23" room="R_15"/>
+    </patient>
+    <patient name="Pat_401" status="registered" delay="6">
+      <stay day="2014-05-20" room="R_14"/>
+      <stay day="2014-05-21" room="R_14"/>
+    </patient>
+    <patient name="Pat_402" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_22"/>
+    </patient>
+    <patient name="Pat_403" status="discharged">
+      <stay day="2014-05-15" room="R_18"/>
+    </patient>
+    <patient name="Pat_404" status="registered" delay="7">
+      <stay day="2014-05-21" room="R_12"/>
+      <stay day="2014-05-22" room="R_12"/>
+    </patient>
+    <patient name="Pat_405" status="discharged">
+      <stay day="2014-05-14" room="R_19"/>
+    </patient>
+    <patient name="Pat_406" status="registered" delay="12">
+      <stay day="2014-05-27" room="R_13"/>
+    </patient>
+    <patient name="Pat_407" status="registered" delay="3">
+      <stay day="2014-05-18" room="R_22"/>
+    </patient>
+    <patient name="Pat_408" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_10"/>
+    </patient>
+    <patient name="Pat_409" status="registered" delay="2">
+      <stay day="2014-05-16" room="R_6"/>
+      <stay day="2014-05-17" room="R_6"/>
+    </patient>
+    <patient name="Pat_410" status="registered" delay="7">
+      <stay day="2014-05-22" room="R_11"/>
+    </patient>
+    <patient name="Pat_411" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_0"/>
+    </patient>
+    <patient name="Pat_412" status="registered" delay="3">
+      <stay day="2014-05-18" room="R_13"/>
+    </patient>
+    <patient name="Pat_413" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_21"/>
+    </patient>
+    <patient name="Pat_414" status="registered" delay="2">
+      <stay day="2014-05-17" room="R_21"/>
+    </patient>
+    <patient name="Pat_415" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_1"/>
+    </patient>
+    <patient name="Pat_416" status="registered" delay="4">
+      <stay day="2014-05-19" room="R_23"/>
+    </patient>
+    <patient name="Pat_417" status="discharged">
+      <stay day="2014-05-15" room="R_23"/>
+    </patient>
+    <patient name="Pat_418" status="registered" delay="6">
+      <stay day="2014-05-21" room="R_3"/>
+    </patient>
+    <patient name="Pat_419" status="registered" delay="5">
+      <stay day="2014-05-20" room="R_8"/>
+    </patient>
+    <patient name="Pat_420" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_2"/>
+    </patient>
+    <patient name="Pat_421" status="registered" delay="4">
+      <stay day="2014-05-19" room="R_15"/>
+    </patient>
+    <patient name="Pat_422" status="registered" delay="4">
+      <stay day="2014-05-19" room="R_12"/>
+    </patient>
+    <patient name="Pat_423" status="registered" delay="13">
+      <stay day="2014-05-28" room="R_15"/>
+    </patient>
+    <patient name="Pat_424" status="registered" delay="2">
+      <stay day="2014-05-17" room="R_23"/>
+    </patient>
+    <patient name="Pat_425" status="registered" delay="4">
+      <stay day="2014-05-19" room="R_13"/>
+    </patient>
+    <patient name="Pat_426" status="registered" delay="6">
+      <stay day="2014-05-21" room="R_15"/>
+    </patient>
+    <patient name="Pat_427" status="registered" delay="2">
+      <stay day="2014-05-17" room="R_17"/>
+    </patient>
+    <patient name="Pat_428" status="discharged">
+      <stay day="2014-05-15" room="R_18"/>
+    </patient>
+    <patient name="Pat_429" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_23"/>
+    </patient>
+    <patient name="Pat_430" status="registered" delay="1">
+      <stay day="2014-05-16" room="R_13"/>
+    </patient>
+  </patients_scheduling>
+  <costs violations="0" objectives="45600" time="66.37">
+    <patient_room value="11230">
+      <properties violations="375" weight="20"/>
+      <preference violations="260" weight="10"/>
+      <specialism violations="34" weight="20"/>
+      <gender violations="9" weight="50"/>
+    </patient_room>
+    <gender>50</gender>
+    <transfer>400</transfer>
+    <delay>3950</delay>
+    <overcrowd_risk>65</overcrowd_risk>
+    <or_overtime_cost>1545</or_overtime_cost>
+    <idle_room_cost>4060</idle_room_cost>
+    <idle_operating_room_cost>24300</idle_operating_room_cost>
+    <capacity_violations value="0" room_utilization="78.36"/>
+    <or_violations value="0" or_utilization="83.34"/>
+  </costs>
+</OrPasu_main_out>
