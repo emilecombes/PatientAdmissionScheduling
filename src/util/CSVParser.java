@@ -18,11 +18,11 @@ public class CSVParser {
 
   public void buildMoveInfoCSV() throws IOException {
     File file = new File(outputPath + instance + "_move_info.csv");
-    if(file.exists()) file.delete();
+    if (file.exists()) file.delete();
     file.createNewFile();
 
     FileWriter writer = new FileWriter(file);
-    for(String info : solver.getMoveInfo())
+    for (String info : solver.getMoveInfo())
       writer.write(info);
     writer.flush();
     writer.close();

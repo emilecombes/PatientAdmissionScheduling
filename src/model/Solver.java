@@ -75,7 +75,8 @@ public class Solver {
     String[] columns =
         {"id", "type", "accepted", "first_patient", "second_patient", "first_room", "second_room",
             "first_department", "second_department", "first_shift", "second_shift",
-            "patient_savings", "load_savings", "patient_cost", "load_cost"};
+            "patient_savings", "load_savings", "total_patient_cost", "total_load_cost",
+            "patient_cost", "load_cost"};
 
     StringBuilder header = new StringBuilder();
     for (String key : columns) header.append(key).append(',');
@@ -223,7 +224,7 @@ public class Solver {
     double temp = 155;
     double stopTemp = 1.55;
     double alpha = 0.999;
-    int iterations = 1000;
+    int iterations = 100;
     int i;
     int n = 0;
 
@@ -244,7 +245,7 @@ public class Solver {
       loadCost = schedule.getTotalDailyLoadCost()
           + schedule.getTotalDepartmentLoadCost()
           + schedule.getCapacityViolations() * getPenalty("capacity_violation");
-      if (n % 1000 == 0) {
+      if (n % 100 == 0) {
         System.out.println(n + ", TEMP: " + temp);
         printCosts();
       }
@@ -399,12 +400,16 @@ public class Solver {
   }
 
   public void addSavingsToMove(int capacitySavings, int patientSavings, double loadSavings) {
-    lastMove.put("capacity_violations", schedule.getCapacityViolations());
+    int capacityViolations = schedule.getCapacityViolations();
+    int capacityViolationCost = capacityViolations * getPenalty("capacity_violation");
+    lastMove.put("capacity_violations", capacityViolations);
     lastMove.put("capacity_violation_savings", capacitySavings);
-    lastMove.put("patient_cost", patientCost);
-    lastMove.put("load_cost", loadCost);
+    lastMove.put("total_patient_cost", patientCost);
+    lastMove.put("patient_cost", patientCost - capacityViolationCost);
     lastMove.put("patient_savings", patientSavings);
-    lastMove.put("load_savings", (int) (Math.round(loadSavings)));
+    lastMove.put("total_load_cost", loadCost);
+    lastMove.put("load_cost", loadCost - capacityViolationCost);
+    lastMove.put("load_savings", (int) loadSavings);
   }
 
   public void executeChangeRoom() {
