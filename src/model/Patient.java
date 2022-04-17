@@ -39,7 +39,7 @@ public class Patient {
     this.neededCare = new ArrayList<>();
     int total = 0;
     for (int i = 0; i < stayLength; i++) {
-      neededCare.add(100);
+      neededCare.add((int) (Math.random() * 100));
       total += neededCare.get(i);
     }
     totalNeededCare = total;

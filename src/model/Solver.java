@@ -231,20 +231,25 @@ public class Solver {
       i = 0;
       while (i < iterations) {
         executeNewMove();
-        if (lastMove.get(objective) > 0)
-          acceptMove();
-        else if (Math.random() < Math.exp(lastMove.get(objective) / temp))
-          acceptMove();
-        else
-          undoLastMove();
+        if (lastMove.get(objective) > 0) acceptMove();
+        else if (Math.random() < Math.exp(lastMove.get(objective) / temp)) acceptMove();
+        else undoLastMove();
         generatedMoves.add(lastMove);
         i++;
+
+        if (i % 100 == 0)
+          if (schedule.checkLoadCost(loadCost))
+            System.out.println(i);
       }
+      loadCost = schedule.getTotalDailyLoadCost()
+          + schedule.getTotalDepartmentLoadCost()
+          + schedule.getCapacityViolations() * getPenalty("capacity_violation");
       if (n % 1000 == 0) {
-        System.out.println(n++ + ", TEMP: " + temp);
+        System.out.println(n + ", TEMP: " + temp);
         printCosts();
       }
       temp *= alpha;
+      n++;
     }
   }
 
@@ -253,70 +258,6 @@ public class Solver {
     patientCost -= lastMove.get("patient_savings");
     loadCost -= lastMove.get("load_savings");
   }
-
-  public void validateLastMove(String caller) {
-    validateLoadCost();
-    validatePatients();
-    validateSchedule();
-    Map<String, Integer> move = lastMove;
-    int type = lastMove.get("type");
-    Set<Patient> patients = new HashSet<>();
-    patients.add(patientList.getPatient(lastMove.get("first_patient")));
-    if (type == 1 || type == 3)
-      patients.add(patientList.getPatient(lastMove.get("second_patient")));
-    for (Patient patient : patients) {
-      if (!patient.isAdmissibleOn(patient.getAdmission())) {
-        boolean[] types = {false, false, false, false};
-        for (Map<String, Integer> m : generatedMoves) {
-          types[m.get("type")] = true;
-        }
-        for (int i = 0; i < 4; i++) {
-          if (types[i]) System.out.println("Type " + i + " executed");
-        }
-        System.out.println("Wrong admission date (type " + type + " move)");
-        System.out.println("Called " + caller);
-        System.out.println();
-      }
-    }
-  }
-
-  public void validateLoadCost() {
-    int realLoadCost = schedule.getTotalDailyLoadCost()
-        + schedule.getTotalDepartmentLoadCost()
-        + schedule.getCapacityViolations() * getPenalty("capacity_violation");
-    if (Math.abs(realLoadCost - loadCost) > 100)
-      System.out.println("Load costs out of sync after type "
-          + lastMove.get("type") + " move with "
-          + lastMove.get("load_savings") + " savings."
-          + "\nReal load cost: " + realLoadCost
-          + ", Local load cost: " + loadCost);
-
-  }
-
-  public void validatePatients() {
-    for (int pat = 0; pat < patientList.getNumberOfPatients(); pat++) {
-      Patient patient = patientList.getPatient(pat);
-      if (patient.getAdmittedDays().size() != patient.getStayLength())
-        System.out.println("Size of admitted days is wrong");
-      for (int day = patient.getAdmission(); day < patient.getDischarge(); day++)
-        if (!schedule.getPatients(patient.getRoom(day), day).contains(pat))
-          System.out.println("Schedule doesn't contain patient");
-      if (patient.getDischarge() - patient.getAdmission() != patient.getStayLength())
-        System.out.println("Distance between AD & DD is wrong");
-      if (patient.getAdmission() < patient.getOriginalAD() ||
-          patient.getAdmission() > patient.getMaxAdm())
-        System.out.println("Wrong admission date");
-    }
-  }
-
-  public void validateSchedule() {
-    for (int day = 0; day < DateConverter.getTotalHorizon(); day++)
-      for (int r = 0; r < departmentList.getNumberOfRooms(); r++)
-        for (int p : schedule.getPatients(r, day))
-          if (patientList.getPatient(p).getRoom(day) != r)
-            System.out.println("Wrong assignment in schedule");
-  }
-
 
   // Move generation
   public Map<String, Integer> generateMove() {
