@@ -15,7 +15,7 @@ public class Patient {
   private final LinkedHashMap<Integer, Integer> assignedRooms;
   private final Map<String, Map<Integer, Integer>> specificRoomCosts;
   private final Map<Integer, Integer> roomCosts;
-  private int initialRoom;
+  private int initialRoom, bed;
   private int admission, discharge, delay;
   private boolean inPatient;
   private Set<Integer> feasibleRooms;
@@ -46,6 +46,7 @@ public class Patient {
     assignedRooms = new LinkedHashMap<>();
     roomCosts = new HashMap<>();
     specificRoomCosts = new HashMap<>();
+    bed = -1;
   }
 
   public String getName() {
@@ -78,6 +79,10 @@ public class Patient {
 
   public int getRoomCost(int room) {
     return roomCosts.get(room);
+  }
+
+  public int getSpecificRoomCost(int room, String type) {
+    return specificRoomCosts.get(type).get(room);
   }
 
   public int getCurrentRoomCost() {
@@ -140,6 +145,10 @@ public class Patient {
     return assignedRooms.getOrDefault(day, -1);
   }
 
+  public int getBed() {
+    return bed;
+  }
+
   public int getInitialRoom() {
     return initialRoom;
   }
@@ -160,6 +169,24 @@ public class Patient {
     return inPatient ? "arrived" : "registered";
   }
 
+  public Map<String, String> getInfo() {
+    Map<String, String> info = new LinkedHashMap<>();
+    info.put("Id", String.valueOf(id));
+    info.put("Name", name);
+    info.put("Gender", gender);
+    info.put("Treatment", treatment);
+    info.put("Admission", DateConverter.getDateString(admission));
+    info.put("Discharge", DateConverter.getDateString(discharge));
+    info.put("Delay", String.valueOf(delay));
+    info.put("Department", DepartmentList.getRoom(getLastRoom()).getDepartment());
+    info.put("MainSpecialism",
+        specificRoomCosts.get("speciality").get(getLastRoom()) == 0 ? "True" : "False");
+    info.put("Room", DepartmentList.getRoomName(getLastRoom()));
+    info.put("RoomCost", String.valueOf(roomCosts.get(getLastRoom())));
+    info.put("Bed", String.valueOf(bed));
+    return info;
+  }
+
   public void setInitialRoom(int room) {
     inPatient = true;
     initialRoom = room;
@@ -176,6 +203,10 @@ public class Patient {
   public void setRoomCost(String type, int room, int cost) {
     specificRoomCosts.computeIfAbsent(type, k -> new HashMap<>());
     specificRoomCosts.get(type).put(room, cost);
+  }
+
+  public void setBed(int b) {
+    bed = b;
   }
 
   public void calculateTotalRoomCost() {
@@ -213,5 +244,4 @@ public class Patient {
     discharge += days;
     delay += days;
   }
-
 }

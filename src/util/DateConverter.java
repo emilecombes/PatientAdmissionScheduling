@@ -17,7 +17,7 @@ public class DateConverter {
         Integer.parseInt(d[0]), Integer.parseInt(d[1]) - 1, Integer.parseInt(d[2])
     );
 
-    for (int i = 0; i < numDays + extend; i++) {
+    for (int i = 0; i <= numDays + extend; i++) {
       String dateString = buildDateString(date);
       dateStrings.add(dateString);
       dateIndices.put(dateString, i);

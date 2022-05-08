@@ -219,7 +219,7 @@ public class XMLParser {
       for (int j = p.getAdmission(); j < p.getDischarge(); j++) {
         Element stayElement = doc.createElement("stay");
         stayElement.setAttribute("day", DateConverter.getDateString(j));
-        stayElement.setAttribute("room", DepartmentList.getRoomId(p.getRoom(p.getAdmission())));
+        stayElement.setAttribute("room", DepartmentList.getRoomName(p.getRoom(p.getAdmission())));
         patientElement.appendChild(stayElement);
       }
       patientsElement.appendChild(patientElement);

@@ -5,13 +5,21 @@ import util.DateConverter;
 import java.util.*;
 
 public class Solver {
+  // INFO
   private final Map<String, Integer> penalties;
   private final PatientList patientList;
   private final DepartmentList departmentList;
+
+  // SOLUTION
   private final Schedule schedule;
   private int patientCost, loadCost;
+  private List<Schedule> paretoSet;
+  private List<Integer> areas;
+
+  // MOVES
   private final List<Map<String, Integer>> generatedMoves;
   private Map<String, Integer> lastMove;
+
 
   public Solver(PatientList pl, DepartmentList dl, Schedule s) {
     patientList = pl;
@@ -107,8 +115,30 @@ public class Solver {
     );
   }
 
+  public void setPatientBedNumbers(){
+    Set<Integer>[][] usedBeds = new Set[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
+    for (int i = 0; i < usedBeds.length; i++)
+      for (int j = 0; j < usedBeds[0].length; j++)
+        usedBeds[i][j] = new HashSet<>();
+    for (int pat = 0; pat < patientList.getNumberOfPatients(); pat++) {
+      Patient patient = patientList.getPatient(pat);
+      int bed = 0;
+      int day = patient.getAdmission();
+      while (day < patient.getDischarge()) {
+        if (usedBeds[patient.getRoom(day)][day].contains(bed)) {
+          bed++;
+          day = patient.getAdmission();
+        }
+        day++;
+      }
+      patient.setBed(bed);
+      for (int i = patient.getAdmission(); i < patient.getDischarge(); i++) {
+        usedBeds[patient.getRoom(i)][i].add(bed);
+      }
+    }
+  }
 
-  // Initialize Schedule & Solver
+  // Initialize
   public void init() {
     patientCost = 0;
     loadCost = 0;
@@ -219,8 +249,9 @@ public class Solver {
   }
 
 
-  // Start Search Procedure
-  public void solve(String objective) {
+  // Local search
+  public void initialSolve() {
+    String objective = "load_savings";
     double temp = 155;
     double stopTemp = 1.55;
     double alpha = 0.999;
@@ -254,13 +285,24 @@ public class Solver {
     }
   }
 
+  public void paretoSolve(int epsilon) {
+
+  }
+
+  public void addNonDominatedSolution(){
+
+  }
+
+  public void getNextEpsilon(){
+
+  }
+
   public void acceptMove() {
     lastMove.put("accepted", 1);
     patientCost -= lastMove.get("patient_savings");
     loadCost -= lastMove.get("load_savings");
   }
 
-  // Move generation
   public Map<String, Integer> generateMove() {
     int random = (int) (Math.random() * 100);
     int type;
@@ -338,7 +380,6 @@ public class Solver {
     return move;
   }
 
-  // Move Execution
   public void executeNewMove() {
     lastMove = generateMove();
     switch (lastMove.get("type")) {

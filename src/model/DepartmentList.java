@@ -30,7 +30,7 @@ public class DepartmentList {
     return roomIndices.get(name);
   }
 
-  public static String getRoomId(int idx) {
+  public static String getRoomName(int idx) {
     return allRooms.get(idx).getName();
   }
 
@@ -46,7 +46,7 @@ public class DepartmentList {
     return integerDepartmentMap.get(id);
   }
 
-  public Room getRoom(int id) {
+  public static Room getRoom(int id) {
     return allRooms.get(id);
   }
 

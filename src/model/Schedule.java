@@ -15,10 +15,10 @@ public class Schedule {
   private int capacityViolations;
 
   private final double[][] loadMatrix;
-  private final double[] averageDailyLoads;
-  private final double[] dailyLoads;
-  private final double[] averageDepartmentLoads;
-  private final double[] departmentLoads;
+  private final double[] avgDailyLoads;
+  private final double[] dailyLoadCosts;
+  private final double[] avgDepLoads;
+  private final double[] depLoadCosts;
 
   public Schedule(DepartmentList dl, PatientList pl) {
     departmentList = dl;
@@ -30,10 +30,10 @@ public class Schedule {
     capacityViolations = 0;
 
     loadMatrix = new double[departmentCount][horizonLength];
-    averageDailyLoads = new double[horizonLength];
-    dailyLoads = new double[horizonLength];
-    averageDepartmentLoads = new double[departmentCount];
-    departmentLoads = new double[departmentCount];
+    avgDailyLoads = new double[horizonLength];
+    dailyLoadCosts = new double[horizonLength];
+    avgDepLoads = new double[departmentCount];
+    depLoadCosts = new double[departmentCount];
 
     for (int i = 0; i < departmentList.getNumberOfRooms(); i++) {
       for (int j = 0; j < horizonLength; j++)
@@ -75,9 +75,9 @@ public class Schedule {
       double avg = 0;
       for (int j = 0; j < horizonLength; j++) avg += loadMatrix[i][j];
       avg /= horizonLength;
-      if (Math.abs(avg - averageDepartmentLoads[i]) > 0.1) {
+      if (Math.abs(avg - avgDepLoads[i]) > 0.1) {
         System.err.printf("Wrong avg dep load (corr: %f, local: %f)\n",
-            avg, averageDepartmentLoads[i]);
+            avg, avgDepLoads[i]);
         return true;
       }
     }
@@ -86,16 +86,16 @@ public class Schedule {
       double avg = 0;
       for (int i = 0; i < departmentCount; i++) avg += loadMatrix[i][j];
       avg /= departmentCount;
-      if (Math.abs(avg - averageDailyLoads[j]) > 0.1) {
+      if (Math.abs(avg - avgDailyLoads[j]) > 0.1) {
         System.err.printf("Wrong avg day load (corr: %f, local: %f)\n",
-            avg, averageDailyLoads[j]);
+            avg, avgDailyLoads[j]);
         return true;
       }
     }
 
     // Compare costs
-    double correctCost = Arrays.stream(departmentLoads).sum()
-        + Arrays.stream(dailyLoads).sum()
+    double correctCost = Arrays.stream(depLoadCosts).sum()
+        + Arrays.stream(dailyLoadCosts).sum()
         + capacityViolations * 1000;
     if (Math.abs(correctCost - solverCost) > 50) {
       System.err.printf("Costs don't match (corr: %f, local %d)\n", correctCost, solverCost);
@@ -103,7 +103,6 @@ public class Schedule {
     }
     return false;
   }
-
 
   public Set<Integer> getPatients(int room, int day) {
     return schedule[room][day];
@@ -242,50 +241,50 @@ public class Schedule {
 
   // Load cost related functions
   public double getDepartmentLoadCost(int dep) {
-    return departmentLoads[dep];
+    return depLoadCosts[dep];
   }
 
   public int getTotalDepartmentLoadCost() {
-    return (int) Arrays.stream(departmentLoads).sum();
+    return (int) Arrays.stream(depLoadCosts).sum();
   }
 
   public void calculateDepartmentLoadCost(int dep) {
     if (dep == -1) return;
     double cost = 0;
     for (int i = 0; i < horizonLength; i++)
-      cost += Math.pow(averageDepartmentLoads[dep] - loadMatrix[dep][i], 2);
-    departmentLoads[dep] = cost;
+      cost += Math.pow(avgDepLoads[dep] - loadMatrix[dep][i], 2);
+    depLoadCosts[dep] = cost;
   }
 
   public void incrementAverageDepartmentLoad(int dep, double delta) {
-    averageDepartmentLoads[dep] += delta;
+    avgDepLoads[dep] += delta;
   }
 
   public void decrementAverageDepartmentLoad(int dep, double delta) {
-    averageDepartmentLoads[dep] -= delta;
+    avgDepLoads[dep] -= delta;
   }
 
   public double getDailyLoadCost(int day) {
-    return dailyLoads[day];
+    return dailyLoadCosts[day];
   }
 
   public int getTotalDailyLoadCost() {
-    return (int) Arrays.stream(dailyLoads).sum();
+    return (int) Arrays.stream(dailyLoadCosts).sum();
   }
 
   public void calculateDailyLoadCost(int day) {
     double cost = 0;
     for (int i = 0; i < departmentCount; i++)
-      cost += Math.pow(averageDailyLoads[day] - loadMatrix[i][day], 2);
-    dailyLoads[day] = cost;
+      cost += Math.pow(avgDailyLoads[day] - loadMatrix[i][day], 2);
+    dailyLoadCosts[day] = cost;
   }
 
   public void incrementAverageDailyLoad(int day, double delta) {
-    averageDailyLoads[day] += delta;
+    avgDailyLoads[day] += delta;
   }
 
   public void decrementAverageDailyLoad(int day, double delta) {
-    averageDailyLoads[day] -= delta;
+    avgDailyLoads[day] -= delta;
   }
 
 }
