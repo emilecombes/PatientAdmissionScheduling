@@ -13,8 +13,6 @@ public class Solver {
   // SOLUTION
   private final Schedule schedule;
   private int patientCost, loadCost;
-  private List<Schedule> paretoSet;
-  private List<Integer> areas;
 
   // MOVES
   private final List<Map<String, Integer>> generatedMoves;

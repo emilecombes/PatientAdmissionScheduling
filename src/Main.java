@@ -4,9 +4,6 @@ import util.*;
 import java.io.IOException;
 import java.util.Random;
 
-// Run validator with: ./or_pas_validator Instances/or_pas_dept2_short01.xml
-// ../solutions/xml/or_pas_dept2_short01_sol.xml in ./data
-
 public class Main {
   public static void main(String[] args) throws IOException {
     int extend = 14;
