@@ -285,18 +285,6 @@ public class Solver {
     }
   }
 
-  public void paretoSolve(int epsilon) {
-
-  }
-
-  public void addNonDominatedSolution(){
-
-  }
-
-  public void getNextEpsilon(){
-
-  }
-
   public void acceptMove() {
     lastMove.put("accepted", 1);
     patientCost -= lastMove.get("patient_savings");

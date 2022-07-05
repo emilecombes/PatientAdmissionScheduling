@@ -5,6 +5,9 @@ import util.DateConverter;
 import java.util.*;
 
 public class Schedule {
+
+  private final boolean EXHAUSTIVE = false;
+  private final int SWAPTRIES = 5;
   private final DepartmentList departmentList;
   private final PatientList patientList;
   private final int horizonLength;
@@ -118,7 +121,13 @@ public class Schedule {
     return candidates;
   }
 
-  public Patient getSwapRoomPatient(Patient firstPatient) {
+  public Patient getSwapRoomPatient(Patient pat) {
+    return EXHAUSTIVE
+        ? getExhaustiveSwapRoomPatient(pat)
+        : getFastSwapPatient(pat, pat.getAdmission(), pat.getDischarge());
+  }
+
+  public Patient getExhaustiveSwapRoomPatient(Patient firstPatient) {
     int swapRoom = firstPatient.getLastRoom();
     Set<Integer> rooms = firstPatient.getFeasibleRooms();
     rooms.remove(swapRoom);
@@ -134,7 +143,13 @@ public class Schedule {
     return patientList.getPatient(swapPatients.get(0));
   }
 
-  public Patient getSwapAdmissionPatient(Patient firstPatient) {
+  public Patient getSwapAdmissionPatient(Patient pat) {
+    return EXHAUSTIVE
+        ? getExhaustiveSwapAdmissionPatient(pat)
+        : getFastSwapPatient(pat, 0, DateConverter.getNumDays());
+  }
+
+  public Patient getExhaustiveSwapAdmissionPatient(Patient firstPatient) {
     int firstAdmission = firstPatient.getAdmission();
     int swapRoom = firstPatient.getLastRoom();
     Set<Integer> rooms = firstPatient.getFeasibleRooms();
@@ -157,6 +172,22 @@ public class Schedule {
     List<Integer> swapPatients = new ArrayList<>(candidates);
     Collections.shuffle(swapPatients);
     return patientList.getPatient(swapPatients.get(0));
+  }
+
+  public Patient getFastSwapPatient(Patient pat, int startDate, int endDate) {
+    Set<Integer> rooms = pat.getFeasibleRooms();
+    rooms.remove(pat.getLastRoom());
+    List<Patient> candidates = new ArrayList<>();
+    for (int i = 0; i < SWAPTRIES; i++) {
+      int room = rooms.stream().skip(new Random().nextInt(rooms.size())).findFirst().orElse(-1);
+      int day = startDate + new Random().nextInt(endDate - startDate);
+      Set<Integer> patients = getPatients(room, day);
+      if(patients.isEmpty()) continue;
+      int sp = patients.stream().skip(new Random().nextInt(patients.size())).findFirst().orElse(-1);
+      Patient swapPat = patientList.getPatient(sp);
+      if(swapPat.hasFeasibleRoom(pat.getLastRoom())) candidates.add(swapPat);
+    }
+    return candidates.isEmpty() ? null : candidates.get(new Random().nextInt(candidates.size()));
   }
 
   public void assignPatient(Patient pat, int room, int day) {

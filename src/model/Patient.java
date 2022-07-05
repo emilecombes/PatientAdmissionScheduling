@@ -21,8 +21,8 @@ public class Patient {
   private Set<Integer> feasibleRooms;
   private List<Integer> feasibleRoomList;
 
-  public Patient(int id, String name, String gender, String treatment, int ad, int dd,
-                 int ma, int cap, Set<String> np, Set<String> pp) {
+  public Patient(int id, String name, String gender, String treatment, int ad, int dd, int ma,
+                 int cap, Set<String> np, Set<String> pp) {
     this.id = id;
     this.name = name;
     this.gender = gender;
