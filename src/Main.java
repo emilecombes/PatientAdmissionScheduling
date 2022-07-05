@@ -36,6 +36,6 @@ public class Main {
     csvParser.buildScheduleCSV();
 
     System.out.println("Validator: ./or_pas_validator Instances/" + instance + ".xml ." +
-        "./out/solutions/" + instance + "_sol.xml");
+        "./solutions/xml/" + instance + "_sol.xml");
   }
 }

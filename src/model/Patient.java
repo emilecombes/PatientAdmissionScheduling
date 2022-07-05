@@ -6,47 +6,47 @@ import java.util.*;
 
 public class Patient {
   private final String name, treatment, gender;
-  private final int id, preferredCap;
-  private final int originalAD, stayLength, maxAdm;
+  private final int id, preferredCap, initialRoom, originalAD, stayLength, maxAdm;
+  private final boolean inPatient;
   private final Set<String> preferredProps, neededProps;
   private final List<Integer> neededCare;
-  private final int totalNeededCare;
-
   private final LinkedHashMap<Integer, Integer> assignedRooms;
   private final Map<String, Map<Integer, Integer>> specificRoomCosts;
   private final Map<Integer, Integer> roomCosts;
-  private int initialRoom, bed;
-  private int admission, discharge, delay;
-  private boolean inPatient;
+  private int admission, discharge, delay, bed;
   private Set<Integer> feasibleRooms;
   private List<Integer> feasibleRoomList;
 
   public Patient(int id, String name, String gender, String treatment, int ad, int dd, int ma,
-                 int cap, Set<String> np, Set<String> pp) {
+                 int room, int cap, Set<String> np, Set<String> pp) {
     this.id = id;
     this.name = name;
     this.gender = gender;
     this.treatment = treatment;
     this.originalAD = ad;
-    this.admission = ad;
-    this.discharge = dd;
     this.stayLength = dd - ad;
-    this.maxAdm = (ma == -1) ? DateConverter.getTotalHorizon() - stayLength : ma;
-    this.delay = 0;
     this.preferredCap = cap;
     this.neededProps = np;
     this.preferredProps = pp;
+
+    this.assignedRooms = new LinkedHashMap<>();
+    this.roomCosts = new HashMap<>();
+    this.specificRoomCosts = new HashMap<>();
+    this.delay = 0;
+    this.initialRoom = room;
+    this.inPatient = initialRoom != -1;
+    this.bed = -1;
+    this.admission = ad;
+    this.discharge = dd;
+    this.maxAdm = (initialRoom != -1) ? admission
+        : (ma == -1) ? DateConverter.getTotalHorizon() - stayLength : ma;
+    if (inPatient) for (int i = admission; i < discharge; i++)
+      assignRoom(initialRoom, i);
+
     this.neededCare = new ArrayList<>();
-    int total = 0;
     for (int i = 0; i < stayLength; i++) {
       neededCare.add((int) (Math.random() * 100));
-      total += neededCare.get(i);
     }
-    totalNeededCare = total;
-    assignedRooms = new LinkedHashMap<>();
-    roomCosts = new HashMap<>();
-    specificRoomCosts = new HashMap<>();
-    bed = -1;
   }
 
   public String getName() {
@@ -185,13 +185,6 @@ public class Patient {
     info.put("RoomCost", String.valueOf(roomCosts.get(getLastRoom())));
     info.put("Bed", String.valueOf(bed));
     return info;
-  }
-
-  public void setInitialRoom(int room) {
-    inPatient = true;
-    initialRoom = room;
-    for (int i = admission; i < discharge; i++)
-      assignRoom(room, i);
   }
 
   public void setFeasibleRooms(Set<Integer> fr) {

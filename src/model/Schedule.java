@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Schedule {
 
-  private final boolean EXHAUSTIVE = false;
+  private final boolean EXHAUSTIVE = true;
   private final int SWAPTRIES = 5;
   private final DepartmentList departmentList;
   private final PatientList patientList;

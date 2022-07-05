@@ -27,7 +27,7 @@ public class DepartmentList {
   }
 
   public static int getRoomIndex(String name) {
-    return roomIndices.get(name);
+    return roomIndices.getOrDefault(name, -1);
   }
 
   public static String getRoomName(int idx) {

@@ -49,8 +49,12 @@ public class Solver {
     for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
       Patient patient = patientList.getPatient(i);
       if (patient.isInitial())
-        if (patient.getInitialRoom() != patient.getLastRoom())
+        if (patient.getInitialRoom() != patient.getLastRoom()){
           transfer += getPenalty("transfer");
+          System.out.println(
+              "Patient " + patient.getId() + " was transferred from " + patient.getInitialRoom() +
+                  " to " + patient.getLastRoom());
+        }
       roomCosts += patient.getTotalRoomCost();
       totalDelay += patient.getDelay() * getPenalty("delay");
     }

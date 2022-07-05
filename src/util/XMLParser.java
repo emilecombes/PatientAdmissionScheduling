@@ -155,6 +155,7 @@ public class XMLParser {
 
         String pc = patientElement.getAttribute("preferred_capacity");
         int preferredCapacity = (pc.equals("")) ? -1 : Integer.parseInt(pc);
+        int room = DepartmentList.getRoomIndex(patientElement.getAttribute("room"));
         Patient patient = new Patient(
             index++,
             patientElement.getAttribute("name"),
@@ -163,15 +164,11 @@ public class XMLParser {
             DateConverter.getDateIndex(patientElement.getAttribute("admission")),
             DateConverter.getDateIndex(patientElement.getAttribute("discharge")),
             DateConverter.getDateIndex(patientElement.getAttribute("max_admission")),
+            room,
             preferredCapacity,
             neededProps,
             preferredProps
         );
-
-        if (!patientElement.getAttribute("room").isEmpty()) {
-          int roomIndex = DepartmentList.getRoomIndex(patientElement.getAttribute("room"));
-          patient.setInitialRoom(roomIndex);
-        }
 
         patients.add(patient);
       }
