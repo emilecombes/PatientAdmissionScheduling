@@ -6,11 +6,19 @@ import java.util.Random;
 
 public class Main {
   public static void main(String[] args) throws IOException {
-    int extend = 14;
     String instance = "or_pas_dept2_short00";
+    boolean exhaustive = false;
+    boolean reset = false;
+    int extend = 14;
+    int swapLoops = 10;
+    int timeoutSol = 1000 * 60 * 5;
+    int timeoutInst = 1000 * 60 * 5;
+    double tradeoff = 1.25;
 
+    new Variables(exhaustive, reset, extend, swapLoops, timeoutSol, timeoutInst, tradeoff);
     XMLParser xmlParser = new XMLParser(instance);
     xmlParser.buildDateConverter(extend);
+
     DepartmentList departmentList = xmlParser.buildDepartmentList();
     PatientList patientList = xmlParser.buildPatientList();
     Schedule schedule = new Schedule(departmentList, patientList);
@@ -24,7 +32,7 @@ public class Main {
     solver.setPenalty("capacity_violation", 1000);
 
     solver.init();
-    solver.initialSolve();
+    solver.optimizePatientCost();
     xmlParser.writeSolution(solver);
     solver.printCosts();
 

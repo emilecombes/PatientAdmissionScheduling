@@ -1,6 +1,7 @@
 package model;
 
 import util.DateConverter;
+import util.Variables;
 
 import java.util.*;
 
@@ -225,8 +226,8 @@ public class Solver {
   public void assignRandomRooms() {
     for (Patient p : patientList.getRegisteredPatients()) {
       int room = p.getNewRandomFeasibleRoom();
-      for (int i = p.getAdmission(); i < p.getDischarge(); i++)
-        schedule.assignPatient(p, room, i);
+      for (int i = 0; i < p.getStayLength(); i++)
+        schedule.assignPatient(p, room, i + p.getOriginalAD());
       patientCost += p.getRoomCost(room);
     }
   }
@@ -252,39 +253,33 @@ public class Solver {
 
 
   // Local search
-  public void initialSolve() {
-    String objective = "load_savings";
-    double temp = 155;
-    double stopTemp = 1.55;
-    double alpha = 0.999;
-    int iterations = 100;
-    int i;
-    int n = 0;
+  public void adjustLoadCost() {
+    loadCost = schedule.getTotalDailyLoadCost()
+        + schedule.getTotalDepartmentLoadCost()
+        + schedule.getCapacityViolations() * getPenalty("capacity_violation");
+  }
 
-    while (temp > stopTemp) {
-      i = 0;
-      while (i < iterations) {
+  public void optimizePatientCost() {
+    double temp = Variables.PC_START_TEMP;
+    while(temp > Variables.PC_STOP_TEMP) {
+      for (int i = 0; i < Variables.PC_ITERATIONS; i++) {
         executeNewMove();
-        if (lastMove.get(objective) > 0) acceptMove();
-        else if (Math.random() < Math.exp(lastMove.get(objective) / temp)) acceptMove();
+        int savings = lastMove.get("patient_savings");
+        if(savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
         generatedMoves.add(lastMove);
-        i++;
-
-        if (i % 100 == 0)
-          if (schedule.checkLoadCost(loadCost))
-            System.out.println(i);
       }
-      loadCost = schedule.getTotalDailyLoadCost()
-          + schedule.getTotalDepartmentLoadCost()
-          + schedule.getCapacityViolations() * getPenalty("capacity_violation");
-      if (n % 100 == 0) {
-        System.out.println(n + ", TEMP: " + temp);
-        printCosts();
-      }
-      temp *= alpha;
-      n++;
+      temp *= Variables.PC_ALPHA;
+      adjustLoadCost();
     }
+  }
+
+  public void optimizeWorkloadEquity(int epsilon) {
+    //TODO
+  }
+
+  public void addCurrentSolution(){
+    //TODO
   }
 
   public void acceptMove() {
