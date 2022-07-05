@@ -10,7 +10,7 @@ import java.util.Random;
 public class Main {
   public static void main(String[] args) throws IOException {
     int extend = 14;
-    String instance = "or_pas_dept2_long00";
+    String instance = "or_pas_dept2_short00";
 
     XMLParser xmlParser = new XMLParser(instance);
     xmlParser.buildDateConverter(extend);
