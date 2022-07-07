@@ -6,23 +6,25 @@ import java.util.*;
 
 public class Solution {
   private final int patientCost, equityCost;
+  private final double temperature;
   private final Set<Integer>[][] schedule;
   private final Map<Integer, List<Map<String, Integer>>> dynamicGenderCount;
   private final Map<Patient, Integer> delays;
   private final Map<Patient, Room> assignedRooms;
-  private int capacityViolations;
+  private final int capacityViolations;
   private final double[][] loadMatrix;
   private final double[] averageDailyLoads;
   private final double[] dailyLoadCosts;
   private final double[] averageDepartmentLoads;
   private final double[] departmentLoadCosts;
 
-  public Solution(int patientCost, int equityCost, Schedule schedule) {
+  public Solution(Schedule schedule, int patientCost, int equityCost, double temperature) {
     this.patientCost = patientCost;
     this.equityCost = equityCost;
+    this.temperature = temperature;
     this.delays = new HashMap<>();
     this.assignedRooms = new HashMap<>();
-    this.schedule = new Set[DepartmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
+    this.schedule = schedule.copySchedule();
     this.dynamicGenderCount = schedule.copyDynamicGenderViolations();
     this.capacityViolations = schedule.getCapacityViolations();
     this.loadMatrix = schedule.getLoadMatrix();
@@ -30,19 +32,11 @@ public class Solution {
     this.dailyLoadCosts = schedule.getDailyLoadCosts();
     this.averageDepartmentLoads = schedule.getAverageDepartmentLoads();
     this.departmentLoadCosts = schedule.getDepartmentLoadCosts();
-
-
-    for (int i = 0; i < DepartmentList.getNumberOfRooms(); i++)
-      for (int j = 0; j < DateConverter.getTotalHorizon(); j++)
-        this.schedule[i][j] = new HashSet<>();
-
     for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
       Patient patient = PatientList.getPatient(i);
       Room room = DepartmentList.getRoom(patient.getLastRoom());
       delays.put(patient, patient.getDelay());
       assignedRooms.put(patient, room);
-      for (int j = patient.getAdmission(); j < patient.getDischarge(); j++)
-        this.schedule[i][j].add(patient.getId());
     }
   }
 
@@ -52,6 +46,10 @@ public class Solution {
 
   public int getEquityCost() {
     return equityCost;
+  }
+
+  public double getTemperature() {
+    return temperature;
   }
 
   public int getDelay(Patient pat) {

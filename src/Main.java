@@ -21,8 +21,8 @@ public class Main {
     xmlParser.buildDepartmentList();
     xmlParser.buildPatientList();
 
-    Schedule schedule = new Schedule();
-    Solver solver = new Solver(schedule);
+    Solver solver = new Solver();
+
 
     solver.preProcessing();
     solver.initSchedule();

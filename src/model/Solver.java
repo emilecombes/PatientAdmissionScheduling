@@ -7,20 +7,21 @@ import java.util.*;
 
 public class Solver {
   // SOLUTION
-  private final Schedule schedule;
+  private Schedule schedule;
   private int patientCost, loadCost;
-  private List<Solution> approximationSet;
+  private List<Solution> approximationArchive, intermediateApproximationArchive;
   private List<Rectangle> rectangleArchive;
 
   // MOVES
   private final List<Map<String, Integer>> generatedMoves;
   private Map<String, Integer> lastMove;
 
-  public Solver(Schedule s) {
-    schedule = s;
+  public Solver() {
+    schedule = new Schedule();
     generatedMoves = new ArrayList<>();
   }
 
+  // Functions to remove
   public Map<String, Integer> getCostInfo() {
     Map<String, Integer> costs = new LinkedHashMap<>();
     int roomCosts = 0;
@@ -123,25 +124,10 @@ public class Solver {
     }
   }
 
-  // Initialize
+  // Preprocessing
   public void preProcessing() {
     setFeasibleRooms();
     calculateRoomCosts();
-  }
-
-  public void initSchedule() {
-    patientCost = 0;
-    loadCost = 0;
-    insertInitialPatients();
-    assignRandomRooms();
-    addDynamicGenderCost();
-    calculateLoadCost();
-    addCapacityViolationCost();
-  }
-
-  public void loadSchedule(Solution s) {
-    patientCost = s.getPatientCost();
-    loadCost = s.getEquityCost();
   }
 
   public void setFeasibleRooms() {
@@ -206,6 +192,24 @@ public class Solver {
     }
   }
 
+
+  // Initializing
+  public void initSchedule() {
+    patientCost = 0;
+    loadCost = 0;
+    insertInitialPatients();
+    assignRandomRooms();
+    patientCost += schedule.getDynamicGenderViolations() * Variables.GENDER_PEN;
+    for (int i = 0; i < DateConverter.getTotalHorizon(); i++)
+      schedule.calculateDailyLoadCost(i);
+    for (int i = 0; i < DepartmentList.getNumberOfDepartments(); i++)
+      schedule.calculateDepartmentLoadCost(i);
+    loadCost += schedule.getTotalDailyLoadCost();
+    loadCost += schedule.getTotalDepartmentLoadCost();
+    loadCost += schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
+    patientCost += schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
+  }
+
   public void insertInitialPatients() {
     for (Patient p : PatientList.getInitialPatients()) {
       int room = p.getRoom(p.getAdmission());
@@ -224,39 +228,74 @@ public class Solver {
     }
   }
 
-  public void addDynamicGenderCost() {
-    patientCost += schedule.getDynamicGenderViolations() * Variables.GENDER_PEN;
+  public void loadSchedule(Solution s) {
+    patientCost = s.getPatientCost();
+    loadCost = s.getEquityCost();
+    schedule = new Schedule(s);
   }
-
-  public void calculateLoadCost() {
-    for (int i = 0; i < DateConverter.getTotalHorizon(); i++)
-      schedule.calculateDailyLoadCost(i);
-    for (int i = 0; i < DepartmentList.getNumberOfDepartments(); i++)
-      schedule.calculateDepartmentLoadCost(i);
-
-    loadCost = schedule.getTotalDailyLoadCost() + schedule.getTotalDepartmentLoadCost();
-  }
-
-  public void addCapacityViolationCost() {
-    int cap = schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
-    loadCost += cap;
-    patientCost += cap;
-  }
-
 
   // Local search
   public void boxSplitting(int maxPC, int minWE, int delta) {
+    approximationArchive = new LinkedList<>();
+    intermediateApproximationArchive = new LinkedList<>();
+    rectangleArchive = new LinkedList<>();
     optimizePatientCost();
-
+    rectangleArchive.add(new Rectangle(new Point(patientCost, loadCost), new Point(maxPC, minWE)));
+    while (!rectangleArchive.isEmpty()) {
+      Rectangle rectangle = findBiggestRectangle();
+      int c = (rectangle.getTop() - rectangle.getBottom()) / 2;
+      optimizePatientCost(c);
+      if (!currentlyNonDominated())
+        rectangle.setLowerRight(new Point(rectangle.getRight(), c));
+      else {
+        updateApproximationArchive(-1);
+        Rectangle horizontalHit = findRectangleOnX(patientCost);
+        if (horizontalHit != null) {
+          int top = Math.max(horizontalHit.getBottom(), c);
+          Point updatedPoint = new Point(patientCost, top);
+          if (horizontalHit.getTop() - top > delta)
+            addRectangle(new Rectangle(horizontalHit.getUpperLeft(), updatedPoint));
+        }
+        Rectangle verticalHit = findRectangleOnY(loadCost);
+        if (verticalHit != null) {
+          int left = Math.max(patientCost, verticalHit.getLeft());
+          Point updatedPoint = new Point(left, loadCost);
+          if(loadCost - verticalHit.getBottom() > delta)
+            addRectangle(new Rectangle(updatedPoint, verticalHit.getLowerRight()));
+        }
+        rectangleArchive.remove(horizontalHit);
+        rectangleArchive.remove(verticalHit);
+        removeCurrentlyDominatedRectangles();
+      }
+    }
   }
 
-  public int calculateEpsilon(){
+  public boolean currentlyNonDominated() {
     // TODO
-    return 0;
+    return schedule.isFeasible();
   }
 
-  public void addSolution(){
+  public void addRectangle(Rectangle r) {
+    // TODO
+  }
 
+  public Rectangle findBiggestRectangle() {
+    // TODO
+    return null;
+  }
+
+  public Rectangle findRectangleOnX(int pc) {
+    // TODO
+    return null;
+  }
+
+  public Rectangle findRectangleOnY(int we) {
+    // TODO
+    return null;
+  }
+
+  public void removeCurrentlyDominatedRectangles() {
+    // TODO
   }
 
   public void adjustLoadCost() {
@@ -278,31 +317,40 @@ public class Solver {
       }
       temp *= Variables.PC_ALPHA;
       adjustLoadCost();
+      if(currentlyNonDominated()) updateApproximationArchive(temp);
     }
   }
 
-  public void optimizeEquityCost(int epsilon) {
-    double temp = Variables.EC_START_TEMP;
-    while (temp > Variables.EC_STOP_TEMP) {
-      for (int i = 0; i < Variables.EC_ITERATIONS; i++) {
+  public void optimizePatientCost(int c) {
+    Solution initialSolution = findNearestSolution(c);
+    double temp = initialSolution.getTemperature();
+    while (temp > Variables.PC_STOP_TEMP) {
+      for (int i = 0; i < Variables.PC_ITERATIONS; i++) {
         executeNewMove();
-        int savings = lastMove.get("load_savings");
-        int patient_savings = lastMove.get("patient_savings");
-        if ((savings > 0 || Math.random() < Math.exp(savings / temp))
-            && patientCost - patient_savings <= epsilon
-        ) acceptMove();
+        int ps = lastMove.get("patient_savings");
+        int ls = lastMove.get("load_savings");
+        int savings = ps + Math.max(c, loadCost) - Math.max(c, loadCost - ls);
+        if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
         generatedMoves.add(lastMove);
       }
-      temp *= Variables.EC_ALPHA;
+      temp *= Variables.PC_ALPHA;
+      if(currentlyNonDominated()) updateApproximationArchive(temp);
       adjustLoadCost();
     }
   }
 
-  public void addCurrentSolution() {
-    //TODO
+  public Solution findNearestSolution(int c) {
+    // TODO
+    return null;
   }
 
+  public void updateApproximationArchive(double temp) {
+    // TODO
+  }
+
+
+  // Move functionality
   public void acceptMove() {
     lastMove.put("accepted", 1);
     patientCost -= lastMove.get("patient_savings");

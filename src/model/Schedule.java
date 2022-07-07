@@ -52,6 +52,11 @@ public class Schedule {
     avgDepLoads = s.getAverageDepartmentLoads();
     depLoadCosts = s.getDepartmentLoadCosts();
   }
+  
+  public boolean isFeasible() {
+    // TODO
+    return false;
+  }
 
   public int getCapacityViolations() {
     return capacityViolations;
@@ -296,6 +301,21 @@ public class Schedule {
 
 
   // Copy functions
+  public Set<Integer>[][] copySchedule() {
+    Set<Integer>[][] copy = new Set[schedule.length][schedule[0].length];
+    for (int i = 0; i < DepartmentList.getNumberOfRooms(); i++)
+      for (int j = 0; j < DateConverter.getTotalHorizon(); j++)
+        copy[i][j] = new HashSet<>();
+
+    for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
+      Patient patient = PatientList.getPatient(i);
+      for (int j = patient.getAdmission(); j < patient.getDischarge(); j++)
+        copy[i][j].add(patient.getId());
+    }
+
+    return copy;
+  }
+
   public Map<Integer, List<Map<String, Integer>>> copyDynamicGenderViolations() {
     Map<Integer, List<Map<String, Integer>>> copy = new HashMap<>();
     for (int k : dynamicGenderCount.keySet()) {
