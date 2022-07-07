@@ -173,13 +173,11 @@ public class XMLParser {
         patients.add(patient);
       }
     }
-
     return new PatientList(patients);
   }
 
   public void writeSolution(Solver solver) {
     String outputFile = "solutions/xml/" + inputInstance + "_sol.xml";
-    PatientList patientList = solver.getPatientList();
 
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = null;
@@ -206,8 +204,8 @@ public class XMLParser {
     // Write patients scheduling
     Element patientsElement = doc.createElement("patients_scheduling");
     root.appendChild(patientsElement);
-    for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
-      Patient p = patientList.getPatient(i);
+    for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
+      Patient p = PatientList.getPatient(i);
       Element patientElement = doc.createElement("patient");
       patientElement.setAttribute("name", p.getName());
       patientElement.setAttribute("delay", String.valueOf(p.getDelay()));

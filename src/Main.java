@@ -21,8 +21,8 @@ public class Main {
 
     DepartmentList departmentList = xmlParser.buildDepartmentList();
     PatientList patientList = xmlParser.buildPatientList();
-    Schedule schedule = new Schedule(departmentList, patientList);
-    Solver solver = new Solver(patientList, departmentList, schedule);
+    Schedule schedule = new Schedule();
+    Solver solver = new Solver(schedule);
     solver.setPenalty("room_property", 20);
     solver.setPenalty("capacity_preference", 10);
     solver.setPenalty("speciality", 20);
@@ -31,7 +31,8 @@ public class Main {
     solver.setPenalty("delay", 5);
     solver.setPenalty("capacity_violation", 1000);
 
-    solver.init();
+    solver.preProcessing();
+    solver.initSchedule();
     solver.optimizePatientCost();
     xmlParser.writeSolution(solver);
     solver.printCosts();

@@ -10,7 +10,7 @@ public class DepartmentList {
   private static List<Room> allRooms;
   private static Map<String, Department> departments;
   private static Map<Integer, Department> integerDepartmentMap;
-  private final Map<String, String> treatmentToSpecialism;
+  private static Map<String, String> treatmentToSpecialism;
 
   public DepartmentList(List<Room> rooms, Map<String, Department> deps, Map<String, String> specs) {
     allRooms = rooms;
@@ -38,11 +38,11 @@ public class DepartmentList {
     return departments.get(name).getId();
   }
 
-  public Department getDepartment(String name) {
+  public static Department getDepartment(String name) {
     return departments.get(name);
   }
 
-  public Department getDepartment(int id) {
+  public static Department getDepartment(int id) {
     return integerDepartmentMap.get(id);
   }
 
@@ -54,15 +54,15 @@ public class DepartmentList {
     return allRooms.size();
   }
 
-  public int getNumberOfDepartments() {
+  public static int getNumberOfDepartments() {
     return departments.size();
   }
 
-  public String getNeededSpecialism(String treatment) {
+  public static String getNeededSpecialism(String treatment) {
     return treatmentToSpecialism.get(treatment);
   }
 
-  public List<Department> getDepartmentsForTreatment(String treatment) {
+  public static List<Department> getDepartmentsForTreatment(String treatment) {
     String specialism = getNeededSpecialism(treatment);
     List<Department> feasibleDepartments = new ArrayList<>();
     for (String dep : departments.keySet())

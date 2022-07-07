@@ -8,22 +8,19 @@ import java.util.*;
 public class Solver {
   // INFO
   private final Map<String, Integer> penalties;
-  private final PatientList patientList;
-  private final DepartmentList departmentList;
 
   // SOLUTION
   private final Schedule schedule;
   private int patientCost, loadCost;
-  private List<Schedule> approximationSet;
+  private List<Solution> approximationSet;
+  private List<Rectangle> rectangleArchive;
 
   // MOVES
   private final List<Map<String, Integer>> generatedMoves;
   private Map<String, Integer> lastMove;
 
 
-  public Solver(PatientList pl, DepartmentList dl, Schedule s) {
-    patientList = pl;
-    departmentList = dl;
+  public Solver(Schedule s) {
     schedule = s;
     penalties = new HashMap<>();
     generatedMoves = new ArrayList<>();
@@ -37,17 +34,13 @@ public class Solver {
     return penalties.get(type);
   }
 
-  public PatientList getPatientList() {
-    return patientList;
-  }
-
   public Map<String, Integer> getCostInfo() {
     Map<String, Integer> costs = new LinkedHashMap<>();
     int roomCosts = 0;
     int transfer = 0;
     int totalDelay = 0;
-    for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
-      Patient patient = patientList.getPatient(i);
+    for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
+      Patient patient = PatientList.getPatient(i);
       if (patient.isInitial())
         if (patient.getInitialRoom() != patient.getLastRoom()) {
           transfer += getPenalty("transfer");
@@ -121,12 +114,12 @@ public class Solver {
 
   public void setPatientBedNumbers() {
     Set<Integer>[][] usedBeds =
-        new Set[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
+        new Set[DepartmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
     for (int i = 0; i < usedBeds.length; i++)
       for (int j = 0; j < usedBeds[0].length; j++)
         usedBeds[i][j] = new HashSet<>();
-    for (int pat = 0; pat < patientList.getNumberOfPatients(); pat++) {
-      Patient patient = patientList.getPatient(pat);
+    for (int pat = 0; pat < PatientList.getNumberOfPatients(); pat++) {
+      Patient patient = PatientList.getPatient(pat);
       int bed = 0;
       int day = patient.getAdmission();
       while (day < patient.getDischarge()) {
@@ -144,32 +137,41 @@ public class Solver {
   }
 
   // Initialize
-  public void init() {
-    patientCost = 0;
-    loadCost = 0;
+  public void preProcessing() {
     setFeasibleRooms();
     calculateRoomCosts();
+  }
+
+  public void initSchedule() {
+    patientCost = 0;
+    loadCost = 0;
     insertInitialPatients();
     assignRandomRooms();
     addDynamicGenderCost();
     calculateLoadCost();
     addCapacityViolationCost();
-    approximationSet = new LinkedList<>();
+  }
+
+  public void loadSchedule(Solution s) {
+    patientCost = s.getPatientCost();
+    loadCost = s.getEquityCost();
   }
 
   public void setFeasibleRooms() {
-    for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
-      Patient patient = patientList.getPatient(i);
+    for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
+      Patient patient = PatientList.getPatient(i);
 
       Set<Integer> feasibleRooms = new HashSet<>();
-      for (Department department : departmentList.getDepartmentsForTreatment(
-          patient.getTreatment()))
+      List<Department> feasibleDepartments =
+          DepartmentList.getDepartmentsForTreatment(patient.getTreatment());
+      for (Department department : feasibleDepartments)
         feasibleRooms.addAll(department.getRoomIndices());
 
       Set<Integer> infeasibleRooms = new HashSet<>();
       for (int r : feasibleRooms) {
-        Room room = departmentList.getRoom(r);
-        if (!room.hasAllFeatures(patient.getNeededProperties())) infeasibleRooms.add(r);
+        Room room = DepartmentList.getRoom(r);
+        if (!room.hasAllFeatures(patient.getNeededProperties()))
+          infeasibleRooms.add(r);
       }
 
       feasibleRooms.removeAll(infeasibleRooms);
@@ -178,10 +180,10 @@ public class Solver {
   }
 
   public void calculateRoomCosts() {
-    for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
-      Patient patient = patientList.getPatient(i);
+    for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
+      Patient patient = PatientList.getPatient(i);
       for (int r : patient.getFeasibleRooms()) {
-        Room room = departmentList.getRoom(r);
+        Room room = DepartmentList.getRoom(r);
 
         int propertyCost = 0;
         for (String property : patient.getPreferredProperties())
@@ -195,8 +197,8 @@ public class Solver {
         patient.setRoomCost("capacity_preference", r, capacityCost);
 
         int specialityCost;
-        String specialism = departmentList.getNeededSpecialism(patient.getTreatment());
-        Department department = departmentList.getDepartment(room.getDepartment());
+        String specialism = DepartmentList.getNeededSpecialism(patient.getTreatment());
+        Department department = DepartmentList.getDepartment(room.getDepartment());
         if (!department.hasMainSpecialism(specialism)) specialityCost = getPenalty("speciality");
         else specialityCost = 0;
         patient.setRoomCost("speciality", r, specialityCost);
@@ -218,7 +220,7 @@ public class Solver {
   }
 
   public void insertInitialPatients() {
-    for (Patient p : patientList.getInitialPatients()) {
+    for (Patient p : PatientList.getInitialPatients()) {
       int room = p.getRoom(p.getAdmission());
       for (int i = p.getAdmission(); i < p.getDischarge(); i++)
         schedule.assignPatient(p, room, i);
@@ -227,7 +229,7 @@ public class Solver {
   }
 
   public void assignRandomRooms() {
-    for (Patient p : patientList.getRegisteredPatients()) {
+    for (Patient p : PatientList.getRegisteredPatients()) {
       int room = p.getNewRandomFeasibleRoom();
       for (int i = 0; i < p.getStayLength(); i++)
         schedule.assignPatient(p, room, i + p.getOriginalAD());
@@ -242,7 +244,7 @@ public class Solver {
   public void calculateLoadCost() {
     for (int i = 0; i < DateConverter.getTotalHorizon(); i++)
       schedule.calculateDailyLoadCost(i);
-    for (int i = 0; i < departmentList.getNumberOfDepartments(); i++)
+    for (int i = 0; i < DepartmentList.getNumberOfDepartments(); i++)
       schedule.calculateDepartmentLoadCost(i);
 
     loadCost = schedule.getTotalDailyLoadCost() + schedule.getTotalDepartmentLoadCost();
@@ -256,15 +258,9 @@ public class Solver {
 
 
   // Local search
-  public void solve() {
-    long start = System.currentTimeMillis();
-    long stop = start + Variables.TIMEOUT_INSTANCE;
-    while(System.currentTimeMillis() < stop) {
-      init();
-      optimizePatientCost();
-      optimizeEquityCost(calculateEpsilon());
-      addSolution();
-    }
+  public void boxSplitting(int maxPC, int minWE, int delta) {
+    optimizePatientCost();
+
   }
 
   public int calculateEpsilon(){
@@ -281,6 +277,7 @@ public class Solver {
         + schedule.getTotalDepartmentLoadCost()
         + schedule.getCapacityViolations() * getPenalty("capacity_violation");
   }
+
 
   public void optimizePatientCost() {
     double temp = Variables.PC_START_TEMP;
@@ -343,20 +340,20 @@ public class Solver {
 
   public Map<String, Integer> generateChangeRoom() {
     Map<String, Integer> move = new HashMap<>();
-    Patient patient = patientList.getRandomPatient();
+    Patient patient = PatientList.getRandomPatient();
     int room = patient.getNewRandomFeasibleRoom();
     move.put("type", 0);
     move.put("first_patient", patient.getId());
     move.put("first_room", patient.getLastRoom());
-    move.put("first_department", departmentList.getRoom(patient.getLastRoom()).getDepartmentId());
+    move.put("first_department", DepartmentList.getRoom(patient.getLastRoom()).getDepartmentId());
     move.put("second_room", room);
-    move.put("second_department", departmentList.getRoom(room).getDepartmentId());
+    move.put("second_department", DepartmentList.getRoom(room).getDepartmentId());
     return move;
   }
 
   public Map<String, Integer> generateSwapRoom() {
     Map<String, Integer> move = new HashMap<>();
-    Patient firstPatient = patientList.getRandomPatient();
+    Patient firstPatient = PatientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapRoomPatient(firstPatient);
     if (secondPatient == null) return generateMove();
     move.put("type", 1);
@@ -364,28 +361,28 @@ public class Solver {
     move.put("second_patient", secondPatient.getId());
     move.put("first_room", firstPatient.getLastRoom());
     move.put("first_department",
-        departmentList.getRoom(firstPatient.getLastRoom()).getDepartmentId());
+        DepartmentList.getRoom(firstPatient.getLastRoom()).getDepartmentId());
     move.put("second_room", secondPatient.getLastRoom());
     move.put("second_department",
-        departmentList.getRoom(secondPatient.getLastRoom()).getDepartmentId());
+        DepartmentList.getRoom(secondPatient.getLastRoom()).getDepartmentId());
     return move;
   }
 
   public Map<String, Integer> generateShiftAdmission() {
     Map<String, Integer> move = new HashMap<>();
-    Patient patient = patientList.getRandomShiftPatient();
+    Patient patient = PatientList.getRandomShiftPatient();
     int shift = patient.getRandomShift();
     move.put("type", 2);
     move.put("first_patient", patient.getId());
     move.put("first_room", patient.getLastRoom());
-    move.put("first_department", departmentList.getRoom(patient.getLastRoom()).getDepartmentId());
+    move.put("first_department", DepartmentList.getRoom(patient.getLastRoom()).getDepartmentId());
     move.put("first_shift", shift);
     return move;
   }
 
   public Map<String, Integer> generateSwapAdmission() {
     Map<String, Integer> move = new HashMap<>();
-    Patient firstPatient = patientList.getRandomPatient();
+    Patient firstPatient = PatientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapAdmissionPatient(firstPatient);
     if (secondPatient == null) return generateMove();
     move.put("type", 3);
@@ -393,10 +390,10 @@ public class Solver {
     move.put("second_patient", secondPatient.getId());
     move.put("first_room", firstPatient.getLastRoom());
     move.put("first_department",
-        departmentList.getRoom(firstPatient.getLastRoom()).getDepartmentId());
+        DepartmentList.getRoom(firstPatient.getLastRoom()).getDepartmentId());
     move.put("second_room", secondPatient.getLastRoom());
     move.put("second_department",
-        departmentList.getRoom(secondPatient.getLastRoom()).getDepartmentId());
+        DepartmentList.getRoom(secondPatient.getLastRoom()).getDepartmentId());
     move.put("first_shift", secondPatient.getAdmission() - firstPatient.getAdmission());
     move.put("second_shift", firstPatient.getAdmission() - secondPatient.getAdmission());
     return move;
@@ -476,7 +473,7 @@ public class Solver {
   }
 
   public void executeChangeRoom() {
-    Patient patient = patientList.getPatient(lastMove.get("first_patient"));
+    Patient patient = PatientList.getPatient(lastMove.get("first_patient"));
 
     int[] assignmentSavings = getAssignmentSavings(patient, lastMove.get("second_room"), 0);
 
@@ -489,8 +486,8 @@ public class Solver {
   }
 
   public void executeSwapRoom() {
-    Patient firstPatient = patientList.getPatient(lastMove.get("first_patient"));
-    Patient secondPatient = patientList.getPatient(lastMove.get("second_patient"));
+    Patient firstPatient = PatientList.getPatient(lastMove.get("first_patient"));
+    Patient secondPatient = PatientList.getPatient(lastMove.get("second_patient"));
     Set<Integer> affectedDays = new HashSet<>();
 
     affectedDays.addAll(firstPatient.getAdmittedDays());
@@ -515,7 +512,7 @@ public class Solver {
   }
 
   public void executeShiftAdmission() {
-    Patient patient = patientList.getPatient(lastMove.get("first_patient"));
+    Patient patient = PatientList.getPatient(lastMove.get("first_patient"));
     Set<Integer> affectedDays = new HashSet<>();
 
     affectedDays.addAll(patient.getAdmittedDays());
@@ -533,8 +530,8 @@ public class Solver {
   }
 
   public void executeSwapAdmission() {
-    Patient firstPatient = patientList.getPatient(lastMove.get("first_patient"));
-    Patient secondPatient = patientList.getPatient(lastMove.get("second_patient"));
+    Patient firstPatient = PatientList.getPatient(lastMove.get("first_patient"));
+    Patient secondPatient = PatientList.getPatient(lastMove.get("second_patient"));
     Set<Integer> affectedDays = new HashSet<>();
 
     affectedDays.addAll(firstPatient.getAdmittedDays());
@@ -589,14 +586,14 @@ public class Solver {
   }
 
   public void undoChangeRoom() {
-    Patient patient = patientList.getPatient(lastMove.get("first_patient"));
+    Patient patient = PatientList.getPatient(lastMove.get("first_patient"));
     readmitPatient(patient, lastMove.get("first_room"), 0);
     recalculateLoadCosts(patient.getAdmittedDays());
   }
 
   public void undoSwapRoom() {
-    Patient firstPatient = patientList.getPatient(lastMove.get("first_patient"));
-    Patient secondPatient = patientList.getPatient(lastMove.get("second_patient"));
+    Patient firstPatient = PatientList.getPatient(lastMove.get("first_patient"));
+    Patient secondPatient = PatientList.getPatient(lastMove.get("second_patient"));
     Set<Integer> affectedDays = new HashSet<>();
     affectedDays.addAll(firstPatient.getAdmittedDays());
     affectedDays.addAll(secondPatient.getAdmittedDays());
@@ -606,7 +603,7 @@ public class Solver {
   }
 
   public void undoShiftAdmission() {
-    Patient patient = patientList.getPatient(lastMove.get("first_patient"));
+    Patient patient = PatientList.getPatient(lastMove.get("first_patient"));
     Set<Integer> affectedDays = new HashSet<>(patient.getAdmittedDays());
     readmitPatient(patient, lastMove.get("first_room"), (-lastMove.get("first_shift")));
     affectedDays.addAll(patient.getAdmittedDays());
@@ -614,8 +611,8 @@ public class Solver {
   }
 
   public void undoSwapAdmission() {
-    Patient firstPatient = patientList.getPatient(lastMove.get("first_patient"));
-    Patient secondPatient = patientList.getPatient(lastMove.get("second_patient"));
+    Patient firstPatient = PatientList.getPatient(lastMove.get("first_patient"));
+    Patient secondPatient = PatientList.getPatient(lastMove.get("second_patient"));
     Set<Integer> affectedDays = new HashSet<>();
     affectedDays.addAll(firstPatient.getAdmittedDays());
     affectedDays.addAll(secondPatient.getAdmittedDays());

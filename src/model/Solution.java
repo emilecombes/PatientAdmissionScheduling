@@ -6,32 +6,43 @@ import java.util.*;
 
 public class Solution {
   private final int patientCost, equityCost;
+  private final Set<Integer>[][] schedule;
+  private final Map<Integer, List<Map<String, Integer>>> dynamicGenderCount;
   private final Map<Patient, Integer> delays;
   private final Map<Patient, Room> assignedRooms;
-  private final Map<Room, List<Set<Patient>>> admittedPatients;
+  private int capacityViolations;
+  private final double[][] loadMatrix;
+  private final double[] averageDailyLoads;
+  private final double[] dailyLoadCosts;
+  private final double[] averageDepartmentLoads;
+  private final double[] departmentLoadCosts;
 
-  public Solution(PatientList patientList, int patientCost, int equityCost) {
+  public Solution(int patientCost, int equityCost, Schedule schedule) {
     this.patientCost = patientCost;
     this.equityCost = equityCost;
     this.delays = new HashMap<>();
     this.assignedRooms = new HashMap<>();
-    this.admittedPatients = new HashMap<>();
+    this.schedule = new Set[DepartmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
+    this.dynamicGenderCount = schedule.copyDynamicGenderViolations();
+    this.capacityViolations = schedule.getCapacityViolations();
+    this.loadMatrix = schedule.getLoadMatrix();
+    this.averageDailyLoads = schedule.getAverageDailyLoads();
+    this.dailyLoadCosts = schedule.getDailyLoadCosts();
+    this.averageDepartmentLoads = schedule.getAverageDepartmentLoads();
+    this.departmentLoadCosts = schedule.getDepartmentLoadCosts();
 
-    for (int i = 0; i < DepartmentList.getNumberOfRooms(); i++) {
-      Room room = DepartmentList.getRoom(i);
-      List<Set<Patient>> roomPatients = new ArrayList<>();
+
+    for (int i = 0; i < DepartmentList.getNumberOfRooms(); i++)
       for (int j = 0; j < DateConverter.getTotalHorizon(); j++)
-        roomPatients.add(new HashSet<>());
-      admittedPatients.put(room, roomPatients);
-    }
+        this.schedule[i][j] = new HashSet<>();
 
-    for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
-      Patient patient = patientList.getPatient(i);
+    for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
+      Patient patient = PatientList.getPatient(i);
       Room room = DepartmentList.getRoom(patient.getLastRoom());
       delays.put(patient, patient.getDelay());
       assignedRooms.put(patient, room);
       for (int j = patient.getAdmission(); j < patient.getDischarge(); j++)
-        admittedPatients.get(room).get(j).add(patient);
+        this.schedule[i][j].add(patient.getId());
     }
   }
 
@@ -51,7 +62,35 @@ public class Solution {
     return assignedRooms.get(pat);
   }
 
-  public Set<Patient> getAdmittedPatients(Room room, int day) {
-    return admittedPatients.get(room).get(day);
+  public Set<Integer>[][] getSchedule() {
+    return schedule;
+  }
+
+  public Map<Integer, List<Map<String, Integer>>> getDynamicGenderCount() {
+    return dynamicGenderCount;
+  }
+
+  public int getCapacityViolations() {
+    return capacityViolations;
+  }
+
+  public double[][] getLoadMatrix() {
+    return loadMatrix;
+  }
+
+  public double[] getAverageDailyLoads() {
+    return averageDailyLoads;
+  }
+
+  public double[] getDailyLoadCosts() {
+    return dailyLoadCosts;
+  }
+
+  public double[] getAverageDepartmentLoads() {
+    return averageDepartmentLoads;
+  }
+
+  public double[] getDepartmentLoadCosts() {
+    return departmentLoadCosts;
   }
 }

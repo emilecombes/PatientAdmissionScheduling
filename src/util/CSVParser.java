@@ -39,11 +39,10 @@ public class CSVParser {
     FileWriter writer = new FileWriter(file);
     solver.setPatientBedNumbers();
 
-    PatientList patientList = solver.getPatientList();
     writer.write("Id,Name,Gender,Treatment,Admission,Discharge,Delay,Department,MainSpecialism," +
         "Room,RoomCost,Bed,RoomCode\n");
-    for (int i = 0; i < patientList.getNumberOfPatients(); i++){
-      Map<String, String> info = patientList.getPatient(i).getInfo();
+    for (int i = 0; i < PatientList.getNumberOfPatients(); i++){
+      Map<String, String> info = PatientList.getPatient(i).getInfo();
       String sb = info.get("Id") + "," +
           "\"" + info.get("Name") + "\"," +
           "\"" + info.get("Gender") + "\"," +

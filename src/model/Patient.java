@@ -10,12 +10,12 @@ public class Patient {
   private final boolean inPatient;
   private final Set<String> preferredProps, neededProps;
   private final List<Integer> neededCare;
-  private final LinkedHashMap<Integer, Integer> assignedRooms;
-  private final Map<String, Map<Integer, Integer>> specificRoomCosts;
-  private final Map<Integer, Integer> roomCosts;
-  private int admission, discharge, delay, bed;
   private Set<Integer> feasibleRooms;
   private List<Integer> feasibleRoomList;
+  private final Map<Integer, Integer> roomCosts;
+  private final Map<String, Map<Integer, Integer>> specificRoomCosts;
+  private final LinkedHashMap<Integer, Integer> assignedRooms;
+  private int admission, discharge, delay, bed;
 
   public Patient(int id, String name, String gender, String treatment, int ad, int dd, int ma,
                  int room, int cap, Set<String> np, Set<String> pp) {
@@ -44,9 +44,8 @@ public class Patient {
       assignRoom(initialRoom, i);
 
     this.neededCare = new ArrayList<>();
-    for (int i = 0; i < stayLength; i++) {
-      neededCare.add((int) (Math.random() * 100));
-    }
+    for (int i = 0; i < stayLength; i++)
+      neededCare.add(50);
   }
 
   public String getName() {
@@ -197,6 +196,13 @@ public class Patient {
     specificRoomCosts.computeIfAbsent(type, k -> new HashMap<>());
     specificRoomCosts.get(type).put(room, cost);
   }
+
+  public void setDelay(int delay) {
+    this.delay = delay;
+    this.admission = originalAD + delay;
+    this.discharge = originalAD + delay + stayLength;
+  }
+
 
   public void setBed(int b) {
     bed = b;
