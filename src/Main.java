@@ -18,18 +18,11 @@ public class Main {
     new Variables(exhaustive, reset, extend, swapLoops, timeoutSol, timeoutInst, tradeoff);
     XMLParser xmlParser = new XMLParser(instance);
     xmlParser.buildDateConverter(extend);
+    xmlParser.buildDepartmentList();
+    xmlParser.buildPatientList();
 
-    DepartmentList departmentList = xmlParser.buildDepartmentList();
-    PatientList patientList = xmlParser.buildPatientList();
     Schedule schedule = new Schedule();
     Solver solver = new Solver(schedule);
-    solver.setPenalty("room_property", 20);
-    solver.setPenalty("capacity_preference", 10);
-    solver.setPenalty("speciality", 20);
-    solver.setPenalty("gender", 50);
-    solver.setPenalty("transfer", 100);
-    solver.setPenalty("delay", 5);
-    solver.setPenalty("capacity_violation", 1000);
 
     solver.preProcessing();
     solver.initSchedule();

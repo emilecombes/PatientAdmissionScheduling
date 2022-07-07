@@ -6,9 +6,6 @@ import util.Variables;
 import java.util.*;
 
 public class Solver {
-  // INFO
-  private final Map<String, Integer> penalties;
-
   // SOLUTION
   private final Schedule schedule;
   private int patientCost, loadCost;
@@ -19,19 +16,9 @@ public class Solver {
   private final List<Map<String, Integer>> generatedMoves;
   private Map<String, Integer> lastMove;
 
-
   public Solver(Schedule s) {
     schedule = s;
-    penalties = new HashMap<>();
     generatedMoves = new ArrayList<>();
-  }
-
-  public void setPenalty(String type, int value) {
-    penalties.put(type, value);
-  }
-
-  public int getPenalty(String type) {
-    return penalties.get(type);
   }
 
   public Map<String, Integer> getCostInfo() {
@@ -43,17 +30,17 @@ public class Solver {
       Patient patient = PatientList.getPatient(i);
       if (patient.isInitial())
         if (patient.getInitialRoom() != patient.getLastRoom()) {
-          transfer += getPenalty("transfer");
+          transfer += Variables.TRANSFER_PEN;
           System.out.println(
               "Patient " + patient.getId() + " was transferred from " + patient.getInitialRoom() +
                   " to " + patient.getLastRoom());
         }
       roomCosts += patient.getTotalRoomCost();
-      totalDelay += patient.getDelay() * getPenalty("delay");
+      totalDelay += patient.getDelay() * Variables.DELAY_PEN;
     }
     roomCosts -= transfer;
-    int gender = schedule.getDynamicGenderViolations() * getPenalty("gender");
-    int capacity = schedule.getCapacityViolations() * getPenalty("capacity_violation");
+    int gender = schedule.getDynamicGenderViolations() * Variables.GENDER_PEN;
+    int capacity = schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
     int load = schedule.getTotalDailyLoadCost() + schedule.getTotalDepartmentLoadCost() + capacity;
     costs.put("capacity_violations", capacity);
     costs.put("transfer", transfer);
@@ -102,7 +89,7 @@ public class Solver {
   }
 
   public void printCosts() {
-    int violationCost = schedule.getCapacityViolations() * getPenalty("capacity_violation");
+    int violationCost = schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
     System.out.println(
         "\nCapacity Violations\t:" + violationCost
             + "\nTotal Patient Cost\t:" + patientCost
@@ -187,30 +174,30 @@ public class Solver {
 
         int propertyCost = 0;
         for (String property : patient.getPreferredProperties())
-          if (!room.hasFeature(property)) propertyCost += getPenalty("room_property");
+          if (!room.hasFeature(property)) propertyCost += Variables.ROOM_PROP_PEN;
         patient.setRoomCost("room_property", r, propertyCost);
 
         int capacityCost;
         if (patient.getPreferredCap() < room.getCapacity() && patient.getPreferredCap() != -1)
-          capacityCost = getPenalty("capacity_preference");
+          capacityCost = Variables.PREF_CAP_PEN;
         else capacityCost = 0;
         patient.setRoomCost("capacity_preference", r, capacityCost);
 
         int specialityCost;
         String specialism = DepartmentList.getNeededSpecialism(patient.getTreatment());
         Department department = DepartmentList.getDepartment(room.getDepartment());
-        if (!department.hasMainSpecialism(specialism)) specialityCost = getPenalty("speciality");
+        if (!department.hasMainSpecialism(specialism)) specialityCost = Variables.SPECIALITY_PEN;
         else specialityCost = 0;
         patient.setRoomCost("speciality", r, specialityCost);
 
         int genderCost;
-        if (!room.canHostGender(patient.getGender())) genderCost = getPenalty("gender");
+        if (!room.canHostGender(patient.getGender())) genderCost = Variables.GENDER_PEN;
         else genderCost = 0;
         patient.setRoomCost("gender", r, genderCost);
 
         int transferCost;
         if (patient.isInitial() && patient.getRoom(patient.getAdmission()) != r)
-          transferCost = getPenalty("transfer");
+          transferCost = Variables.TRANSFER_PEN;
         else transferCost = 0;
         patient.setRoomCost("transfer", r, transferCost);
       }
@@ -238,7 +225,7 @@ public class Solver {
   }
 
   public void addDynamicGenderCost() {
-    patientCost += schedule.getDynamicGenderViolations() * getPenalty("gender");
+    patientCost += schedule.getDynamicGenderViolations() * Variables.GENDER_PEN;
   }
 
   public void calculateLoadCost() {
@@ -251,7 +238,7 @@ public class Solver {
   }
 
   public void addCapacityViolationCost() {
-    int cap = schedule.getCapacityViolations() * getPenalty("capacity_violation");
+    int cap = schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
     loadCost += cap;
     patientCost += cap;
   }
@@ -275,7 +262,7 @@ public class Solver {
   public void adjustLoadCost() {
     loadCost = schedule.getTotalDailyLoadCost()
         + schedule.getTotalDepartmentLoadCost()
-        + schedule.getCapacityViolations() * getPenalty("capacity_violation");
+        + schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
   }
 
 
@@ -417,21 +404,21 @@ public class Solver {
 
     for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
       if (schedule.hasSingleDynamicGenderViolation(patient.getLastRoom(), day, patient.getGender()))
-        patientSavings += getPenalty("gender");
+        patientSavings += Variables.GENDER_PEN;
       schedule.cancelPatient(patient, day);
     }
 
-    patientSavings -= shift * getPenalty("delay");
+    patientSavings -= shift * Variables.DELAY_PEN;
     patient.shiftAdmission(shift);
 
     for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
       if (schedule.isFirstDynamicGenderViolation(room, day, patient.getGender()))
-        patientSavings -= getPenalty("gender");
+        patientSavings -= Variables.GENDER_PEN;
       schedule.assignPatient(patient, room, day);
     }
 
     int capacitySavings = (capacityViolations - schedule.getCapacityViolations())
-        * getPenalty("capacity_violation");
+        * Variables.CAP_VIOL_PEN;
     return new int[]{patientSavings, capacitySavings};
   }
 
@@ -461,7 +448,7 @@ public class Solver {
 
   public void addSavingsToMove(int capacitySavings, int patientSavings, double loadSavings) {
     int capacityViolations = schedule.getCapacityViolations();
-    int capacityViolationCost = capacityViolations * getPenalty("capacity_violation");
+    int capacityViolationCost = capacityViolations * Variables.CAP_VIOL_PEN;
     lastMove.put("capacity_violations", capacityViolations);
     lastMove.put("capacity_violation_savings", capacitySavings);
     lastMove.put("total_patient_cost", patientCost);

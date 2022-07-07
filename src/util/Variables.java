@@ -1,17 +1,23 @@
 package util;
 
 public class Variables {
-  public static boolean EXHAUSTIVE;
-  public static boolean RESET;
-  public static int EXTEND;
-  public static int SWAP_LOOPS;
-  public static int TIMEOUT_SOLUTION;
-  public static int TIMEOUT_INSTANCE;
+  public static boolean EXHAUSTIVE, RESET;
+  public static int EXTEND, SWAP_LOOPS, TIMEOUT_SOLUTION, TIMEOUT_INSTANCE;
+  public static int ROOM_PROP_PEN, PREF_CAP_PEN, SPECIALITY_PEN, GENDER_PEN, TRANSFER_PEN,
+      DELAY_PEN, CAP_VIOL_PEN ;
   public static double TRADEOFF;
   public static double PC_START_TEMP, PC_STOP_TEMP, PC_ITERATIONS, PC_ALPHA;
   public static double EC_START_TEMP, EC_STOP_TEMP, EC_ITERATIONS, EC_ALPHA;
 
-  public Variables(boolean exh, boolean res, int ext, int sl, int ts, int ti, double to){
+  public Variables(boolean exh, boolean res, int ext, int sl, int ts, int ti, double to) {
+    ROOM_PROP_PEN = 20;
+    PREF_CAP_PEN = 10;
+    SPECIALITY_PEN = 20;
+    GENDER_PEN = 50;
+    TRANSFER_PEN = 100;
+    DELAY_PEN = 5;
+    CAP_VIOL_PEN = 1000;
+
     EXHAUSTIVE = exh;
     RESET = res;
     EXTEND = ext;
