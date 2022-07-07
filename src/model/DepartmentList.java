@@ -50,7 +50,7 @@ public class DepartmentList {
     return allRooms.get(id);
   }
 
-  public int getNumberOfRooms() {
+  public static int getNumberOfRooms() {
     return allRooms.size();
   }
 

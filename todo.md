@@ -24,6 +24,16 @@
 [] Create optWorkloadEquity(epsilon)
 [] Maintain approximation set
 
+
+## Tomorrow
+[] Class to store a found solution
+
+### Solution
+Map<Patient, Integer> delays
+Map<Patient, Integer> assignedRooms
+Map<Room, List<Set<Patient>>> rooms
+Map<String, Integer> costs
+
 ## Parameters to set
 EXTEND
 SA OPT_PC & OPT_WE

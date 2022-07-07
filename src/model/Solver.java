@@ -14,6 +14,7 @@ public class Solver {
   // SOLUTION
   private final Schedule schedule;
   private int patientCost, loadCost;
+  private List<Schedule> approximationSet;
 
   // MOVES
   private final List<Map<String, Integer>> generatedMoves;
@@ -48,7 +49,7 @@ public class Solver {
     for (int i = 0; i < patientList.getNumberOfPatients(); i++) {
       Patient patient = patientList.getPatient(i);
       if (patient.isInitial())
-        if (patient.getInitialRoom() != patient.getLastRoom()){
+        if (patient.getInitialRoom() != patient.getLastRoom()) {
           transfer += getPenalty("transfer");
           System.out.println(
               "Patient " + patient.getId() + " was transferred from " + patient.getInitialRoom() +
@@ -118,8 +119,9 @@ public class Solver {
     );
   }
 
-  public void setPatientBedNumbers(){
-    Set<Integer>[][] usedBeds = new Set[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
+  public void setPatientBedNumbers() {
+    Set<Integer>[][] usedBeds =
+        new Set[departmentList.getNumberOfRooms()][DateConverter.getTotalHorizon()];
     for (int i = 0; i < usedBeds.length; i++)
       for (int j = 0; j < usedBeds[0].length; j++)
         usedBeds[i][j] = new HashSet<>();
@@ -152,6 +154,7 @@ public class Solver {
     addDynamicGenderCost();
     calculateLoadCost();
     addCapacityViolationCost();
+    approximationSet = new LinkedList<>();
   }
 
   public void setFeasibleRooms() {
@@ -253,6 +256,26 @@ public class Solver {
 
 
   // Local search
+  public void solve() {
+    long start = System.currentTimeMillis();
+    long stop = start + Variables.TIMEOUT_INSTANCE;
+    while(System.currentTimeMillis() < stop) {
+      init();
+      optimizePatientCost();
+      optimizeEquityCost(calculateEpsilon());
+      addSolution();
+    }
+  }
+
+  public int calculateEpsilon(){
+    // TODO
+    return 0;
+  }
+
+  public void addSolution(){
+
+  }
+
   public void adjustLoadCost() {
     loadCost = schedule.getTotalDailyLoadCost()
         + schedule.getTotalDepartmentLoadCost()
@@ -261,11 +284,11 @@ public class Solver {
 
   public void optimizePatientCost() {
     double temp = Variables.PC_START_TEMP;
-    while(temp > Variables.PC_STOP_TEMP) {
+    while (temp > Variables.PC_STOP_TEMP) {
       for (int i = 0; i < Variables.PC_ITERATIONS; i++) {
         executeNewMove();
         int savings = lastMove.get("patient_savings");
-        if(savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
+        if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
         generatedMoves.add(lastMove);
       }
@@ -274,11 +297,25 @@ public class Solver {
     }
   }
 
-  public void optimizeWorkloadEquity(int epsilon) {
-    //TODO
+  public void optimizeEquityCost(int epsilon) {
+    double temp = Variables.EC_START_TEMP;
+    while (temp > Variables.EC_STOP_TEMP) {
+      for (int i = 0; i < Variables.EC_ITERATIONS; i++) {
+        executeNewMove();
+        int savings = lastMove.get("load_savings");
+        int patient_savings = lastMove.get("patient_savings");
+        if ((savings > 0 || Math.random() < Math.exp(savings / temp))
+            && patientCost - patient_savings <= epsilon
+        ) acceptMove();
+        else undoLastMove();
+        generatedMoves.add(lastMove);
+      }
+      temp *= Variables.EC_ALPHA;
+      adjustLoadCost();
+    }
   }
 
-  public void addCurrentSolution(){
+  public void addCurrentSolution() {
     //TODO
   }
 
