@@ -114,7 +114,11 @@ public class Schedule {
     Set<Integer> rooms = new HashSet<>(pat.getFeasibleRooms());
     rooms.remove(pat.getLastRoom());
     List<Patient> candidates = new ArrayList<>();
-    for (int i = 0; i < Variables.SWAP_LOOPS; i++) {
+    int loops = Math.min(
+        Variables.SWAP_LOOPS,
+        pat.getFeasibleRooms().size() * 4 * (endDate - startDate)
+    );
+    for (int i = 0; i < loops; i++) {
       int room = rooms.stream().skip(new Random().nextInt(rooms.size())).findFirst().orElse(-1);
       int day = startDate + new Random().nextInt(endDate - startDate);
       Set<Integer> patients = getPatients(room, day);

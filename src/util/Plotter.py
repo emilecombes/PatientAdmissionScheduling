@@ -9,17 +9,17 @@ import plotly.express as px
 
 
 def main():
-    instance = "or_pas_dept4_short01"
-    df_moves = pd.read_csv("solutions/csv/${instance}_move_info.csv")
-    df_schedule = pd.read_csv("solutions/csv/${instance}_schedule.csv")
+    instance = "or_pas_dept2_short00"
+    df_moves = pd.read_csv("../../solutions/csv/or_pas_dept2_short00_move_info.csv")
+    df_schedule = pd.read_csv("../../solutions/csv/or_pas_dept2_short00_schedule.csv")
     generations, accepts = get_move_generations(df_moves)
     df_moves = remove_unaccepted_moves(df_moves)
     plot_cost_time_evolution(df_moves)
-    plot_cost_cost_evolution(df_moves)
-    plot_generated_moves(generations, accepts)
-    plot_accepts_per_generated_move(accepts, generations)
-    plot_accepts_per_specific_generated_move(accepts, generations)
-    plot_gantt_chart(df_schedule)
+    # plot_cost_cost_evolution(df_moves)
+    # plot_generated_moves(generations, accepts)
+    # plot_accepts_per_generated_move(accepts, generations)
+    # plot_accepts_per_specific_generated_move(accepts, generations)
+    # plot_gantt_chart(df_schedule)
 
 
 def get_move_generations(df):

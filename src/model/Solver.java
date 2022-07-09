@@ -306,8 +306,9 @@ public class Solver {
 
 
   public void optimizePatientCost() {
+    double stop = System.currentTimeMillis() + Variables.TIMEOUT_INSTANCE;
     double temp = Variables.PC_START_TEMP;
-    while (temp > Variables.PC_STOP_TEMP) {
+    while (temp > Variables.PC_STOP_TEMP && System.currentTimeMillis() < stop) {
       for (int i = 0; i < Variables.PC_ITERATIONS; i++) {
         executeNewMove();
         int savings = lastMove.get("patient_savings");

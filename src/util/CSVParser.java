@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.Map;
 
 public class CSVParser {
-  private String outputPath = "solutions/csv/";
-  private String instance;
-  private Solver solver;
+  private final String outputPath = "solutions/csv/";
+  private final String instance;
+  private final Solver solver;
 
   public CSVParser(String instance, Solver solver) {
     this.instance = instance;
