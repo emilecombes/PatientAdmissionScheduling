@@ -30,12 +30,8 @@ public class Solver {
     for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
       Patient patient = PatientList.getPatient(i);
       if (patient.isInitial())
-        if (patient.getInitialRoom() != patient.getLastRoom()) {
+        if (patient.getInitialRoom() != patient.getLastRoom())
           transfer += Variables.TRANSFER_PEN;
-          System.out.println(
-              "Patient " + patient.getId() + " was transferred from " + patient.getInitialRoom() +
-                  " to " + patient.getLastRoom());
-        }
       roomCosts += patient.getTotalRoomCost();
       totalDelay += patient.getDelay() * Variables.DELAY_PEN;
     }
@@ -92,11 +88,9 @@ public class Solver {
   public void printCosts() {
     int violationCost = schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
     System.out.println(
-        "\nCapacity Violations\t:" + violationCost
-            + "\nTotal Patient Cost\t:" + patientCost
+        "\nCapacity Violations\t:" + schedule.getCapacityViolations() + " (" + violationCost + ")"
             + "\nPatient Cost\t\t:" + (patientCost - violationCost)
-            + "\nTotal Load Cost\t\t:" + loadCost
-            + "\nLoad Cost\t\t\t:" + (loadCost - violationCost)
+            + "\nLoad Cost\t\t:" + (loadCost - violationCost)
     );
   }
 

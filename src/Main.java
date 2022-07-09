@@ -6,7 +6,6 @@ import java.util.Random;
 
 public class Main {
   public static void main(String[] args) throws IOException {
-    String instance = "or_pas_dept2_short00";
     Variables.EXHAUSTIVE = true;
     Variables.RESET = false;
     Variables.EXTEND = 14;
@@ -20,12 +19,14 @@ public class Main {
     Variables.SPECIALITY_PEN = 20;
     Variables.GENDER_PEN = 50;
     Variables.DELAY_PEN = 5;
+    Variables.TRANSFER_PEN = 100;
     Variables.CAP_VIOL_PEN = 1000;
 
-    Variables.PC_START_TEMP = Double.parseDouble(args[0]);
-    Variables.PC_STOP_TEMP = Double.parseDouble(args[1]);
-    Variables.PC_ITERATIONS = Integer.parseInt(args[2]);
-    Variables.PC_ALPHA = Double.parseDouble(args[3]);
+    String instance = System.getProperty("i");
+    Variables.PC_START_TEMP = Double.parseDouble(System.getProperty("t0"));
+    Variables.PC_STOP_TEMP = Double.parseDouble(System.getProperty("te"));
+    Variables.PC_ITERATIONS = Integer.parseInt(System.getProperty("it"));
+    Variables.PC_ALPHA = Double.parseDouble(System.getProperty("a"));
 
     XMLParser xmlParser = new XMLParser(instance);
     xmlParser.buildDateConverter();
