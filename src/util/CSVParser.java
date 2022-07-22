@@ -20,7 +20,8 @@ public class CSVParser {
   }
 
   public void buildMoveInfoCSV() throws IOException {
-    File file = new File(outputPath + instance + "_move_info.csv");
+    File file = new File("/Users/emilecombes/Projects/IdeaProjects/PatientAdmissionScheduling" +
+        "/solutions/csv/sol_move_info.csv");
     if (file.exists()) file.delete();
     file.createNewFile();
 
@@ -32,7 +33,8 @@ public class CSVParser {
   }
 
   public void buildScheduleCSV() throws IOException {
-    File file = new File(outputPath + instance + "_schedule.csv");
+    File file = new File(  "/Users/emilecombes/Projects/IdeaProjects/PatientAdmissionScheduling" +
+        "/solutions/csv/sol_sched.csv");
     if (file.exists()) file.delete();
     file.createNewFile();
 

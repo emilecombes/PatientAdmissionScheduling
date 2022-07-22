@@ -42,12 +42,10 @@ public class Room {
   }
 
   public boolean canHostGender(String gender) {
-    return switch (genderPolicy) {
-      case "Any", "SameGender" -> true;
-      case "MaleOnly" -> gender.equals("Male");
-      case "FemaleOnly" -> gender.equals("Female");
-      default -> false;
-    };
+    if (genderPolicy.equals("Any") || genderPolicy.equals("SameGender")) return true;
+    if (genderPolicy.equals("MaleOnly")) return gender.equals("Male");
+    if (genderPolicy.equals("FemaleOnly")) return gender.equals("Female");
+    return false;
   }
 
   public boolean hasGenderPolicy(String pol) {

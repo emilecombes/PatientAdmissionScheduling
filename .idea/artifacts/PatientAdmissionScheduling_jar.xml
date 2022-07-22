@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="PatientAdmissionScheduling:jar">
-    <output-path>$PROJECT_DIR$/out/production/PatientAdmissionScheduling/artifacts/PatientAdmissionScheduling_jar</output-path>
-    <root id="archive" name="PatientAdmissionScheduling.jar">
-      <element id="module-output" name="PatientAdmissionScheduling" />
-    </root>
-  </artifact>
-</component>

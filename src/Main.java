@@ -28,6 +28,8 @@ public class Main {
     Variables.PC_ITERATIONS = Integer.parseInt(System.getProperty("it"));
     Variables.PC_ALPHA = Double.parseDouble(System.getProperty("a"));
 
+    System.out.println(instance);
+
     XMLParser xmlParser = new XMLParser(instance);
     xmlParser.buildDateConverter();
     xmlParser.buildDepartmentList();
@@ -39,7 +41,7 @@ public class Main {
     solver.initSchedule();
     solver.optimizePatientCost();
     xmlParser.writeSolution(solver);
-    solver.printCosts();
+    solver.printCost();
 
     CSVParser csvParser = new CSVParser(instance, solver);
     csvParser.buildMoveInfoCSV();

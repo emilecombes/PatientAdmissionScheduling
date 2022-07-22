@@ -15,12 +15,10 @@ import java.io.*;
 import java.util.*;
 
 public class XMLParser {
-  private final String inputInstance;
   private Document document;
 
   public XMLParser(String instance) {
-    inputInstance = instance;
-    String inputFile = "data/Instances/" + inputInstance + ".xml";
+    String inputFile = instance;
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
@@ -177,7 +175,8 @@ public class XMLParser {
   }
 
   public void writeSolution(Solver solver) {
-    String outputFile = "solutions/xml/" + inputInstance + "_sol.xml";
+    String outputFile = "/Users/emilecombes/Projects/IdeaProjects/PatientAdmissionScheduling" +
+        "/solutions/xml/sol.xml";
 
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = null;

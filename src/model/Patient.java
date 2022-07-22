@@ -156,6 +156,14 @@ public class Patient {
     return getRoom(discharge - 1);
   }
 
+  public int getRandomFeasibleRoom() {
+    if (feasibleRoomList.size() <= 1) return feasibleRoomList.get(0);
+    int room;
+    do room = feasibleRoomList.get((int) (Math.random() * feasibleRoomList.size()));
+    while (room == getLastRoom());
+    return room;
+  }
+
   public int getNewRandomFeasibleRoom() {
     if (feasibleRoomList.size() <= 1) return -1;
     int room;

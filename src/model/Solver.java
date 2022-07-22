@@ -85,6 +85,10 @@ public class Solver {
     return moveInfo;
   }
 
+  public void printCost() {
+    System.out.println(patientCost);
+  }
+
   public void printCosts() {
     int violationCost = schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
     System.out.println(
@@ -215,7 +219,7 @@ public class Solver {
 
   public void assignRandomRooms() {
     for (Patient p : PatientList.getRegisteredPatients()) {
-      int room = p.getNewRandomFeasibleRoom();
+      int room = p.getRandomFeasibleRoom();
       for (int i = 0; i < p.getStayLength(); i++)
         schedule.assignPatient(p, room, i + p.getOriginalAD());
       patientCost += p.getRoomCost(room);
@@ -254,7 +258,7 @@ public class Solver {
         if (verticalHit != null) {
           int left = Math.max(patientCost, verticalHit.getLeft());
           Point updatedPoint = new Point(left, loadCost);
-          if(loadCost - verticalHit.getBottom() > delta)
+          if (loadCost - verticalHit.getBottom() > delta)
             addRectangle(new Rectangle(updatedPoint, verticalHit.getLowerRight()));
         }
         rectangleArchive.remove(horizontalHit);
@@ -312,7 +316,7 @@ public class Solver {
       }
       temp *= Variables.PC_ALPHA;
       adjustLoadCost();
-      if(currentlyNonDominated()) updateApproximationArchive(temp);
+      if (currentlyNonDominated()) updateApproximationArchive(temp);
     }
   }
 
@@ -330,7 +334,7 @@ public class Solver {
         generatedMoves.add(lastMove);
       }
       temp *= Variables.PC_ALPHA;
-      if(currentlyNonDominated()) updateApproximationArchive(temp);
+      if (currentlyNonDominated()) updateApproximationArchive(temp);
       adjustLoadCost();
     }
   }
@@ -359,19 +363,24 @@ public class Solver {
     else if (random < 80) type = 1;
     else if (random < 85) type = 2;
     else type = 3;
-    return switch (type) {
-      case 0 -> generateChangeRoom();
-      case 1 -> generateSwapRoom();
-      case 2 -> generateShiftAdmission();
-      case 3 -> generateSwapAdmission();
-      default -> null;
-    };
+    switch (type) {
+      case 0:
+        return generateChangeRoom();
+      case 1:
+        return generateSwapRoom();
+      case 2:
+        return generateShiftAdmission();
+      case 3:
+        return generateSwapAdmission();
+      default:
+        return null;
+    }
   }
 
   public Map<String, Integer> generateChangeRoom() {
     Map<String, Integer> move = new HashMap<>();
     Patient patient = PatientList.getRandomPatient();
-    int room = patient.getNewRandomFeasibleRoom();
+    int room = patient.getRandomFeasibleRoom();
     move.put("type", 0);
     move.put("first_patient", patient.getId());
     move.put("first_room", patient.getLastRoom());
@@ -431,12 +440,10 @@ public class Solver {
 
   public void executeNewMove() {
     lastMove = generateMove();
-    switch (lastMove.get("type")) {
-      case 0 -> executeChangeRoom();
-      case 1 -> executeSwapRoom();
-      case 2 -> executeShiftAdmission();
-      case 3 -> executeSwapAdmission();
-    }
+    if (lastMove.get("type") == 0) executeChangeRoom();
+    else if (lastMove.get("type") == 1) executeSwapRoom();
+    else if (lastMove.get("type") == 2) executeShiftAdmission();
+    else if (lastMove.get("type") == 3) executeSwapAdmission();
   }
 
   public int[] getAssignmentSavings(Patient patient, int room, int shift) {
@@ -590,12 +597,10 @@ public class Solver {
   // Undo Move
   public void undoLastMove() {
     lastMove.put("accepted", 0);
-    switch (lastMove.get("type")) {
-      case 0 -> undoChangeRoom();
-      case 1 -> undoSwapRoom();
-      case 2 -> undoShiftAdmission();
-      case 3 -> undoSwapAdmission();
-    }
+    if (lastMove.get("type") == 0) undoChangeRoom();
+    else if (lastMove.get("type") == 1) undoSwapRoom();
+    else if (lastMove.get("type") == 2) undoShiftAdmission();
+    else if (lastMove.get("type") == 3) undoSwapAdmission();
   }
 
   public void readmitPatient(Patient patient, int room, int shift) {
