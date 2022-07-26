@@ -20,7 +20,7 @@ public class Main {
     Variables.CAP_VIOL_PEN = 1000;
 
     String[] i = System.getProperty("instance").split("/");
-    Variables.INSTANCE = i[i.length-1];
+    Variables.INSTANCE = i[i.length-1].split("\\.")[0];
     Variables.PATH = System.getProperty("path");
 
     Variables.PCR = Integer.parseInt(System.getProperty("pcr"));

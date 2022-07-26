@@ -1,0 +1,39 @@
+## This is an example of specifying instances with a file.
+
+# Each line is an instance relative to trainInstancesDir
+# (see scenario.txt.tmpl) and an optional sequence of instance-specific
+# parameters that will be passed to target-runnerx when invoked on that
+# instance.
+
+# Empty lines and comments are ignored.
+
+or_pas_dept2_long00
+or_pas_dept2_long01
+or_pas_dept2_long02
+or_pas_dept2_long03
+or_pas_dept2_long04
+or_pas_dept2_short00
+or_pas_dept2_short01
+or_pas_dept2_short02
+or_pas_dept2_short03
+or_pas_dept2_short04
+or_pas_dept4_long00
+or_pas_dept4_long01
+or_pas_dept4_long02
+or_pas_dept4_long03
+or_pas_dept4_long04
+or_pas_dept4_short00
+or_pas_dept4_short01
+or_pas_dept4_short02
+or_pas_dept4_short03
+or_pas_dept4_short04
+or_pas_dept6_long00
+or_pas_dept6_long01
+or_pas_dept6_long02
+or_pas_dept6_long03
+or_pas_dept6_long04
+or_pas_dept6_short00
+or_pas_dept6_short01
+or_pas_dept6_short02
+or_pas_dept6_short03
+or_pas_dept6_short04
