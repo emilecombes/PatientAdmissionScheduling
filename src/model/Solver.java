@@ -359,9 +359,9 @@ public class Solver {
   public Map<String, Integer> generateMove() {
     int random = (int) (Math.random() * 100);
     int type;
-    if (random < 50) type = 0;
-    else if (random < 80) type = 1;
-    else if (random < 85) type = 2;
+    if (random < Variables.PCR) type = 0;
+    else if (random - Variables.PCR < Variables.PSR ) type = 1;
+    else if (random - Variables.PCR - Variables.PSR < Variables.PSHA) type = 2;
     else type = 3;
     switch (type) {
       case 0:

@@ -10,18 +10,15 @@ import java.io.IOException;
 import java.util.Map;
 
 public class CSVParser {
-  private final String outputPath = "solutions/csv/";
-  private final String instance;
   private final Solver solver;
 
-  public CSVParser(String instance, Solver solver) {
-    this.instance = instance;
+  public CSVParser(Solver solver) {
     this.solver = solver;
   }
 
   public void buildMoveInfoCSV() throws IOException {
-    File file = new File("/Users/emilecombes/Projects/IdeaProjects/PatientAdmissionScheduling" +
-        "/solutions/csv/sol_move_info.csv");
+    File file = new File(Variables.PATH + "/solutions/csv/" + Variables.INSTANCE +
+        "_sol_move_info.csv");
     if (file.exists()) file.delete();
     file.createNewFile();
 
@@ -33,8 +30,8 @@ public class CSVParser {
   }
 
   public void buildScheduleCSV() throws IOException {
-    File file = new File(  "/Users/emilecombes/Projects/IdeaProjects/PatientAdmissionScheduling" +
-        "/solutions/csv/sol_sched.csv");
+    File file = new File(Variables.PATH + "/solutions/csv/" + Variables.INSTANCE +
+        "_schedule.csv");
     if (file.exists()) file.delete();
     file.createNewFile();
 

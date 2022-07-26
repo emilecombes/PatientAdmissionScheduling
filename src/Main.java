@@ -2,14 +2,11 @@ import model.*;
 import util.*;
 
 import java.io.IOException;
-import java.util.Random;
 
 public class Main {
   public static void main(String[] args) throws IOException {
-    Variables.EXHAUSTIVE = true;
     Variables.RESET = false;
     Variables.EXTEND = 14;
-    Variables.SWAP_LOOPS = 25;
     Variables.TIMEOUT_SOLUTION = 1000 * 60 * 5;
     Variables.TIMEOUT_INSTANCE = 1000 * 60 * 8;
     Variables.TRADEOFF = 1.25;
@@ -22,15 +19,21 @@ public class Main {
     Variables.TRANSFER_PEN = 100;
     Variables.CAP_VIOL_PEN = 1000;
 
-    String instance = System.getProperty("i");
-    Variables.PC_START_TEMP = Double.parseDouble(System.getProperty("t0"));
-    Variables.PC_STOP_TEMP = Double.parseDouble(System.getProperty("te"));
-    Variables.PC_ITERATIONS = Integer.parseInt(System.getProperty("it"));
-    Variables.PC_ALPHA = Double.parseDouble(System.getProperty("a"));
+    String[] i = System.getProperty("instance").split("/");
+    Variables.INSTANCE = i[i.length-1];
+    Variables.PATH = System.getProperty("path");
 
-    System.out.println(instance);
+    Variables.PCR = Integer.parseInt(System.getProperty("pcr"));
+    Variables.PSR = Integer.parseInt(System.getProperty("psr"));
+    Variables.PSHA = Integer.parseInt(System.getProperty("psha"));
+    Variables.EXHAUSTIVE = System.getProperty("exhaustive").equals("1");
+    Variables.SWAP_LOOPS = Integer.parseInt(System.getProperty("swap_loops"));
+    Variables.PC_START_TEMP = Double.parseDouble(System.getProperty("t_start"));
+    Variables.PC_STOP_TEMP = Double.parseDouble(System.getProperty("t_stop"));
+    Variables.PC_ITERATIONS = Integer.parseInt(System.getProperty("iterations"));
+    Variables.PC_ALPHA = Double.parseDouble(System.getProperty("alpha"));
 
-    XMLParser xmlParser = new XMLParser(instance);
+    XMLParser xmlParser = new XMLParser();
     xmlParser.buildDateConverter();
     xmlParser.buildDepartmentList();
     xmlParser.buildPatientList();
@@ -43,11 +46,11 @@ public class Main {
     xmlParser.writeSolution(solver);
     solver.printCost();
 
-    CSVParser csvParser = new CSVParser(instance, solver);
-    csvParser.buildMoveInfoCSV();
-    csvParser.buildScheduleCSV();
-
-    System.out.println("Validator: ./or_pas_validator Instances/" + instance + ".xml ." +
-        "./solutions/xml/" + instance + "_sol.xml");
+    CSVParser csvParser = new CSVParser(solver);
+//    csvParser.buildMoveInfoCSV();
+//    csvParser.buildScheduleCSV();
+//
+//    System.out.println("Validator: ./or_pas_validator Instances/" + instance + ".xml ." +
+//        "./solutions/xml/" + instance + "_sol.xml");
   }
 }

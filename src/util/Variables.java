@@ -6,7 +6,10 @@ public class Variables {
   public static int EXTEND,
       SWAP_LOOPS,
       TIMEOUT_SOLUTION,
-      TIMEOUT_INSTANCE;
+      TIMEOUT_INSTANCE,
+      PCR,
+      PSR,
+      PSHA;
   public static double TRADEOFF;
   public static int ROOM_PROP_PEN,
       PREF_CAP_PEN,
@@ -23,4 +26,5 @@ public class Variables {
       EC_STOP_TEMP,
       EC_ITERATIONS,
       EC_ALPHA;
+  public static String PATH, INSTANCE;
 }

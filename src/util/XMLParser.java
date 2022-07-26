@@ -17,12 +17,12 @@ import java.util.*;
 public class XMLParser {
   private Document document;
 
-  public XMLParser(String instance) {
-    String inputFile = instance;
+  public XMLParser() {
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
-      document = builder.parse(new File(inputFile));
+      document = builder.parse(new File(
+          Variables.PATH + "/Instances/" + Variables.INSTANCE + ".xml"));
       document.getDocumentElement().normalize();
     } catch (Exception e) {
       System.out.println("Something went wrong...");
@@ -39,7 +39,7 @@ public class XMLParser {
     new DateConverter(startDay, nDays, Variables.EXTEND);
   }
 
-  public DepartmentList buildDepartmentList() {
+  public void buildDepartmentList() {
     // Build rooms
     List<Room> rooms = new ArrayList<>();
     Node roomsNode = document.getElementsByTagName("rooms").item(0);
@@ -124,10 +124,10 @@ public class XMLParser {
       );
     }
 
-    return new DepartmentList(rooms, departments, treatmentToSpecialism);
+    new DepartmentList(rooms, departments, treatmentToSpecialism);
   }
 
-  public PatientList buildPatientList() {
+  public void buildPatientList() {
     Node patientsNode = document.getElementsByTagName("patients").item(0);
     NodeList patientsNodeList = patientsNode.getChildNodes();
     List<Patient> patients = new ArrayList<>();
@@ -171,12 +171,12 @@ public class XMLParser {
         patients.add(patient);
       }
     }
-    return new PatientList(patients);
+
+    new PatientList(patients);
   }
 
   public void writeSolution(Solver solver) {
-    String outputFile = "/Users/emilecombes/Projects/IdeaProjects/PatientAdmissionScheduling" +
-        "/solutions/xml/sol.xml";
+    String outputFile = Variables.PATH + "/solutions/xml/" + Variables.INSTANCE + "_sol.xml";
 
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = null;

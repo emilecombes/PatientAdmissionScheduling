@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PAS:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PAS_jar</output-path>
+    <root id="archive" name="PAS.jar">
+      <element id="module-output" name="PAS" />
+    </root>
+  </artifact>
+</component>
