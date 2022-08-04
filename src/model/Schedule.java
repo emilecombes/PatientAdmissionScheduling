@@ -45,7 +45,6 @@ public class Schedule {
   public Schedule(Solution s) {
     schedule = s.getSchedule();
     dynamicGenderCount = s.getDynamicGenderCount();
-    capacityViolations = s.getCapacityViolations();
     loadMatrix = s.getLoadMatrix();
     avgDailyLoads = s.getAverageDailyLoads();
     dailyLoadCosts = s.getDailyLoadCosts();
@@ -54,8 +53,7 @@ public class Schedule {
   }
   
   public boolean isFeasible() {
-    // TODO
-    return false;
+    return capacityViolations == 0;
   }
 
   public int getCapacityViolations() {

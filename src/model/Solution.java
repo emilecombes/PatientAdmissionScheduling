@@ -11,7 +11,6 @@ public class Solution {
   private final Map<Integer, List<Map<String, Integer>>> dynamicGenderCount;
   private final Map<Patient, Integer> delays;
   private final Map<Patient, Room> assignedRooms;
-  private final int capacityViolations;
   private final double[][] loadMatrix;
   private final double[] averageDailyLoads;
   private final double[] dailyLoadCosts;
@@ -22,16 +21,17 @@ public class Solution {
     this.patientCost = patientCost;
     this.equityCost = equityCost;
     this.temperature = temperature;
-    this.delays = new HashMap<>();
-    this.assignedRooms = new HashMap<>();
+
     this.schedule = schedule.copySchedule();
     this.dynamicGenderCount = schedule.copyDynamicGenderViolations();
-    this.capacityViolations = schedule.getCapacityViolations();
     this.loadMatrix = schedule.getLoadMatrix();
     this.averageDailyLoads = schedule.getAverageDailyLoads();
     this.dailyLoadCosts = schedule.getDailyLoadCosts();
     this.averageDepartmentLoads = schedule.getAverageDepartmentLoads();
     this.departmentLoadCosts = schedule.getDepartmentLoadCosts();
+
+    this.assignedRooms = new HashMap<>();
+    this.delays = new HashMap<>();
     for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
       Patient patient = PatientList.getPatient(i);
       Room room = DepartmentList.getRoom(patient.getLastRoom());
@@ -66,10 +66,6 @@ public class Solution {
 
   public Map<Integer, List<Map<String, Integer>>> getDynamicGenderCount() {
     return dynamicGenderCount;
-  }
-
-  public int getCapacityViolations() {
-    return capacityViolations;
   }
 
   public double[][] getLoadMatrix() {

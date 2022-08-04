@@ -6,22 +6,19 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Tuning hyperparameters on server">
-      <change afterPath="$PROJECT_DIR$/tuning/output.txt" afterDir="false" />
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Tuning hyperparamers with shorter and individual execution times">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/solutions/xml/or_pas_dept2_short00_sol.xml" beforeDir="false" afterPath="$PROJECT_DIR$/solutions/xml/or_pas_dept2_short00_sol.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Schedule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Solution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solution.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Variables.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo.md" beforeDir="false" afterPath="$PROJECT_DIR$/todo.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning.zip" beforeDir="false" afterPath="$PROJECT_DIR$/tuning.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tuning/configurations.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/configurations.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tuning/default.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tuning/irace.Rdata" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/irace.Rdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/forbidden.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tuning/parameters.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/parameters.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tuning/pas.jar" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/pas.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/pas.jar" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tuning/scenario.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/scenario.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tuning/target-runner" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/target-runner" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +64,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/tuning" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/tuning" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application">
@@ -74,7 +74,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="PAS" />
-      <option name="VM_PARAMETERS" value="-Dinstance=$USER_HOME$/tuning/Instances/or_pas_dept2_short00.xml -Dswap_loops=127 -Dt_start=735 -Dt_stop=1.0714 -Dalpha=0.9995 -Dt_iterations=600 -Dpcr=40 -Dpsr=36 -Dpsha=15" />
+      <option name="VM_PARAMETERS" value="-Dinstance=$USER_HOME$/tuning/Instances/or_pas_dept6_long00.xml -Dswap_loops=60 -Dt_start=650 -Dt_stop=1.72 -Dalpha=0.998 -Diterations=50000 -Dpcr=25 -Dpsr=41 -Dpsha=11" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -91,7 +91,7 @@
       <workItem from="1658497051448" duration="8931000" />
       <workItem from="1658849929616" duration="3611000" />
       <workItem from="1659260924701" duration="11724000" />
-      <workItem from="1659608921106" duration="6345000" />
+      <workItem from="1659608921106" duration="13715000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -100,7 +100,14 @@
       <option name="project" value="LOCAL" />
       <updated>1658851159117</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Tuning hyperparamers with shorter and individual execution times">
+      <created>1659618623546</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1659618623546</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -119,6 +126,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Tuning hyperparameters on server" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tuning hyperparameters on server" />
+    <MESSAGE value="Tuning hyperparamers with shorter and individual execution times" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tuning hyperparamers with shorter and individual execution times" />
   </component>
 </project>

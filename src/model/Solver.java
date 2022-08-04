@@ -9,7 +9,7 @@ public class Solver {
   // SOLUTION
   private Schedule schedule;
   private int patientCost, loadCost;
-  private List<Solution> approximationArchive, intermediateApproximationArchive;
+  private List<Solution> solutionArchive;
   private List<Rectangle> rectangleArchive;
 
   // MOVES
@@ -234,8 +234,7 @@ public class Solver {
 
   // Local search
   public void boxSplitting(int maxPC, int minWE, int delta) {
-    approximationArchive = new LinkedList<>();
-    intermediateApproximationArchive = new LinkedList<>();
+    solutionArchive = new LinkedList<>();
     rectangleArchive = new LinkedList<>();
     optimizePatientCost();
     rectangleArchive.add(new Rectangle(new Point(patientCost, loadCost), new Point(maxPC, minWE)));
@@ -246,7 +245,7 @@ public class Solver {
       if (!currentlyNonDominated())
         rectangle.setLowerRight(new Point(rectangle.getRight(), c));
       else {
-        updateApproximationArchive(-1);
+        updateArchive(-1);
         Rectangle horizontalHit = findRectangleOnX(patientCost);
         if (horizontalHit != null) {
           int top = Math.max(horizontalHit.getBottom(), c);
@@ -270,6 +269,7 @@ public class Solver {
 
   public boolean currentlyNonDominated() {
     // TODO
+    // If solution before curr PC dominates curr, yes
     return schedule.isFeasible();
   }
 
@@ -316,7 +316,7 @@ public class Solver {
       }
       temp *= Variables.ALPHA;
       adjustLoadCost();
-      if (currentlyNonDominated()) updateApproximationArchive(temp);
+      updateArchive(temp);
     }
   }
 
@@ -334,8 +334,8 @@ public class Solver {
         generatedMoves.add(lastMove);
       }
       temp *= Variables.ALPHA;
-      if (currentlyNonDominated()) updateApproximationArchive(temp);
       adjustLoadCost();
+      updateArchive(temp);
     }
   }
 
@@ -344,8 +344,11 @@ public class Solver {
     return null;
   }
 
-  public void updateApproximationArchive(double temp) {
-    // TODO
+  public void updateArchive(double temp) {
+    if(currentlyNonDominated()){
+      // add sol to solution arch
+      // remove dominated solutions
+    }
   }
 
 

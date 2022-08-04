@@ -7,7 +7,7 @@ public class Variables {
   public static int EXTEND,
       SWAP_LOOPS,
       TIME_LIMIT,
-      TOTAL_ITERATIONS,
+      ITERATIONS,
       T_ITERATIONS,
       PCR,
       PSR,
