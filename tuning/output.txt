@@ -1,0 +1,254 @@
+#------------------------------------------------------------------------------
+# irace: An implementation in R of (Elitist) Iterated Racing
+# Version: 3.4.1.9fcaeaf
+# Copyright (C) 2010-2020
+# Manuel Lopez-Ibanez     <manuel.lopez-ibanez@manchester.ac.uk>
+# Jeremie Dubois-Lacoste  
+# Leslie Perez Caceres    <leslie.perez.caceres@ulb.ac.be>
+#
+# This is free software, and you are welcome to redistribute it under certain
+# conditions.  See the GNU General Public License for details. There is NO
+# WARRANTY; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# irace builds upon previous code from the race package:
+#     race: Racing methods for the selection of the best
+#     Copyright (C) 2003 Mauro Birattari
+#------------------------------------------------------------------------------
+# installed at: /home/emilecombes/R/x86_64-pc-linux-gnu-library/3.6/irace
+# called with: 
+Warning: A default scenario file './scenario.txt' has been found and will be read
+# 0 expression(s) specifying forbidden configurations read from '/home/emilecombes/tuning/forbidden.txt'
+# 0 expression(s) specifying forbidden configurations read from '/home/emilecombes/tuning/forbidden.txt'
+# 2022-07-27 13:27:24 CEST: Initialization
+# Elitist race
+# Elitist new instances: 1
+# Elitist limit: 2
+# nbIterations: 5
+# minNbSurvival: 5
+# nbParameters: 9
+# seed: 1528256069
+# confidence level: 0.95
+# budget: 300
+# mu: 5
+# deterministic: FALSE
+
+# 2022-07-27 13:27:24 CEST: Iteration 1 of 5
+# experimentsUsedSoFar: 0
+# remainingBudget: 300
+# currentBudget: 60
+# nbConfigurations: 10
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|          1|         10|          8|    54780.00000|         10|00:37:12|   NA|  NA|    NA|
+|x|          2|         10|          8|    56477.50000|         20|00:37:35|+0.96|0.98|0.0000|
+|x|          3|         10|          8|    50525.00000|         30|00:36:00|+0.94|0.96|0.0003|
+|x|          4|         10|          8|    47212.50000|         40|00:37:21|+0.96|0.97|0.0003|
+|-|          5|          1|          8|    44912.00000|         50|00:36:15|   NA|  NA|    NA|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:           8    mean value:     44912.00000
+Description of the best-so-far configuration:
+  .ID. exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha .PARENT.
+8    8          0        154     772 2.3971        400 0.9995  42  36    8       NA
+
+# 2022-07-27 16:31:49 CEST: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+  exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha
+8          0        154     772 2.3971        400 0.9995  42  36    8
+# 2022-07-27 16:31:49 CEST: Iteration 2 of 5
+# experimentsUsedSoFar: 50
+# remainingBudget: 250
+# currentBudget: 62
+# nbConfigurations: 9
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|          6|          9|         16|    14800.00000|          9|00:37:01|   NA|  NA|    NA|
+|x|          4|          9|         16|    25657.50000|         17|00:37:13|+0.82|0.91|0.0000|
+|x|          1|          9|         16|    35616.66667|         25|00:36:53|+0.86|0.91|0.0000|
+|x|          5|          9|         16|    35775.00000|         33|00:35:44|+0.89|0.92|0.0000|
+|-|          3|          2|         16|    36025.00000|         41|00:37:02|-0.20|0.04|0.6000|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:           8    mean value:     39943.33333
+Description of the best-so-far configuration:
+  .ID. exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha .PARENT.
+8    8          0        154     772 2.3971        400 0.9995  42  36    8       NA
+
+# 2022-07-27 19:35:45 CEST: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+   exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha
+8           0        154     772 2.3971        400 0.9995  42  36    8
+16          0        127     735 1.0714        328 0.9995  40  36   15
+# 2022-07-27 19:35:45 CEST: Iteration 3 of 5
+# experimentsUsedSoFar: 91
+# remainingBudget: 209
+# currentBudget: 69
+# nbConfigurations: 10
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|          7|         10|         16|    10230.00000|         10|00:30:06|   NA|  NA|    NA|
+|x|          2|         10|         16|    34212.50000|         19|00:29:50|+0.82|0.91|0.0070|
+|x|          1|         10|          8|    41145.00000|         27|00:26:18|+0.89|0.93|0.0044|
+|x|          3|         10|         16|    40246.25000|         35|00:25:36|+0.85|0.89|0.1129|
+|-|          6|          2|         16|    35157.00000|         43|00:24:23|-0.20|0.04|0.6000|
+|.|          4|          2|         16|    35383.33333|         43|00:00:00|-0.07|0.11|0.5333|
+|.|          5|          2|         16|    35507.14286|         43|00:00:00|-0.14|0.02|0.5714|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:          16    mean value:     35507.14286
+Description of the best-so-far configuration:
+   .ID. exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha .PARENT.
+16   16          0        127     735 1.0714        328 0.9995  40  36   15        8
+
+# 2022-07-27 21:52:01 CEST: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+   exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha
+16          0        127     735 1.0714        328 0.9995  40  36   15
+8           0        154     772 2.3971        400 0.9995  42  36    8
+# 2022-07-27 21:52:01 CEST: Iteration 4 of 5
+# experimentsUsedSoFar: 134
+# remainingBudget: 166
+# currentBudget: 83
+# nbConfigurations: 10
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|          8|         10|         28|    12350.00000|         10|00:37:26|   NA|  NA|    NA|
+|x|          1|         10|         28|    33792.50000|         18|00:34:54|+0.87|0.93|0.0000|
+|x|          6|         10|          8|    27478.33333|         26|00:31:38|+0.86|0.90|0.0002|
+|x|          5|         10|          8|    29536.25000|         34|00:34:17|+0.89|0.91|0.0001|
+|-|          4|          3|          8|    31084.00000|         42|00:34:30|-0.25|0.00|0.8288|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:          16    mean value:     32630.62500
+Description of the best-so-far configuration:
+   .ID. exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha .PARENT.
+16   16          0        127     735 1.0714        328 0.9995  40  36   15        8
+
+# 2022-07-28 00:44:49 CEST: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+   exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha
+16          0        127     735 1.0714        328 0.9995  40  36   15
+8           0        154     772 2.3971        400 0.9995  42  36    8
+28          0        444     526 2.0782        488 0.9990  34  29   14
+# 2022-07-28 00:44:49 CEST: Iteration 5 of 5
+# experimentsUsedSoFar: 176
+# remainingBudget: 124
+# currentBudget: 124
+# nbConfigurations: 14
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|          9|         14|         36|    17020.00000|         14|01:01:09|   NA|  NA|    NA|
+|x|          5|         14|         36|    26075.00000|         25|00:54:05|+0.78|0.89|0.0001|
+|x|          3|         14|         35|    29878.33333|         37|00:58:37|+0.78|0.85|0.0018|
+|x|          8|         14|         35|    25410.00000|         48|00:49:44|+0.82|0.86|0.0014|
+|-|          1|          6|         35|    31054.00000|         59|00:54:04|+0.21|0.37|0.6209|
+|!|          6|          6|         35|    28310.83333|         62|00:17:57|+0.25|0.38|0.5866|
+|-|          2|          5|         35|    32359.28571|         66|00:24:22|+0.37|0.46|0.4750|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:          16    mean value:     30917.77778
+Description of the best-so-far configuration:
+   .ID. exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha .PARENT.
+16   16          0        127     735 1.0714        328 0.9995  40  36   15        8
+
+# 2022-07-28 06:04:50 CEST: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+   exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha
+16          0        127     735 1.0714        328 0.9995  40  36   15
+8           0        154     772 2.3971        400 0.9995  42  36    8
+28          0        444     526 2.0782        488 0.9990  34  29   14
+35          0        125     763 0.9776        428 0.9997  48  27   17
+36          0         70     731 0.5017        373 0.9998  41  50    7
+# 2022-07-28 06:04:50 CEST: Iteration 6 of 6
+# experimentsUsedSoFar: 242
+# remainingBudget: 58
+# currentBudget: 58
+# nbConfigurations: 10
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|         10|         10|         35|    13300.00000|         10|00:46:43|   NA|  NA|    NA|
+|x|          9|         10|         46|    15310.00000|         15|00:19:56|+0.73|0.86|0.4193|
+|x|          3|         10|         46|    22530.00000|         20|00:22:17|+0.52|0.68|0.5195|
+|x|          8|         10|         35|    20046.25000|         25|00:19:55|+0.26|0.44|0.6476|
+|=|          5|         10|         35|    22988.00000|         30|00:22:32|+0.18|0.34|0.6598|
+|-|          6|          8|         35|    21589.16667|         35|00:19:58|+0.30|0.42|0.6116|
+|!|          1|          8|         35|    26166.42857|         38|00:14:21|+0.30|0.40|0.6100|
+|-|          2|          6|         35|    29976.87500|         41|00:15:04|+0.43|0.51|0.4764|
+|-|          7|          4|         35|    27706.11111|         45|00:24:45|+0.42|0.48|0.3205|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:          16    mean value:     29187.00000
+Description of the best-so-far configuration:
+   .ID. exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha .PARENT.
+16   16          0        127     735 1.0714        328 0.9995  40  36   15        8
+
+# 2022-07-28 09:30:24 CEST: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+   exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha
+16          0        127     735 1.0714        328 0.9995  40  36   15
+28          0        444     526 2.0782        488 0.9990  34  29   14
+8           0        154     772 2.3971        400 0.9995  42  36    8
+35          0        125     763 0.9776        428 0.9997  48  27   17
+# 2022-07-28 09:30:24 CEST: Stopped because there is not enough budget left to race more than the minimum (5)
+# You may either increase the budget or set 'minNbSurvival' to a lower value
+# Iteration: 7
+# nbIterations: 7
+# experimentsUsedSoFar: 287
+# timeUsed: 0
+# remainingBudget: 13
+# currentBudget: 13
+# number of elites: 4
+# nbConfigurations: 4
+# Best configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+   exhaustive swap_loops t_start t_stop iterations  alpha pcr psr psha
+16          0        127     735 1.0714        328 0.9995  40  36   15
+28          0        444     526 2.0782        488 0.9990  34  29   14
+8           0        154     772 2.3971        400 0.9995  42  36    8
+35          0        125     763 0.9776        428 0.9997  48  27   17
+# Best configurations as commandlines (first number is the configuration ID; same order as above):
+16  -Dexhaustive=0 -Dswap_loops=127 -Dt_start=735 -Dt_stop=1.0714 -Diterations=328 -Dalpha=0.9995 -Dpcr=40 -Dpsr=36 -Dpsha=15
+28  -Dexhaustive=0 -Dswap_loops=444 -Dt_start=526 -Dt_stop=2.0782 -Diterations=488 -Dalpha=0.999 -Dpcr=34 -Dpsr=29 -Dpsha=14
+8   -Dexhaustive=0 -Dswap_loops=154 -Dt_start=772 -Dt_stop=2.3971 -Diterations=400 -Dalpha=0.9995 -Dpcr=42 -Dpsr=36 -Dpsha=8
+35  -Dexhaustive=0 -Dswap_loops=125 -Dt_start=763 -Dt_stop=0.9776 -Diterations=428 -Dalpha=0.9997 -Dpcr=48 -Dpsr=27 -Dpsha=17

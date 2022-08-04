@@ -4,7 +4,7 @@ error() {
 }
 
 EXE="pas.jar"
-FIXED_PARAMS="-Xms256m -Xmx6g -Dpath=/Users/emilecombes/Projects/IdeaProjects/PAS/tuning"
+FIXED_PARAMS="-Xms256m -Xmx25g"
 
 CONFIG_ID=$1
 INSTANCE_ID=$2

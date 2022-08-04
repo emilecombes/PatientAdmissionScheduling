@@ -304,17 +304,17 @@ public class Solver {
 
 
   public void optimizePatientCost() {
-    double stop = System.currentTimeMillis() + Variables.TIMEOUT_INSTANCE;
-    double temp = Variables.PC_START_TEMP;
-    while (temp > Variables.PC_STOP_TEMP && System.currentTimeMillis() < stop) {
-      for (int i = 0; i < Variables.PC_ITERATIONS; i++) {
+    double stop = System.currentTimeMillis() + Variables.TIME_LIMIT;
+    double temp = Variables.T_START;
+    while (temp > Variables.T_STOP && System.currentTimeMillis() < stop) {
+      for (int i = 0; i < Variables.T_ITERATIONS; i++) {
         executeNewMove();
         int savings = lastMove.get("patient_savings");
         if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
         generatedMoves.add(lastMove);
       }
-      temp *= Variables.PC_ALPHA;
+      temp *= Variables.ALPHA;
       adjustLoadCost();
       if (currentlyNonDominated()) updateApproximationArchive(temp);
     }
@@ -323,8 +323,8 @@ public class Solver {
   public void optimizePatientCost(int c) {
     Solution initialSolution = findNearestSolution(c);
     double temp = initialSolution.getTemperature();
-    while (temp > Variables.PC_STOP_TEMP) {
-      for (int i = 0; i < Variables.PC_ITERATIONS; i++) {
+    while (temp > Variables.T_STOP) {
+      for (int i = 0; i < Variables.T_ITERATIONS; i++) {
         executeNewMove();
         int ps = lastMove.get("patient_savings");
         int ls = lastMove.get("load_savings");
@@ -333,7 +333,7 @@ public class Solver {
         else undoLastMove();
         generatedMoves.add(lastMove);
       }
-      temp *= Variables.PC_ALPHA;
+      temp *= Variables.ALPHA;
       if (currentlyNonDominated()) updateApproximationArchive(temp);
       adjustLoadCost();
     }
@@ -360,7 +360,7 @@ public class Solver {
     int random = (int) (Math.random() * 100);
     int type;
     if (random < Variables.PCR) type = 0;
-    else if (random - Variables.PCR < Variables.PSR ) type = 1;
+    else if (random - Variables.PCR < Variables.PSR) type = 1;
     else if (random - Variables.PCR - Variables.PSR < Variables.PSHA) type = 2;
     else type = 3;
     switch (type) {

@@ -11,5 +11,5 @@
 ## parameter conditions (NA should be used for those parameters that
 ## are not enabled for a given configuration) and, if given, the
 ## constraints that describe forbidden configurations.
-exhaustive swap_loops t_start t_stop iterations alpha pcr psw psha pswa
-1 30 326 7.3115 483 0.9986 50 30 5 15
+swap_loops t_start t_stop t_iterations alpha pcr psr psha
+100 730 1.0714 483 0.9996 30 35 10

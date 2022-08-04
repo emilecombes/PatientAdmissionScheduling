@@ -4,6 +4,7 @@
 [x] Efficient swap patient
 [] Add overstay risk costs
 [] Correct updating load cost
+[] Is equity cost correct?
 
 ## Analytics
 [] Add aborted while generating moves to map
@@ -12,10 +13,10 @@
 
 ## Production
 [x] Create class with all global variables
-[] Make all configurable parameters external
+[x] Make all configurable parameters external
 [] Compact output files
-[] Jar executable
-[] Bash script
+[x] Jar executable
+[x] Bash script
 
 ## Box splitting
 [] Copy Schedule
@@ -26,23 +27,13 @@
 
 
 ## Tomorrow
-[] Class to store a found solution
+[x] Class to store a found solution
 
 ### Solution
 Map<Patient, Integer> delays
 Map<Patient, Integer> assignedRooms
 Map<Room, List<Set<Patient>>> rooms
 Map<String, Integer> costs
-
-## Parameters to set
-EXTEND
-SA OPT_PC & OPT_WE
-EXHAUSTIVE
-SWAP_LOOPS
-RESTART
-TIMEOUT_NEW_SOLUTION
-TIMEOUT_INSTANCE
-TRADEOFF
 
 
 

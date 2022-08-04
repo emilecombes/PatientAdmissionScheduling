@@ -7,9 +7,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Tuning hyperparameters on server">
+      <change afterPath="$PROJECT_DIR$/tuning/output.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/xml/or_pas_dept2_short00_sol.xml" beforeDir="false" afterPath="$PROJECT_DIR$/solutions/xml/or_pas_dept2_short00_sol.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Variables.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo.md" beforeDir="false" afterPath="$PROJECT_DIR$/todo.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/configurations.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/configurations.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/default.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/irace.Rdata" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/irace.Rdata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/parameters.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/parameters.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tuning/pas.jar" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/pas.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/scenario.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/scenario.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/target-runner" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/target-runner" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,18 +50,19 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/emilecombes/Projects/IdeaProjects/PAS/tuning&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/emilecombes/Projects/IdeaProjects/PAS/tuning",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/tuning" />
@@ -61,7 +74,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="PAS" />
-      <option name="VM_PARAMETERS" value="-Dinstance=$USER_HOME$/tuning/Instances/or_pas_dept2_short00 -Dpath=$USER_HOME$/tuning -Dexhaustive=0 -Dswap_loops=30 -Dt_start=326 -Dt_stop=7.3115 -Diterations=483 -Dalpha=0.9986 -Dpcr=50 -Dpsr=30 -Dpsha=5" />
+      <option name="VM_PARAMETERS" value="-Dinstance=$USER_HOME$/tuning/Instances/or_pas_dept2_short00.xml -Dswap_loops=127 -Dt_start=735 -Dt_stop=1.0714 -Dalpha=0.9995 -Dt_iterations=600 -Dpcr=40 -Dpsr=36 -Dpsha=15" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -76,7 +89,9 @@
       <option name="presentableId" value="Default" />
       <updated>1658497049904</updated>
       <workItem from="1658497051448" duration="8931000" />
-      <workItem from="1658849929616" duration="2703000" />
+      <workItem from="1658849929616" duration="3611000" />
+      <workItem from="1659260924701" duration="11724000" />
+      <workItem from="1659608921106" duration="6345000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>

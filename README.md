@@ -1,5 +1,23 @@
 # Patient Admission Scheduling (PAS)
-Java 15.0.1 was used for this
+Java 8 was used for this
+
+## Onderzoeksonderwerpen
+
+### Optimize workload equity
+- Hoe wordt workkload equity beschreven?
+
+### HBS algorithm
+- Toon hoe de single objective procedure kan gebruikt worden om een
+  approximation set te vinden.
+
+### HBS with diverse initial set
+- Om ervoor te zorgen dat de oplossingen divers zijn rekenen we eerst een
+  set initiele oplossingen uit om diversiteit te verhogen.
+    - Toon het verschil in qualiteit tussen de approximation sets en/of
+      rekentijd.
+    - Toon het verschil in diversiteit van de oplossingen.
+    - Hoe wordt de initiele set bepaald?
+
 
 ## Building Approximation Set
 

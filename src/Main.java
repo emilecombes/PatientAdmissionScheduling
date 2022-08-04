@@ -5,11 +5,10 @@ import java.io.IOException;
 
 public class Main {
   public static void main(String[] args) throws IOException {
+    Variables.START_TIME = System.currentTimeMillis();
     Variables.RESET = false;
     Variables.EXTEND = 14;
-    Variables.TIMEOUT_SOLUTION = 1000 * 60 * 5;
-    Variables.TIMEOUT_INSTANCE = 1000 * 60 * 8;
-    Variables.TRADEOFF = 1.25;
+    Variables.EXHAUSTIVE = false;
 
     Variables.ROOM_PROP_PEN = 20;
     Variables.PREF_CAP_PEN = 10;
@@ -19,19 +18,26 @@ public class Main {
     Variables.TRANSFER_PEN = 100;
     Variables.CAP_VIOL_PEN = 1000;
 
-    String[] i = System.getProperty("instance").split("/");
-    Variables.INSTANCE = i[i.length-1].split("\\.")[0];
-    Variables.PATH = System.getProperty("path");
+    String[] path_and_file = System.getProperty("instance").split("/Instances/");
+    Variables.INSTANCE = path_and_file[1].split("\\.")[0];
+    Variables.PATH = path_and_file[0];
+
+    Variables.T_START = Integer.parseInt(System.getProperty("t_start"));
+    Variables.T_STOP = Double.parseDouble(System.getProperty("t_stop"));
+    Variables.T_ITERATIONS = Integer.parseInt(System.getProperty("t_iterations"));
+    Variables.ALPHA = Double.parseDouble(System.getProperty("alpha"));
 
     Variables.PCR = Integer.parseInt(System.getProperty("pcr"));
     Variables.PSR = Integer.parseInt(System.getProperty("psr"));
     Variables.PSHA = Integer.parseInt(System.getProperty("psha"));
-    Variables.EXHAUSTIVE = System.getProperty("exhaustive").equals("1");
+    Variables.PSWA = 100 - Variables.PCR - Variables.PSR - Variables.PSHA;
+
     Variables.SWAP_LOOPS = Integer.parseInt(System.getProperty("swap_loops"));
-    Variables.PC_START_TEMP = Double.parseDouble(System.getProperty("t_start"));
-    Variables.PC_STOP_TEMP = Double.parseDouble(System.getProperty("t_stop"));
-    Variables.PC_ITERATIONS = Integer.parseInt(System.getProperty("iterations"));
-    Variables.PC_ALPHA = Double.parseDouble(System.getProperty("alpha"));
+    Variables.TIME_LIMIT = 20000;
+    if(Variables.INSTANCE.contains("dept4")) Variables.TIME_LIMIT *= 2;
+    else if(Variables.INSTANCE.contains("dept6")) Variables.TIME_LIMIT *= 3;
+    if(Variables.INSTANCE.contains("long")) Variables.TIME_LIMIT *= 2;
+
 
     XMLParser xmlParser = new XMLParser();
     xmlParser.buildDateConverter();
@@ -43,10 +49,10 @@ public class Main {
     solver.preProcessing();
     solver.initSchedule();
     solver.optimizePatientCost();
-    xmlParser.writeSolution(solver);
+//    xmlParser.writeSolution(solver);
     solver.printCost();
 
-    CSVParser csvParser = new CSVParser(solver);
+//    CSVParser csvParser = new CSVParser(solver);
 //    csvParser.buildMoveInfoCSV();
 //    csvParser.buildScheduleCSV();
 //
