@@ -234,40 +234,6 @@ public class Solver {
   }
 
   // Local search
-  public void boxSplitting(int maxPC, int minWE, int delta) {
-    solutionArchive = new LinkedList<>();
-    rectangleArchive = new LinkedList<>();
-    optimizePatientCost();
-    rectangleArchive.add(new Rectangle(new Point(patientCost, loadCost), new Point(maxPC, minWE)));
-    while (!rectangleArchive.isEmpty()) {
-      Rectangle rectangle = findBiggestRectangle();
-      int c = (rectangle.getTop() - rectangle.getBottom()) / 2;
-      optimizePatientCost(c);
-      if (!currentlyNonDominated())
-        rectangle.setLowerRight(new Point(rectangle.getRight(), c));
-      else {
-        updateArchive(-1);
-        Rectangle horizontalHit = findRectangleOnX(patientCost);
-        if (horizontalHit != null) {
-          int top = Math.max(horizontalHit.getBottom(), c);
-          Point updatedPoint = new Point(patientCost, top);
-          if (horizontalHit.getTop() - top > delta)
-            addRectangle(new Rectangle(horizontalHit.getUpperLeft(), updatedPoint));
-        }
-        Rectangle verticalHit = findRectangleOnY(loadCost);
-        if (verticalHit != null) {
-          int left = Math.max(patientCost, verticalHit.getLeft());
-          Point updatedPoint = new Point(left, loadCost);
-          if (loadCost - verticalHit.getBottom() > delta)
-            addRectangle(new Rectangle(updatedPoint, verticalHit.getLowerRight()));
-        }
-        rectangleArchive.remove(horizontalHit);
-        rectangleArchive.remove(verticalHit);
-        removeCurrentlyDominatedRectangles();
-      }
-    }
-  }
-
   public void simpleHBS() {
     /*
       1. Optimize PC
@@ -276,68 +242,98 @@ public class Solver {
     */
     solutionArchive = new LinkedList<>();
     rectangleArchive = new PriorityQueue<>();
-    optimizePatientCost();
-    updateArchives(loadCost);
+    Solution sol = optimizePatientCost(Integer.MAX_VALUE);
+    solutionArchive.add(sol);
+    rectangleArchive.add(new Rectangle(
+        new Point(sol.getPatientCost(), sol.getEquityCost()),
+        new Point(Variables.PC_MAX, Variables.WE_MIN)));
+
     while (!rectangleArchive.isEmpty()) {
       assert rectangleArchive.peek() != null;
-      int c = rectangleArchive.peek().getC();
-      optimizePatientCost(c);
-      updateArchives(c);
+      int c = rectangleArchive.peek().c;
+
+      System.out.println("Looking for a solution w/ WE <= " + c);
+
+      sol = optimizePatientCost(c);
+      updateArchives(sol, c);
     }
   }
 
-  public void updateArchives(int c) {
+  public void addSolution(Solution s) {
+    List<Solution> dominatedSolutions = new ArrayList<>();
+    boolean stop = false;
+    for (int i = solutionArchive.size() - 1; i >= 0 && !stop; i--) {
+      Solution archivedSol = solutionArchive.get(i);
+      stop = archivedSol.getEquityCost() > s.getEquityCost()
+          && archivedSol.getPatientCost() < s.getPatientCost();
+      if (stop) solutionArchive.add(i + 1, s);
+      else if (s.strictylDominates(archivedSol)) dominatedSolutions.add(archivedSol);
+    }
+    solutionArchive.removeAll(dominatedSolutions);
+  }
+
+  public void updateArchives(Solution s, int c) {
     // TODO: If current solution is non-dominated, add it to approximation set, remove dominated
     //  solutions and split its rectangle.
     //  If the solution is out of bounds of the original rectangle, remove dominated rectangles.
     //  If it is dominated, remove its lower rectangle
 
-    Rectangle currentRectangle = rectangleArchive.poll();
-    if (solutionArchive.isEmpty()) {
-      solutionArchive.add(new Solution(schedule, patientCost, loadCost, Variables.T_STOP));
-      rectangleArchive.add(new Rectangle(
-          new Point(patientCost, loadCost),
-          new Point(Variables.PC_MAX, Variables.WE_MIN)
-      ));
-    } else if (currentlyNonDominated()) {
-      List<Solution> dominatedSolutions = new ArrayList<>();
-      for (int i = 0; i < solutionArchive.size(); i++) {
-        Solution sol = solutionArchive.get(i);
-        if (sol.getPatientCost() >= patientCost)
-          if (sol.getEquityCost() > loadCost) dominatedSolutions.add(sol);
-          else {
-            solutionArchive.add(i, new Solution(schedule, patientCost, loadCost, Variables.T_STOP));
-            break;
-          }
-      }
-      solutionArchive.removeAll(dominatedSolutions);
-
+    if (isDominated(s) || s == null) {
+      Rectangle r = rectangleArchive.poll();
+      assert r != null;
+      r.setLr(new Point(r.getRight(), c));
+      rectangleArchive.add(r);
+    } else {
+      addSolution(s);
       Rectangle horizontalHit = findRectangleOnX(patientCost);
       if (horizontalHit != null) {
         int top = Math.max(horizontalHit.getBottom(), c);
         Point updatedPoint = new Point(patientCost, top);
         if (horizontalHit.getTop() - top > Variables.DELTA)
-          rectangleArchive.offer(new Rectangle(horizontalHit.getUpperLeft(), updatedPoint));
+          rectangleArchive.offer(new Rectangle(horizontalHit.getUl(), updatedPoint));
       }
       Rectangle verticalHit = findRectangleOnY(loadCost);
       if (verticalHit != null) {
         int left = Math.max(patientCost, verticalHit.getLeft());
         Point updatedPoint = new Point(left, loadCost);
         if (loadCost - verticalHit.getBottom() > Variables.DELTA)
-          rectangleArchive.offer(new Rectangle(updatedPoint, verticalHit.getLowerRight()));
+          rectangleArchive.offer(new Rectangle(updatedPoint, verticalHit.getLr()));
       }
       rectangleArchive.remove(horizontalHit);
       rectangleArchive.remove(verticalHit);
-    } else {
-      assert currentRectangle != null;
-      currentRectangle.setLowerRight(new Point(currentRectangle.getRight(), c));
+      // TODO: Only if s is out of bounds of its own rectangle
+      removeRectanglesDominatedBy(s);
     }
+  }
+
+  public void removeRectanglesDominatedBy(Solution s) {
+
+  }
+
+  public void printArchiveInfo() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("Current solution: (");
+    sb.append(patientCost).append(",").append(loadCost).append(")\n");
+    sb.append("Rectangle archive { ");
+    for (Rectangle r : rectangleArchive)
+      sb.append(r.area).append(", ");
+    sb.deleteCharAt(sb.length() - 2);
+    sb.append(" }\nSolution archive { ");
+    for (Solution s : solutionArchive)
+      sb.append("(").append(s.getPatientCost()).append(",").append(s.getEquityCost()).append("), ");
+    sb.deleteCharAt(sb.length() - 2);
+    sb.append("}\n");
+    System.out.println(sb);
   }
 
   public boolean currentlyNonDominated() {
     // TODO
     // If solution before curr PC dominates curr, yes
     return schedule.isFeasible();
+  }
+
+  public boolean isDominated(Solution s) {
+    return
   }
 
   public void addRectangle(Rectangle r) {
@@ -350,14 +346,14 @@ public class Solver {
   }
 
   public Rectangle findRectangleOnX(int pc) {
-    for(Rectangle r : rectangleArchive)
-      if(r.getRight() >= pc && r.getLeft() <= pc) return r;
+    for (Rectangle r : rectangleArchive)
+      if (r.getRight() >= pc && r.getLeft() <= pc) return r;
     return null;
   }
 
   public Rectangle findRectangleOnY(int we) {
-    for(Rectangle r : rectangleArchive)
-      if(r.getTop() >= we && r.getBottom() <= we) return r;
+    for (Rectangle r : rectangleArchive)
+      if (r.getTop() >= we && r.getBottom() <= we) return r;
     return null;
   }
 
@@ -385,30 +381,38 @@ public class Solver {
       }
       temp *= Variables.ALPHA;
       adjustLoadCost();
-      updateArchive(temp);
     }
   }
 
-  public void optimizePatientCost(int c) {
-    loadInitialSolution();
+  public Solution optimizePatientCost(int c) {
+    int repairTries = 0;
+    loadInitialSchedule();
+    double penaltyCoefficient = Variables.PENALTY_COEFFICIENT;
     double temp = Variables.T_START;
     while (temp > Variables.T_STOP) {
       for (int i = 0; i < Variables.T_ITERATIONS; i++) {
         executeNewMove();
-        int ps = lastMove.get("patient_savings");
-        int ls = lastMove.get("load_savings");
-        int savings = ps + Math.max(c, loadCost) - Math.max(c, loadCost - ls);
+        double savings = lastMove.get("patient_savings") + penaltyCoefficient *
+            (Math.max(c, loadCost) - Math.max(c, loadCost - lastMove.get("load_savings")));
         if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
         generatedMoves.add(lastMove);
       }
       temp *= Variables.ALPHA;
       adjustLoadCost();
-      updateArchive(temp);
+      if (loadCost >= 0.95 * c) penaltyCoefficient *= 1.2;
+      else if (loadCost <= 1.05 * c) penaltyCoefficient *= 0.85;
+      if (temp <= Variables.T_STOP && loadCost > c && repairTries < 2) {
+        penaltyCoefficient *= 10;
+        temp /= Variables.ALPHA;
+        repairTries++;
+      }
     }
+    penaltyCoefficient /= Math.pow(10, repairTries);
+    return new Solution(schedule, patientCost, loadCost, temp, penaltyCoefficient);
   }
 
-  public void loadInitialSolution() {
+  public void loadInitialSchedule() {
     schedule = new Schedule();
     initSchedule();
   }

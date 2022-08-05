@@ -10,9 +10,10 @@ public class Main {
     Variables.EXTEND = 14;
     Variables.EXHAUSTIVE = false;
     Variables.TIME_LIMIT = 20000;
-    Variables.PC_MAX = (int) Math.pow(10, 4);
+    Variables.PC_MAX = (int) Math.pow(10, 5);
     Variables.WE_MIN = 0;
     Variables.DELTA = 1;
+    Variables.PENALTY_COEFFICIENT = 1;
 
     Variables.ROOM_PROP_PEN = 20;
     Variables.PREF_CAP_PEN = 10;
@@ -60,7 +61,7 @@ public class Main {
 
     solver.preProcessing();
     solver.initSchedule();
-    solver.optimizePatientCost();
+    solver.simpleHBS();
 //    xmlParser.writeSolution(solver);
     solver.printCost();
 

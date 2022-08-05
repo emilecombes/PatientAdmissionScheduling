@@ -1,45 +1,52 @@
 package model;
 
 public class Rectangle implements Comparable<Rectangle> {
-  private Point upperLeft, lowerRight;
-  int area;
+  private Point ul, lr;
+  int area, c;
 
   public Rectangle(Point ul, Point lr) {
-    upperLeft = ul;
-    lowerRight = lr;
+    this.ul = ul;
+    this.lr = lr;
+    calculateArea();
+    calculateC();
+  }
+
+  public void calculateArea() {
     area = (lr.x - ul.x) * (ul.y - lr.y);
   }
 
-  public void setLowerRight(Point p) {
-    lowerRight = p;
+  public void calculateC() {
+    c =  (int) Math.round(getBottom() + 0.5 * (getTop() - getBottom()));
   }
 
-  public Point getUpperLeft() {
-    return upperLeft;
+  public void setLr(Point p) {
+    lr = p;
+    calculateArea();
+    calculateC();
   }
 
-  public Point getLowerRight() {
-    return lowerRight;
+  public Point getUl() {
+    return ul;
+  }
+
+  public Point getLr() {
+    return lr;
   }
 
   public int getTop() {
-    return upperLeft.y;
+    return ul.y;
   }
 
   public int getBottom() {
-    return lowerRight.y;
+    return lr.y;
   }
 
   public int getRight() {
-    return lowerRight.x;
+    return lr.x;
   }
 
   public int getLeft() {
-    return upperLeft.x;
-  }
-
-  public int getC() {
-    return (int) (getBottom() + 0.5 * (getTop() - getBottom()));
+    return ul.x;
   }
 
   @Override

@@ -15,7 +15,8 @@ public class Variables {
       PSWA,
       WE_MIN,
       PC_MAX,
-      DELTA;
+      DELTA,
+      PENALTY_COEFFICIENT;
   public static int ROOM_PROP_PEN,
       PREF_CAP_PEN,
       SPECIALITY_PEN,

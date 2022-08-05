@@ -313,7 +313,7 @@ public class Schedule {
     for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
       Patient patient = PatientList.getPatient(i);
       for (int j = patient.getAdmission(); j < patient.getDischarge(); j++)
-        copy[i][j].add(patient.getId());
+        copy[patient.getRoom(j)][j].add(patient.getId());
     }
 
     return copy;

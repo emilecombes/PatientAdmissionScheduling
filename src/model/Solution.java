@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Solution {
   private final int patientCost, equityCost;
-  private final double temperature;
+  private final double temperature, penaltyCoefficient;
   private final Set<Integer>[][] schedule;
   private final Map<Integer, List<Map<String, Integer>>> dynamicGenderCount;
   private final Map<Patient, Integer> delays;
@@ -17,11 +17,12 @@ public class Solution {
   private final double[] averageDepartmentLoads;
   private final double[] departmentLoadCosts;
 
-  public Solution(Schedule schedule, int patientCost, int equityCost, double temperature) {
+  public Solution(Schedule schedule, int patientCost, int equityCost, double temperature,
+                  double penaltyCoefficient) {
     this.patientCost = patientCost;
     this.equityCost = equityCost;
     this.temperature = temperature;
-
+    this.penaltyCoefficient = penaltyCoefficient;
     this.schedule = schedule.copySchedule();
     this.dynamicGenderCount = schedule.copyDynamicGenderViolations();
     this.loadMatrix = schedule.getLoadMatrix();
@@ -86,5 +87,9 @@ public class Solution {
 
   public double[] getDepartmentLoadCosts() {
     return departmentLoadCosts;
+  }
+
+  public boolean strictylDominates(Solution c) {
+    return equityCost < c.getEquityCost() && patientCost < c.getPatientCost();
   }
 }
