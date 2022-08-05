@@ -333,7 +333,8 @@ public class Solver {
   }
 
   public boolean isDominated(Solution s) {
-    return
+    // TODO
+    return false;
   }
 
   public void addRectangle(Rectangle r) {
