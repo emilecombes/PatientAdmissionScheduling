@@ -16,7 +16,7 @@ public class Rectangle implements Comparable<Rectangle> {
   }
 
   public void calculateC() {
-    c =  (int) Math.round(getBottom() + 0.5 * (getTop() - getBottom()));
+    c = (int) Math.round(getBottom() + 0.5 * (getTop() - getBottom()));
   }
 
   public void setLr(Point p) {
@@ -49,8 +49,12 @@ public class Rectangle implements Comparable<Rectangle> {
     return ul.x;
   }
 
+  public boolean isDominatedBy(Solution s) {
+    return s.getPatientCost() <= getLeft() && s.getEquityCost() <= getBottom();
+  }
+
   @Override
   public int compareTo(Rectangle other) {
-    return area - other.area;
+    return other.area - area;
   }
 }

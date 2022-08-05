@@ -26,6 +26,7 @@ public class Variables {
       CAP_VIOL_PEN;
   public static double T_START,
       T_STOP,
-      ALPHA;
+      ALPHA,
+      TRADEOFF;
   public static String PATH, INSTANCE;
 }

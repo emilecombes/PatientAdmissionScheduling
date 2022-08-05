@@ -14,6 +14,7 @@ public class Main {
     Variables.WE_MIN = 0;
     Variables.DELTA = 1;
     Variables.PENALTY_COEFFICIENT = 1;
+    Variables.TRADEOFF = 3;
 
     Variables.ROOM_PROP_PEN = 20;
     Variables.PREF_CAP_PEN = 10;

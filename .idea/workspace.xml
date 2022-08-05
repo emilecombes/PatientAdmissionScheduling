@@ -5,12 +5,15 @@
       <artifact name="PAS:jar" />
     </artifacts-to-build>
   </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="First versions of simple HBS">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Forgot minor error">
+      <change afterPath="$PROJECT_DIR$/tuning/output1.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Rectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Rectangle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Schedule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solution.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Variables.java" afterDir="false" />
@@ -53,7 +56,7 @@
     "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "configurable.group.other"
+    "settings.editor.selected.configurable": "project.propCompiler"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -70,7 +73,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="PAS" />
-      <option name="VM_PARAMETERS" value="-Dinstance=$USER_HOME$/tuning/Instances/or_pas_dept2_short00.xml -Dswap_loops=21 -Dt_start=546 -Dt_stop=0.21 -Diterations=1000000 -Dalpha=0.9992 -Dpcr=25 -Dpsr=41 -Dpsha=10" />
+      <option name="VM_PARAMETERS" value="-Dinstance=$USER_HOME$/tuning/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx12g -Dswap_loops=25 -Dt_start=533 -Dt_stop=0.71 -Diterations=1000000 -Dalpha=0.99 -Dpcr=28 -Dpsr=28 -Dpsha=14" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -89,7 +92,7 @@
       <workItem from="1659260924701" duration="11724000" />
       <workItem from="1659608921106" duration="20003000" />
       <workItem from="1659691618427" duration="141000" />
-      <workItem from="1659691769172" duration="19206000" />
+      <workItem from="1659691769172" duration="26745000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -133,7 +136,21 @@
       <option name="project" value="LOCAL" />
       <updated>1659710449238</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Progress on simple HBS">
+      <created>1659725046323</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1659725046323</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Forgot minor error">
+      <created>1659725089165</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1659725089165</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -157,18 +174,11 @@
     <MESSAGE value="Again, there was a mistake" />
     <MESSAGE value="Added simple HBS pseudocode" />
     <MESSAGE value="First versions of simple HBS" />
-    <option name="LAST_COMMIT_MESSAGE" value="First versions of simple HBS" />
+    <MESSAGE value="Progress on simple HBS" />
+    <MESSAGE value="Forgot minor error" />
+    <option name="LAST_COMMIT_MESSAGE" value="Forgot minor error" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/model/Solver.java</url>
-          <line>257</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="Variables.ITERATIONS" language="JAVA" />

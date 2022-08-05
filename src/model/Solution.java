@@ -1,10 +1,8 @@
 package model;
 
-import util.DateConverter;
-
 import java.util.*;
 
-public class Solution {
+public class Solution implements Comparable<Solution> {
   private final int patientCost, equityCost;
   private final double temperature, penaltyCoefficient;
   private final Set<Integer>[][] schedule;
@@ -89,7 +87,12 @@ public class Solution {
     return departmentLoadCosts;
   }
 
-  public boolean strictylDominates(Solution c) {
+  public boolean strictlyDominates(Solution c) {
     return equityCost < c.getEquityCost() && patientCost < c.getPatientCost();
+  }
+
+  @Override
+  public int compareTo(Solution s) {
+    return s.getEquityCost() - equityCost;
   }
 }
