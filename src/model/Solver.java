@@ -313,6 +313,7 @@ public class Solver {
         if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
         generatedMoves.add(lastMove);
+        if(System.currentTimeMillis() > stop) break;
       }
       temp *= Variables.ALPHA;
       adjustLoadCost();

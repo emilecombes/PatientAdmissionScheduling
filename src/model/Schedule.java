@@ -111,6 +111,7 @@ public class Schedule {
   public Patient getFastSwapPatient(Patient pat, int startDate, int endDate) {
     Set<Integer> rooms = new HashSet<>(pat.getFeasibleRooms());
     rooms.remove(pat.getLastRoom());
+    if(rooms.isEmpty()) return null;
     List<Patient> candidates = new ArrayList<>();
     int loops = Math.min(
         Variables.SWAP_LOOPS,
