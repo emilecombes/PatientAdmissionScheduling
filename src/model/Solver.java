@@ -10,7 +10,7 @@ public class Solver {
   private Schedule schedule;
   private int patientCost, loadCost;
   private List<Solution> solutionArchive;
-  private List<Rectangle> rectangleArchive;
+  private Queue<Rectangle> rectangleArchive;
   // MOVES
   private final List<Map<String, Integer>> generatedMoves;
   private Map<String, Integer> lastMove;
@@ -275,22 +275,63 @@ public class Solver {
       3. Optimize PC from new initial solution with max WE = c until rectangleArchive is empty
     */
     solutionArchive = new LinkedList<>();
-    rectangleArchive = new LinkedList<>();
+    rectangleArchive = new PriorityQueue<>();
     optimizePatientCost();
-    updateArchives();
+    updateArchives(loadCost);
     while (!rectangleArchive.isEmpty()) {
-      Rectangle rectangle = findBiggestRectangle();
-      int c = (rectangle.getTop() - rectangle.getBottom()) / 2;
+      assert rectangleArchive.peek() != null;
+      int c = rectangleArchive.peek().getC();
       optimizePatientCost(c);
-      updateArchives();
+      updateArchives(c);
     }
   }
 
-  public void updateArchives() {
+  public void updateArchives(int c) {
     // TODO: If current solution is non-dominated, add it to approximation set, remove dominated
     //  solutions and split its rectangle.
     //  If the solution is out of bounds of the original rectangle, remove dominated rectangles.
     //  If it is dominated, remove its lower rectangle
+
+    Rectangle currentRectangle = rectangleArchive.poll();
+    if (solutionArchive.isEmpty()) {
+      solutionArchive.add(new Solution(schedule, patientCost, loadCost, Variables.T_STOP));
+      rectangleArchive.add(new Rectangle(
+          new Point(patientCost, loadCost),
+          new Point(Variables.PC_MAX, Variables.WE_MIN)
+      ));
+    } else if (currentlyNonDominated()) {
+      List<Solution> dominatedSolutions = new ArrayList<>();
+      for (int i = 0; i < solutionArchive.size(); i++) {
+        Solution sol = solutionArchive.get(i);
+        if (sol.getPatientCost() >= patientCost)
+          if (sol.getEquityCost() > loadCost) dominatedSolutions.add(sol);
+          else {
+            solutionArchive.add(i, new Solution(schedule, patientCost, loadCost, Variables.T_STOP));
+            break;
+          }
+      }
+      solutionArchive.removeAll(dominatedSolutions);
+
+      Rectangle horizontalHit = findRectangleOnX(patientCost);
+      if (horizontalHit != null) {
+        int top = Math.max(horizontalHit.getBottom(), c);
+        Point updatedPoint = new Point(patientCost, top);
+        if (horizontalHit.getTop() - top > Variables.DELTA)
+          rectangleArchive.offer(new Rectangle(horizontalHit.getUpperLeft(), updatedPoint));
+      }
+      Rectangle verticalHit = findRectangleOnY(loadCost);
+      if (verticalHit != null) {
+        int left = Math.max(patientCost, verticalHit.getLeft());
+        Point updatedPoint = new Point(left, loadCost);
+        if (loadCost - verticalHit.getBottom() > Variables.DELTA)
+          rectangleArchive.offer(new Rectangle(updatedPoint, verticalHit.getLowerRight()));
+      }
+      rectangleArchive.remove(horizontalHit);
+      rectangleArchive.remove(verticalHit);
+    } else {
+      assert currentRectangle != null;
+      currentRectangle.setLowerRight(new Point(currentRectangle.getRight(), c));
+    }
   }
 
   public boolean currentlyNonDominated() {
@@ -309,12 +350,14 @@ public class Solver {
   }
 
   public Rectangle findRectangleOnX(int pc) {
-    // TODO
+    for(Rectangle r : rectangleArchive)
+      if(r.getRight() >= pc && r.getLeft() <= pc) return r;
     return null;
   }
 
   public Rectangle findRectangleOnY(int we) {
-    // TODO
+    for(Rectangle r : rectangleArchive)
+      if(r.getTop() >= we && r.getBottom() <= we) return r;
     return null;
   }
 
@@ -347,8 +390,8 @@ public class Solver {
   }
 
   public void optimizePatientCost(int c) {
-    Solution initialSolution = findNearestSolution(c);
-    double temp = initialSolution.getTemperature();
+    loadInitialSolution();
+    double temp = Variables.T_START;
     while (temp > Variables.T_STOP) {
       for (int i = 0; i < Variables.T_ITERATIONS; i++) {
         executeNewMove();
@@ -363,6 +406,11 @@ public class Solver {
       adjustLoadCost();
       updateArchive(temp);
     }
+  }
+
+  public void loadInitialSolution() {
+    schedule = new Schedule();
+    initSchedule();
   }
 
   public Solution findNearestSolution(int c) {

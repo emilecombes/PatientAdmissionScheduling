@@ -6,9 +6,12 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Again, there was a mistake">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Added simple HBS pseudocode">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Rectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Rectangle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Variables.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +87,7 @@
       <workItem from="1659260924701" duration="11724000" />
       <workItem from="1659608921106" duration="20003000" />
       <workItem from="1659691618427" duration="141000" />
-      <workItem from="1659691769172" duration="3004000" />
+      <workItem from="1659691769172" duration="10709000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -114,7 +117,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659690925903</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Added simple HBS pseudocode">
+      <created>1659697689326</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1659697689326</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,7 +146,8 @@
     <MESSAGE value="Tuning hyperparamers with shorter and individual execution times" />
     <MESSAGE value="Fixed tuning mistake" />
     <MESSAGE value="Again, there was a mistake" />
-    <option name="LAST_COMMIT_MESSAGE" value="Again, there was a mistake" />
+    <MESSAGE value="Added simple HBS pseudocode" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added simple HBS pseudocode" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

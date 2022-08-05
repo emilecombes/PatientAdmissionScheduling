@@ -12,7 +12,10 @@ public class Variables {
       PCR,
       PSR,
       PSHA,
-      PSWA;
+      PSWA,
+      WE_MIN,
+      PC_MAX,
+      DELTA;
   public static int ROOM_PROP_PEN,
       PREF_CAP_PEN,
       SPECIALITY_PEN,

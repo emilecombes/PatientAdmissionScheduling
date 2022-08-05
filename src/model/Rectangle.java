@@ -1,11 +1,13 @@
 package model;
 
-public class Rectangle {
+public class Rectangle implements Comparable<Rectangle> {
   private Point upperLeft, lowerRight;
+  int area;
 
   public Rectangle(Point ul, Point lr) {
     upperLeft = ul;
     lowerRight = lr;
+    area = (lr.x - ul.x) * (ul.y - lr.y);
   }
 
   public void setLowerRight(Point p) {
@@ -34,5 +36,14 @@ public class Rectangle {
 
   public int getLeft() {
     return upperLeft.x;
+  }
+
+  public int getC() {
+    return (int) (getBottom() + 0.5 * (getTop() - getBottom()));
+  }
+
+  @Override
+  public int compareTo(Rectangle other) {
+    return area - other.area;
   }
 }
