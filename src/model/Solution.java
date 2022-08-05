@@ -93,6 +93,6 @@ public class Solution implements Comparable<Solution> {
 
   @Override
   public int compareTo(Solution s) {
-    return s.getEquityCost() - equityCost;
+    return equityCost - s.getEquityCost();
   }
 }

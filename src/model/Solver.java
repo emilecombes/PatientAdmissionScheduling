@@ -322,25 +322,25 @@ public class Solver {
 
   public void printArchiveInfo() {
     StringBuilder sb = new StringBuilder();
-    sb.append("Current solution: (");
+    sb.append("Current solution: \t\t(");
     sb.append(patientCost).append(",").append(loadCost).append(")\n");
 
-    sb.append("Area archive { ");
+    sb.append("Area archive \t\t\t{ ");
     for (Rectangle r : rectangleArchive)
       sb.append(r.area).append(", ");
     sb.deleteCharAt(sb.length() - 2);
 
-    sb.append(" }\nRectangle x-value's { ");
+    sb.append(" }\nRectangle x-value's \t{ ");
     for (Rectangle r : rectangleArchive)
       sb.append("(").append(r.getLeft()).append(",").append(r.getRight()).append("), ");
     sb.deleteCharAt(sb.length() - 2);
 
-    sb.append(" }\nRectangle y-value's { ");
+    sb.append(" }\nRectangle y-value's \t{ ");
     for (Rectangle r : rectangleArchive)
       sb.append("(").append(r.getBottom()).append(",").append(r.getTop()).append("), ");
     sb.deleteCharAt(sb.length() - 2);
 
-    sb.append(" }\nSolution archive { ");
+    sb.append(" }\nSolution archive \t\t{ ");
     for (Solution s : solutionArchive)
       sb.append("(").append(s.getPatientCost()).append(",").append(s.getEquityCost()).append("), ");
     sb.deleteCharAt(sb.length() - 2);

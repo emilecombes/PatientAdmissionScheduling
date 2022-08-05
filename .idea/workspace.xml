@@ -9,14 +9,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Forgot minor error">
-      <change afterPath="$PROJECT_DIR$/tuning/output1.txt" afterDir="false" />
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Finished simple HBS">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Rectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Rectangle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solution.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Variables.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +70,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="PAS" />
-      <option name="VM_PARAMETERS" value="-Dinstance=$USER_HOME$/tuning/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx12g -Dswap_loops=25 -Dt_start=533 -Dt_stop=0.71 -Diterations=1000000 -Dalpha=0.99 -Dpcr=28 -Dpsr=28 -Dpsha=14" />
+      <option name="VM_PARAMETERS" value="-Dinstance=$USER_HOME$/tuning/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx12g" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -92,7 +89,7 @@
       <workItem from="1659260924701" duration="11724000" />
       <workItem from="1659608921106" duration="20003000" />
       <workItem from="1659691618427" duration="141000" />
-      <workItem from="1659691769172" duration="26745000" />
+      <workItem from="1659691769172" duration="27963000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -150,7 +147,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659725089165</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Finished simple HBS">
+      <created>1659735794492</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1659735794492</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -176,7 +180,8 @@
     <MESSAGE value="First versions of simple HBS" />
     <MESSAGE value="Progress on simple HBS" />
     <MESSAGE value="Forgot minor error" />
-    <option name="LAST_COMMIT_MESSAGE" value="Forgot minor error" />
+    <MESSAGE value="Finished simple HBS" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finished simple HBS" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

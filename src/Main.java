@@ -27,8 +27,8 @@ public class Main {
     String[] path_and_file = System.getProperty("instance").split("/Instances/");
     Variables.INSTANCE = path_and_file[1].split("\\.")[0];
     Variables.PATH = path_and_file[0];
-    Variables.SWAP_LOOPS = Integer.parseInt(System.getProperty("swap_loops"));
-    Variables.ITERATIONS = Integer.parseInt(System.getProperty("iterations"));
+    Variables.SWAP_LOOPS = 25;
+    Variables.ITERATIONS = 1000000;
     if (Variables.INSTANCE.contains("dept4")) {
       Variables.TIME_LIMIT *= 2;
       Variables.ITERATIONS *= 2;
@@ -41,17 +41,16 @@ public class Main {
       Variables.ITERATIONS *= 2;
     }
 
-    Variables.T_START = Integer.parseInt(System.getProperty("t_start"));
-    Variables.T_STOP = Double.parseDouble(System.getProperty("t_stop"));
-    Variables.ALPHA = Double.parseDouble(System.getProperty("alpha"));
+    Variables.T_START = 533;
+    Variables.T_STOP = 0.71;
+    Variables.ALPHA = 0.99;
     Variables.T_ITERATIONS = (int) (Variables.ITERATIONS * Math.log10(Variables.ALPHA) /
         Math.log10(Variables.T_STOP / Variables.T_START));
 
-    Variables.PCR = Integer.parseInt(System.getProperty("pcr"));
-    Variables.PSR = Integer.parseInt(System.getProperty("psr"));
-    Variables.PSHA = Integer.parseInt(System.getProperty("psha"));
+    Variables.PCR = 28;
+    Variables.PSR = 28;
+    Variables.PSHA = 14;
     Variables.PSWA = 100 - Variables.PCR - Variables.PSR - Variables.PSHA;
-
 
     XMLParser xmlParser = new XMLParser();
     xmlParser.buildDateConverter();
@@ -59,17 +58,10 @@ public class Main {
     xmlParser.buildPatientList();
 
     Solver solver = new Solver();
-
     solver.preProcessing();
     solver.initSchedule();
     solver.simpleHBS();
-//    xmlParser.writeSolution(solver);
-    solver.printCost();
 
-//    CSVParser csvParser = new CSVParser(solver);
-//    csvParser.buildMoveInfoCSV();
-//    csvParser.buildScheduleCSV();
-//
 //    System.out.println("Validator: ./or_pas_validator Instances/" + instance + ".xml ." +
 //        "./solutions/xml/" + instance + "_sol.xml");
   }
