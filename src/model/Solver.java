@@ -11,7 +11,6 @@ public class Solver {
   private int patientCost, loadCost;
   private List<Solution> solutionArchive;
   private List<Rectangle> rectangleArchive;
-
   // MOVES
   private final List<Map<String, Integer>> generatedMoves;
   private Map<String, Integer> lastMove;
@@ -219,6 +218,7 @@ public class Solver {
 
   public void assignRandomRooms() {
     for (Patient p : PatientList.getRegisteredPatients()) {
+      p.setDelay(0);
       int room = p.getRandomFeasibleRoom();
       for (int i = 0; i < p.getStayLength(); i++)
         schedule.assignPatient(p, room, i + p.getOriginalAD());
@@ -227,6 +227,7 @@ public class Solver {
   }
 
   public void loadSchedule(Solution s) {
+    // TODO: set patient attributes
     patientCost = s.getPatientCost();
     loadCost = s.getEquityCost();
     schedule = new Schedule(s);
@@ -265,6 +266,31 @@ public class Solver {
         removeCurrentlyDominatedRectangles();
       }
     }
+  }
+
+  public void simpleHBS() {
+    /*
+      1. Optimize PC
+      2. Set first rectangle & save current solution
+      3. Optimize PC from new initial solution with max WE = c until rectangleArchive is empty
+    */
+    solutionArchive = new LinkedList<>();
+    rectangleArchive = new LinkedList<>();
+    optimizePatientCost();
+    updateArchives();
+    while (!rectangleArchive.isEmpty()) {
+      Rectangle rectangle = findBiggestRectangle();
+      int c = (rectangle.getTop() - rectangle.getBottom()) / 2;
+      optimizePatientCost(c);
+      updateArchives();
+    }
+  }
+
+  public void updateArchives() {
+    // TODO: If current solution is non-dominated, add it to approximation set, remove dominated
+    //  solutions and split its rectangle.
+    //  If the solution is out of bounds of the original rectangle, remove dominated rectangles.
+    //  If it is dominated, remove its lower rectangle
   }
 
   public boolean currentlyNonDominated() {
@@ -313,7 +339,6 @@ public class Solver {
         if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
         generatedMoves.add(lastMove);
-        if(System.currentTimeMillis() > stop) break;
       }
       temp *= Variables.ALPHA;
       adjustLoadCost();
@@ -346,7 +371,7 @@ public class Solver {
   }
 
   public void updateArchive(double temp) {
-    if(currentlyNonDominated()){
+    if (currentlyNonDominated()) {
       // add sol to solution arch
       // remove dominated solutions
     }
