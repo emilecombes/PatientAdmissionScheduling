@@ -247,7 +247,7 @@ public class Solver {
     System.out.println(new Date() + ": Found first solution");
     printArchiveInfo();
 
-    while (!rectangleArchive.isEmpty()) {
+    while (!rectangleArchive.isEmpty() && rectangleArchive.size() < 5) {
       assert rectangleArchive.peek() != null;
       int c = rectangleArchive.peek().c;
       System.out.println(new Date() + ": Looking for a solution with c = " + c);
@@ -396,7 +396,6 @@ public class Solver {
             (Math.max(c, loadCost) - Math.max(c, loadCost - lastMove.get("load_savings")));
         if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
-        generatedMoves.add(lastMove);
       }
       temp *= Variables.ALPHA;
       adjustLoadCost();
