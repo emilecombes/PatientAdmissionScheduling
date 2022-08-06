@@ -235,34 +235,24 @@ public class Solver {
 
   // Local search
   public void simpleHBS() {
-    /*
-      1. Optimize PC
-      2. Set first rectangle & save current solution
-      3. Optimize PC from new initial solution with max WE = c until rectangleArchive is empty
-    */
-
     System.out.println(new Date() + ": Started");
-
     solutionArchive = new LinkedList<>();
     rectangleArchive = new PriorityQueue<>();
+
     Solution sol = optimizePatientCost(Integer.MAX_VALUE);
     solutionArchive.add(sol);
     rectangleArchive.add(new Rectangle(
         new Point(sol.getPatientCost(), sol.getEquityCost()),
         new Point((int) (Variables.TRADEOFF * sol.getPatientCost()), Variables.WE_MIN)));
-
     System.out.println(new Date() + ": Found first solution");
     printArchiveInfo();
 
     while (!rectangleArchive.isEmpty()) {
       assert rectangleArchive.peek() != null;
       int c = rectangleArchive.peek().c;
-
       System.out.println(new Date() + ": Looking for a solution with c = " + c);
-
       sol = optimizePatientCost(c);
       updateArchives(sol, c);
-      System.out.println(new Date() + ": Finished subproblem");
       printArchiveInfo();
     }
   }
@@ -273,8 +263,6 @@ public class Solver {
     List<Solution> dominatedSolutions = new ArrayList<>();
     for (Solution s : solutionArchive)
       if (sol.strictlyDominates(s)) dominatedSolutions.add(s);
-      else if (s.getEquityCost() > sol.getEquityCost() && s.getPatientCost() < sol.getPatientCost())
-        break;
     solutionArchive.removeAll(dominatedSolutions);
   }
 
@@ -288,9 +276,10 @@ public class Solver {
       Rectangle r = rectangleArchive.poll();
       assert r != null;
       r.setLr(new Point(r.getRight(), c));
-      rectangleArchive.add(r);
+      rectangleArchive.offer(r);
     } else {
       addSolution(s);
+
       Rectangle horizontalHit = findRectangleOnX(patientCost);
       if (horizontalHit != null) {
         int top = Math.max(horizontalHit.getBottom(), c);
@@ -298,6 +287,7 @@ public class Solver {
         if (horizontalHit.getTop() - top > Variables.DELTA)
           rectangleArchive.offer(new Rectangle(horizontalHit.getUl(), updatedPoint));
       }
+
       Rectangle verticalHit = findRectangleOnY(loadCost);
       if (verticalHit != null) {
         int left = Math.max(patientCost, verticalHit.getLeft());
@@ -305,6 +295,7 @@ public class Solver {
         if (loadCost - verticalHit.getBottom() > Variables.DELTA)
           rectangleArchive.offer(new Rectangle(updatedPoint, verticalHit.getLr()));
       }
+
       boolean inBounds = horizontalHit == rectangleArchive.peek() && horizontalHit == verticalHit;
       rectangleArchive.remove(horizontalHit);
       rectangleArchive.remove(verticalHit);
@@ -322,25 +313,25 @@ public class Solver {
 
   public void printArchiveInfo() {
     StringBuilder sb = new StringBuilder();
-    sb.append("Current solution: \t\t(");
-    sb.append(patientCost).append(",").append(loadCost).append(")\n");
+    sb.append("Current solution\t( ");
+    sb.append(patientCost).append(",").append(loadCost).append(" )\n");
 
-    sb.append("Area archive \t\t\t{ ");
+    sb.append("Area archive\t\t{ ");
     for (Rectangle r : rectangleArchive)
       sb.append(r.area).append(", ");
     sb.deleteCharAt(sb.length() - 2);
 
-    sb.append(" }\nRectangle x-value's \t{ ");
+    sb.append("}\nRectangle x-value's\t{ ");
     for (Rectangle r : rectangleArchive)
       sb.append("(").append(r.getLeft()).append(",").append(r.getRight()).append("), ");
     sb.deleteCharAt(sb.length() - 2);
 
-    sb.append(" }\nRectangle y-value's \t{ ");
+    sb.append("}\nRectangle y-value's\t{ ");
     for (Rectangle r : rectangleArchive)
       sb.append("(").append(r.getBottom()).append(",").append(r.getTop()).append("), ");
     sb.deleteCharAt(sb.length() - 2);
 
-    sb.append(" }\nSolution archive \t\t{ ");
+    sb.append("}\nSolution archive\t{ ");
     for (Solution s : solutionArchive)
       sb.append("(").append(s.getPatientCost()).append(",").append(s.getEquityCost()).append("), ");
     sb.deleteCharAt(sb.length() - 2);

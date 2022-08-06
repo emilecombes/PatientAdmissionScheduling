@@ -2,6 +2,9 @@ import model.*;
 import util.*;
 
 import java.io.IOException;
+import java.security.Permission;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class Main {
   public static void main(String[] args) throws IOException {
@@ -14,7 +17,7 @@ public class Main {
     Variables.WE_MIN = 0;
     Variables.DELTA = 1;
     Variables.PENALTY_COEFFICIENT = 1;
-    Variables.TRADEOFF = 3;
+    Variables.TRADEOFF = 2;
 
     Variables.ROOM_PROP_PEN = 20;
     Variables.PREF_CAP_PEN = 10;
@@ -59,7 +62,6 @@ public class Main {
 
     Solver solver = new Solver();
     solver.preProcessing();
-    solver.initSchedule();
     solver.simpleHBS();
 
 //    System.out.println("Validator: ./or_pas_validator Instances/" + instance + ".xml ." +

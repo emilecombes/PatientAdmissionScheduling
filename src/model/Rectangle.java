@@ -2,7 +2,8 @@ package model;
 
 public class Rectangle implements Comparable<Rectangle> {
   private Point ul, lr;
-  int area, c;
+  int c;
+  float area;
 
   public Rectangle(Point ul, Point lr) {
     this.ul = ul;
@@ -55,6 +56,6 @@ public class Rectangle implements Comparable<Rectangle> {
 
   @Override
   public int compareTo(Rectangle other) {
-    return other.area - area;
+    return (int) ((other.area - area) / 1000);
   }
 }

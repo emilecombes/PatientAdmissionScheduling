@@ -9,10 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Finished simple HBS">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Made hyperparameters internal">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Solution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solution.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Rectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Rectangle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -53,7 +53,7 @@
     "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "project.propCompiler"
+    "settings.editor.selected.configurable": "profiler.jvm"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -66,11 +66,11 @@
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application">
-      <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+      <option name="ALTERNATIVE_JRE_PATH" value="15" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="PAS" />
-      <option name="VM_PARAMETERS" value="-Dinstance=$USER_HOME$/tuning/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx12g" />
+      <option name="VM_PARAMETERS" value="-Dinstance=$USER_HOME$/tuning/Instances/or_pas_dept6_long00.xml -Xms256m -Xmx12g" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -89,7 +89,8 @@
       <workItem from="1659260924701" duration="11724000" />
       <workItem from="1659608921106" duration="20003000" />
       <workItem from="1659691618427" duration="141000" />
-      <workItem from="1659691769172" duration="27963000" />
+      <workItem from="1659691769172" duration="31052000" />
+      <workItem from="1659775845144" duration="4218000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -154,7 +155,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659735794492</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Made hyperparameters internal">
+      <created>1659737054637</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1659737054637</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -181,7 +189,8 @@
     <MESSAGE value="Progress on simple HBS" />
     <MESSAGE value="Forgot minor error" />
     <MESSAGE value="Finished simple HBS" />
-    <option name="LAST_COMMIT_MESSAGE" value="Finished simple HBS" />
+    <MESSAGE value="Made hyperparameters internal" />
+    <option name="LAST_COMMIT_MESSAGE" value="Made hyperparameters internal" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
