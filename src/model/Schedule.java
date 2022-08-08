@@ -55,14 +55,6 @@ public class Schedule {
     depLoadCosts = depL;
   }
 
-  public void validate() {
-    for(int i = 0; i < schedule.length; i++)
-      for(int j = 0; j < schedule[0].length; j++)
-        for(int p : schedule[i][j])
-          if(PatientList.getPatient(p).getRoom(j) != i || PatientList.getPatient(p).getLastRoom() != i)
-            System.out.println("Here's the mistake");
-  }
-
   public boolean isFeasible() {
     return capacityViolations == 0;
   }
@@ -242,6 +234,10 @@ public class Schedule {
 
 
   // Equity cost related functions
+  public double getLoad(int dep, int day) {
+    return loadMatrix[dep][day];
+  }
+
   public double getDepartmentEquityCost(int dep) {
     return depLoadCosts[dep];
   }
@@ -293,9 +289,9 @@ public class Schedule {
   // Copy functions
   public Schedule getCopy() {
     return new Schedule(copySchedule(), copyDynamicGenderViolations(),
-        capacityViolations, loadMatrix,
-        avgDailyLoads, dailyLoadCosts,
-        avgDepLoads, depLoadCosts);
+        capacityViolations, copyLoadMatrix(),
+        copyADayL(), copyDayLC(),
+        copyADepL(), copyDepLC());
   }
 
   public Set<Integer>[][] copySchedule() {
@@ -305,8 +301,8 @@ public class Schedule {
         copy[i][j] = new HashSet<>();
 
     for (int i = 0; i < DepartmentList.getNumberOfRooms(); i++)
-      for ( int j = 0; j < DateConverter.getTotalHorizon(); j++)
-        for(int k : schedule[i][j])
+      for (int j = 0; j < DateConverter.getTotalHorizon(); j++)
+        for (int k : schedule[i][j])
           copy[i][j].add(k);
 
     return copy;
@@ -327,4 +323,34 @@ public class Schedule {
     return copy;
   }
 
+  public double[][] copyLoadMatrix() {
+    double[][] loads = new double[loadMatrix.length][loadMatrix[0].length];
+    for (int i = 0; i < loadMatrix.length; i++)
+      System.arraycopy(loadMatrix[i], 0, loads[i], 0, loadMatrix[0].length);
+    return loads;
+  }
+
+  public double[] copyADayL() {
+    double[] t = new double[avgDailyLoads.length];
+    System.arraycopy(avgDailyLoads, 0, t, 0, avgDailyLoads.length);
+    return t;
+  }
+
+  public double[] copyDayLC() {
+    double[] t = new double[dailyLoadCosts.length];
+    System.arraycopy(dailyLoadCosts, 0, t, 0, dailyLoadCosts.length);
+    return t;
+  }
+
+  public double[] copyADepL() {
+    double[] t = new double[avgDepLoads.length];
+    System.arraycopy(avgDepLoads, 0, t, 0, avgDepLoads.length);
+    return t;
+  }
+
+  public double[] copyDepLC() {
+    double[] t = new double[depLoadCosts.length];
+    System.arraycopy(depLoadCosts, 0, t, 0, depLoadCosts.length);
+    return t;
+  }
 }

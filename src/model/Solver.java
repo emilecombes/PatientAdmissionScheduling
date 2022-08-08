@@ -451,7 +451,6 @@ public class Solver {
       sol.loadPatientConfiguration();
     }
     System.out.println("Loaded solution \t( " + patientCost + ", " + equityCost + " )");
-    schedule.validate();
   }
 
   public void adjustEquityCost() {
