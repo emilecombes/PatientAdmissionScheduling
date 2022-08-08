@@ -9,7 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Fixed priority queue mistake">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Removed logging executed moves">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
     </list>
@@ -89,7 +89,8 @@
       <workItem from="1659691618427" duration="141000" />
       <workItem from="1659691769172" duration="31052000" />
       <workItem from="1659775845144" duration="4255000" />
-      <workItem from="1659782844969" duration="1012000" />
+      <workItem from="1659782844969" duration="1868000" />
+      <workItem from="1659948583531" duration="372000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -168,7 +169,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659782815350</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Removed logging executed moves">
+      <created>1659783877115</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1659783877115</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -197,7 +205,8 @@
     <MESSAGE value="Finished simple HBS" />
     <MESSAGE value="Made hyperparameters internal" />
     <MESSAGE value="Fixed priority queue mistake" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed priority queue mistake" />
+    <MESSAGE value="Removed logging executed moves" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed logging executed moves" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

@@ -247,7 +247,7 @@ public class Solver {
     System.out.println(new Date() + ": Found first solution");
     printArchiveInfo();
 
-    while (!rectangleArchive.isEmpty() && rectangleArchive.size() < 5) {
+    while (!rectangleArchive.isEmpty()) {
       assert rectangleArchive.peek() != null;
       int c = rectangleArchive.peek().c;
       System.out.println(new Date() + ": Looking for a solution with c = " + c);
