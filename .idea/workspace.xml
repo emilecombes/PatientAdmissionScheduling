@@ -9,16 +9,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Fixed workload matrix in solution">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Added schedule randomization">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/util/JSONParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Schedule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Variables.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -70,7 +79,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="PAS" />
-      <option name="VM_PARAMETERS" value="-Dinstance=$USER_HOME$/tuning/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx12g" />
+      <option name="VM_PARAMETERS" value="-Dinstance=$PROJECT_DIR$/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx12g" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -94,7 +103,7 @@
       <workItem from="1659782844969" duration="1868000" />
       <workItem from="1659948583531" duration="418000" />
       <workItem from="1659949024086" duration="16250000" />
-      <workItem from="1659967453030" duration="13366000" />
+      <workItem from="1659967453030" duration="23255000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -208,7 +217,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659980632834</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Added schedule randomization">
+      <created>1659981203147</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1659981203147</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -242,23 +258,10 @@
     <MESSAGE value="Progress on ihbs, rooms in patient aren't the same as patients in schedule after loading a solution" />
     <MESSAGE value="Fixed load scheduling bug" />
     <MESSAGE value="Fixed workload matrix in solution" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed workload matrix in solution" />
+    <MESSAGE value="Added schedule randomization" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added schedule randomization" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/model/Solver.java</url>
-          <line>519</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/model/Solver.java</url>
-          <line>554</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="Variables.ITERATIONS" language="JAVA" />

@@ -14,7 +14,7 @@ public class Main {
     Variables.TIME_LIMIT = 20000;
     Variables.PC_MAX = (int) Math.pow(10, 5);
     Variables.WE_MIN = 0;
-    Variables.DELTA = 1;
+    Variables.DELTA = 50;
     Variables.PENALTY_COEFFICIENT = 1;
     Variables.TRADEOFF = 2;
     Variables.RANDOMIZATION_ITERATIONS = 1000;

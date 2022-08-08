@@ -1,6 +1,7 @@
 package model;
 
 import util.DateConverter;
+import util.JSONParser;
 import util.Variables;
 
 import java.util.*;
@@ -14,10 +15,12 @@ public class Solver {
   // MOVES
   private final List<Map<String, Integer>> generatedMoves;
   private Map<String, Integer> lastMove;
+  private JSONParser jsonParser;
 
   public Solver() {
     schedule = new Schedule();
     generatedMoves = new ArrayList<>();
+    jsonParser = new JSONParser();
   }
 
   // Functions to remove
@@ -83,19 +86,6 @@ public class Solver {
       moveInfo.add(info.toString());
     }
     return moveInfo;
-  }
-
-  public void printCost() {
-    System.out.println(patientCost);
-  }
-
-  public void printCosts() {
-    int violationCost = schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
-    System.out.println(
-        "\nCapacity Violations\t:" + schedule.getCapacityViolations() + " (" + violationCost + ")"
-            + "\nPatient Cost\t\t:" + (patientCost - violationCost)
-            + "\nLoad Cost\t\t:" + (equityCost - violationCost)
-    );
   }
 
   public void setPatientBedNumbers() {
@@ -229,46 +219,46 @@ public class Solver {
 
   // Local search
   public void simpleHBS() {
-    System.out.println(new Date() + ": Started");
     solutionArchive = new LinkedList<>();
     rectangleArchive = new PriorityQueue<>();
 
+    writeStart(-1);
     Solution sol = optimizePatientCost(null, Integer.MAX_VALUE);
     solutionArchive.add(sol);
     rectangleArchive.add(new Rectangle(
         new Point(sol.getPatientCost(), sol.getEquityCost()),
         new Point((int) (Variables.TRADEOFF * sol.getPatientCost()), Variables.WE_MIN)));
-    System.out.println(new Date() + ": Found first solution");
-    printArchiveInfo();
+    writeArchives();
 
     while (!rectangleArchive.isEmpty()) {
       int c = rectangleArchive.peek().c;
-      System.out.println(new Date() + ": Looking for a solution with c = " + c);
       sol = optimizePatientCost(null, c);
       updateArchives(sol, c);
-      printArchiveInfo();
+      writeArchives();
     }
+    writeEnd();
   }
 
   public void iteratedHBS() {
     solutionArchive = new LinkedList<>();
     rectangleArchive = new PriorityQueue<>();
 
+    writeStart(-1);
     Solution sol = optimizePatientCost(null, Integer.MAX_VALUE);
     solutionArchive.add(sol);
     rectangleArchive.add(new Rectangle(
         new Point(sol.getPatientCost(), sol.getEquityCost()),
         new Point((int) (Variables.TRADEOFF * sol.getPatientCost()), Variables.WE_MIN)));
-    System.out.println(new Date() + ": Found first solution");
-    printArchiveInfo();
+    writeArchives();
 
     while (!rectangleArchive.isEmpty()) {
       int c = rectangleArchive.peek().c;
-      System.out.println(new Date() + ": Looking for a solution with c = " + c);
+      writeStart(c);
       sol = optimizePatientCost(getNearestSolution(c), c);
       updateArchives(sol, c);
-      printArchiveInfo();
+      writeArchives();
     }
+    writeEnd();
   }
 
 
@@ -290,8 +280,10 @@ public class Solver {
     if (s == null || isDominated(s.getPatientCost(), s.getEquityCost())) {
       Rectangle r = rectangleArchive.poll();
       assert r != null;
-      r.setLr(new Point(r.getRight(), c));
-      rectangleArchive.offer(r);
+      if (c - r.getBottom() > Variables.DELTA) {
+        r.setLr(new Point(r.getRight(), c));
+        rectangleArchive.offer(r);
+      }
     } else {
       addSolution(s);
 
@@ -326,33 +318,6 @@ public class Solver {
     rectangleArchive.removeAll(dominatedRectangles);
   }
 
-  public void printArchiveInfo() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("Current solution\t( ");
-    sb.append(patientCost).append(",").append(equityCost).append(" )\n");
-
-    sb.append("Area archive\t\t{ ");
-    for (Rectangle r : rectangleArchive)
-      sb.append(r.area).append(", ");
-    sb.deleteCharAt(sb.length() - 2);
-
-    sb.append("}\nRectangle x-value's\t{ ");
-    for (Rectangle r : rectangleArchive)
-      sb.append("(").append(r.getLeft()).append(",").append(r.getRight()).append("), ");
-    sb.deleteCharAt(sb.length() - 2);
-
-    sb.append("}\nRectangle y-value's\t{ ");
-    for (Rectangle r : rectangleArchive)
-      sb.append("(").append(r.getBottom()).append(",").append(r.getTop()).append("), ");
-    sb.deleteCharAt(sb.length() - 2);
-
-    sb.append("}\nSolution archive\t{ ");
-    for (Solution s : solutionArchive)
-      sb.append("(").append(s.getPatientCost()).append(",").append(s.getEquityCost()).append("), ");
-    sb.deleteCharAt(sb.length() - 2);
-    sb.append("}\n");
-    System.out.println(sb);
-  }
 
   public boolean isDominated(int pc, int ec) {
     for (Solution s : solutionArchive)
@@ -396,8 +361,7 @@ public class Solver {
             c - solutionArchive.get(i - 1).getEquityCost())
             ? solutionArchive.get(i - 1)
             : solutionArchive.get(i);
-    System.out.println("This should be unreachable...");
-    return null;
+    return solutionArchive.get(solutionArchive.size() - 1);
   }
 
 
@@ -431,7 +395,6 @@ public class Solver {
         penaltyCoefficient *= 10;
         temp /= Variables.ALPHA;
         repairTries++;
-        System.out.println("Repairing solution...");
       }
     }
 
@@ -450,7 +413,7 @@ public class Solver {
       equityCost = sol.getEquityCost();
       sol.loadPatientConfiguration();
     }
-    System.out.println("Loaded solution \t( " + patientCost + ", " + equityCost + " )");
+    writeCurrentSolution("initial_solution");
   }
 
   public void randomizeSchedule() {
@@ -459,7 +422,7 @@ public class Solver {
       acceptMove();
     }
     adjustEquityCost();
-    System.out.println("Randomized solution\t( " + patientCost + ", " + equityCost + " )");
+    writeCurrentSolution("randomized_solution");
   }
 
   public void adjustEquityCost() {
@@ -515,12 +478,6 @@ public class Solver {
     Patient firstPatient = PatientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapRoomPatient(firstPatient);
     if (secondPatient == null) return generateMove();
-
-    if (!firstPatient.hasFeasibleRoom(secondPatient.getLastRoom()) ||
-        !secondPatient.hasFeasibleRoom(firstPatient.getLastRoom())) {
-      System.out.println("No overlapping feasible room was selected");
-    }
-
     move.put("type", 1);
     move.put("first_patient", firstPatient.getId());
     move.put("second_patient", secondPatient.getId());
@@ -550,11 +507,6 @@ public class Solver {
     Patient firstPatient = PatientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapAdmissionPatient(firstPatient);
     if (secondPatient == null) return generateMove();
-
-    if (!firstPatient.hasFeasibleRoom(secondPatient.getLastRoom()) ||
-        !secondPatient.hasFeasibleRoom(firstPatient.getLastRoom())) {
-      System.out.println("No overlapping feasible room was selected");
-    }
 
     move.put("type", 3);
     move.put("first_patient", firstPatient.getId());
@@ -789,5 +741,46 @@ public class Solver {
     affectedDays.addAll(firstPatient.getAdmittedDays());
     affectedDays.addAll(secondPatient.getAdmittedDays());
     recalculateLoadCosts(affectedDays);
+  }
+
+  public void writeStart(int c) {
+    StringBuilder sb = new StringBuilder();
+    if (c == -1) sb.append("{\n\"iterations\":[\n");
+    sb.append("{\n\"time\":\"").append(new Date()).append("\",\n");
+    if (c != -1) sb.append("\"c\":\"").append(c).append("\",\n");
+    jsonParser.write(sb.toString());
+  }
+
+  public void writeCurrentSolution(String key) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("\"").append(key).append("\":{\"patient_cost\":\"").append(patientCost);
+    sb.append("\", ").append("\"equity_cost\":\"").append(equityCost).append("\"},");
+    jsonParser.write(sb.toString());
+  }
+
+  public void writeArchives() {
+    writeCurrentSolution("final_solution");
+    StringBuilder sb = new StringBuilder();
+    sb.append("\"area_archive\":[");
+    for (Rectangle r : rectangleArchive) {
+      sb.append("{\"area\":\"").append(r.area);
+      sb.append("\",\"x_1\":\"").append(r.getLeft());
+      sb.append("\",\"x_2\":\"").append(r.getRight());
+      sb.append("\",\"y_1\":\"").append(r.getBottom());
+      sb.append("\",\"y_2\":\"").append(r.getTop());
+      sb.append("\"},");
+    }
+
+    sb.append("],\n\"solution_archive\":[");
+    for (Solution s : solutionArchive) {
+      sb.append("{\"patient_cost\":\"").append(s.getPatientCost()).append("\",");
+      sb.append("\"load_cost\":\"").append(s.getPatientCost()).append("\"},");
+    }
+    sb.append("]\n},");
+    jsonParser.write(sb.toString());
+  }
+
+  public void writeEnd() {
+    jsonParser.write("]\n}");
   }
 }
