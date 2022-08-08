@@ -396,7 +396,6 @@ public class Solver {
             c - solutionArchive.get(i - 1).getEquityCost())
             ? solutionArchive.get(i - 1)
             : solutionArchive.get(i);
-    // TODO: Remove
     System.out.println("This should be unreachable...");
     return null;
   }
@@ -404,6 +403,7 @@ public class Solver {
 
   public Solution optimizePatientCost(Solution sol, int c) {
     loadInitialSchedule(sol);
+    randomizeSchedule();
     double penaltyCoefficient = sol == null
         ? Variables.PENALTY_COEFFICIENT
         : sol.getPenaltyCoefficient();
@@ -451,6 +451,15 @@ public class Solver {
       sol.loadPatientConfiguration();
     }
     System.out.println("Loaded solution \t( " + patientCost + ", " + equityCost + " )");
+  }
+
+  public void randomizeSchedule() {
+    for (int i = 0; i < Variables.RANDOMIZATION_ITERATIONS; i++) {
+      executeNewMove();
+      acceptMove();
+    }
+    adjustEquityCost();
+    System.out.println("Randomized solution\t( " + patientCost + ", " + equityCost + " )");
   }
 
   public void adjustEquityCost() {

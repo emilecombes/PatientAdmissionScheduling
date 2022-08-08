@@ -17,6 +17,7 @@ public class Main {
     Variables.DELTA = 1;
     Variables.PENALTY_COEFFICIENT = 1;
     Variables.TRADEOFF = 2;
+    Variables.RANDOMIZATION_ITERATIONS = 1000;
 
     Variables.ROOM_PROP_PEN = 20;
     Variables.PREF_CAP_PEN = 10;

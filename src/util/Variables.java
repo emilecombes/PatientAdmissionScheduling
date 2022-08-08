@@ -27,6 +27,7 @@ public class Variables {
   public static double T_START,
       T_STOP,
       ALPHA,
-      TRADEOFF;
+      TRADEOFF,
+      RANDOMIZATION_ITERATIONS;
   public static String PATH, INSTANCE;
 }
