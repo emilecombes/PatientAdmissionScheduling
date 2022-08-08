@@ -218,27 +218,6 @@ public class Solver {
   }
 
   // Local search
-  public void simpleHBS() {
-    solutionArchive = new LinkedList<>();
-    rectangleArchive = new PriorityQueue<>();
-
-    writeStart(-1);
-    Solution sol = optimizePatientCost(null, Integer.MAX_VALUE);
-    solutionArchive.add(sol);
-    rectangleArchive.add(new Rectangle(
-        new Point(sol.getPatientCost(), sol.getEquityCost()),
-        new Point((int) (Variables.TRADEOFF * sol.getPatientCost()), Variables.WE_MIN)));
-    writeArchives();
-
-    while (!rectangleArchive.isEmpty()) {
-      int c = rectangleArchive.peek().c;
-      sol = optimizePatientCost(null, c);
-      updateArchives(sol, c);
-      writeArchives();
-    }
-    writeEnd();
-  }
-
   public void iteratedHBS() {
     solutionArchive = new LinkedList<>();
     rectangleArchive = new PriorityQueue<>();
@@ -761,7 +740,7 @@ public class Solver {
   public void writeArchives() {
     writeCurrentSolution("final_solution");
     StringBuilder sb = new StringBuilder();
-    sb.append("\"area_archive\":[");
+    sb.append("\"rectangle_archive\":[");
     for (Rectangle r : rectangleArchive) {
       sb.append("{\"area\":\"").append(r.area);
       sb.append("\",\"x_1\":\"").append(r.getLeft());
@@ -770,12 +749,14 @@ public class Solver {
       sb.append("\",\"y_2\":\"").append(r.getTop());
       sb.append("\"},");
     }
+    sb.deleteCharAt(sb.length() - 1);
 
     sb.append("],\n\"solution_archive\":[");
     for (Solution s : solutionArchive) {
       sb.append("{\"patient_cost\":\"").append(s.getPatientCost()).append("\",");
-      sb.append("\"load_cost\":\"").append(s.getPatientCost()).append("\"},");
+      sb.append("\"equity_cost\":\"").append(s.getEquityCost()).append("\"},");
     }
+    sb.deleteCharAt(sb.length() - 1);
     sb.append("]\n},");
     jsonParser.write(sb.toString());
   }

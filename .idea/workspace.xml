@@ -9,12 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Added schedule randomization">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/util/JSONParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Parse output to json file">
+      <change afterPath="$PROJECT_DIR$/src/util/JsonPlotter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -103,7 +100,7 @@
       <workItem from="1659782844969" duration="1868000" />
       <workItem from="1659948583531" duration="418000" />
       <workItem from="1659949024086" duration="16250000" />
-      <workItem from="1659967453030" duration="23255000" />
+      <workItem from="1659967453030" duration="27301000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -224,7 +221,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659981203147</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Parse output to json file">
+      <created>1659992672618</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1659992672618</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -259,7 +263,8 @@
     <MESSAGE value="Fixed load scheduling bug" />
     <MESSAGE value="Fixed workload matrix in solution" />
     <MESSAGE value="Added schedule randomization" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added schedule randomization" />
+    <MESSAGE value="Parse output to json file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Parse output to json file" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
