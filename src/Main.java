@@ -11,7 +11,6 @@ public class Main {
     Variables.START_TIME = System.currentTimeMillis();
     Variables.RESET = false;
     Variables.EXTEND = 14;
-    Variables.EXHAUSTIVE = false;
     Variables.TIME_LIMIT = 20000;
     Variables.PC_MAX = (int) Math.pow(10, 5);
     Variables.WE_MIN = 0;
@@ -30,7 +29,6 @@ public class Main {
     String[] path_and_file = System.getProperty("instance").split("/Instances/");
     Variables.INSTANCE = path_and_file[1].split("\\.")[0];
     Variables.PATH = path_and_file[0];
-    Variables.SWAP_LOOPS = 25;
     Variables.ITERATIONS = 1000000;
     if (Variables.INSTANCE.contains("dept4")) {
       Variables.TIME_LIMIT *= 2;
@@ -50,10 +48,12 @@ public class Main {
     Variables.T_ITERATIONS = (int) (Variables.ITERATIONS * Math.log10(Variables.ALPHA) /
         Math.log10(Variables.T_STOP / Variables.T_START));
 
+    Variables.EXHAUSTIVE = false;
     Variables.PCR = 28;
     Variables.PSR = 28;
     Variables.PSHA = 14;
     Variables.PSWA = 100 - Variables.PCR - Variables.PSR - Variables.PSHA;
+    Variables.SWAP_LOOPS = 25;
 
     XMLParser xmlParser = new XMLParser();
     xmlParser.buildDateConverter();
@@ -62,7 +62,7 @@ public class Main {
 
     Solver solver = new Solver();
     solver.preProcessing();
-    solver.simpleHBS();
+    solver.iteratedHBS();
 
 //    System.out.println("Validator: ./or_pas_validator Instances/" + instance + ".xml ." +
 //        "./solutions/xml/" + instance + "_sol.xml");

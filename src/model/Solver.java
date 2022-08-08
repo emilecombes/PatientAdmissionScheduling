@@ -8,7 +8,7 @@ import java.util.*;
 public class Solver {
   // SOLUTION
   private Schedule schedule;
-  private int patientCost, loadCost;
+  private int patientCost, equityCost;
   private List<Solution> solutionArchive;
   private Queue<Rectangle> rectangleArchive;
   // MOVES
@@ -37,7 +37,8 @@ public class Solver {
     roomCosts -= transfer;
     int gender = schedule.getDynamicGenderViolations() * Variables.GENDER_PEN;
     int capacity = schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
-    int load = schedule.getTotalDailyLoadCost() + schedule.getTotalDepartmentLoadCost() + capacity;
+    int load =
+        schedule.getTotalDailyEquityCost() + schedule.getTotalDepartmentEquityCost() + capacity;
     costs.put("capacity_violations", capacity);
     costs.put("transfer", transfer);
     costs.put("patient_room", roomCosts);
@@ -93,7 +94,7 @@ public class Solver {
     System.out.println(
         "\nCapacity Violations\t:" + schedule.getCapacityViolations() + " (" + violationCost + ")"
             + "\nPatient Cost\t\t:" + (patientCost - violationCost)
-            + "\nLoad Cost\t\t:" + (loadCost - violationCost)
+            + "\nLoad Cost\t\t:" + (equityCost - violationCost)
     );
   }
 
@@ -193,17 +194,17 @@ public class Solver {
   // Initializing
   public void initSchedule() {
     patientCost = 0;
-    loadCost = 0;
+    equityCost = 0;
     insertInitialPatients();
     assignRandomRooms();
     patientCost += schedule.getDynamicGenderViolations() * Variables.GENDER_PEN;
     for (int i = 0; i < DateConverter.getTotalHorizon(); i++)
-      schedule.calculateDailyLoadCost(i);
+      schedule.calculateDailyEquityCost(i);
     for (int i = 0; i < DepartmentList.getNumberOfDepartments(); i++)
-      schedule.calculateDepartmentLoadCost(i);
-    loadCost += schedule.getTotalDailyLoadCost();
-    loadCost += schedule.getTotalDepartmentLoadCost();
-    loadCost += schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
+      schedule.calculateDepartmentEquityCost(i);
+    equityCost += schedule.getTotalDailyEquityCost();
+    equityCost += schedule.getTotalDepartmentEquityCost();
+    equityCost += schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
     patientCost += schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
   }
 
@@ -226,20 +227,13 @@ public class Solver {
     }
   }
 
-  public void loadSchedule(Solution s) {
-    // TODO: set patient attributes
-    patientCost = s.getPatientCost();
-    loadCost = s.getEquityCost();
-    schedule = new Schedule(s);
-  }
-
   // Local search
   public void simpleHBS() {
     System.out.println(new Date() + ": Started");
     solutionArchive = new LinkedList<>();
     rectangleArchive = new PriorityQueue<>();
 
-    Solution sol = optimizePatientCost(Integer.MAX_VALUE);
+    Solution sol = optimizePatientCost(null, Integer.MAX_VALUE);
     solutionArchive.add(sol);
     rectangleArchive.add(new Rectangle(
         new Point(sol.getPatientCost(), sol.getEquityCost()),
@@ -248,14 +242,35 @@ public class Solver {
     printArchiveInfo();
 
     while (!rectangleArchive.isEmpty()) {
-      assert rectangleArchive.peek() != null;
       int c = rectangleArchive.peek().c;
       System.out.println(new Date() + ": Looking for a solution with c = " + c);
-      sol = optimizePatientCost(c);
+      sol = optimizePatientCost(null, c);
       updateArchives(sol, c);
       printArchiveInfo();
     }
   }
+
+  public void iteratedHBS() {
+    solutionArchive = new LinkedList<>();
+    rectangleArchive = new PriorityQueue<>();
+
+    Solution sol = optimizePatientCost(null, Integer.MAX_VALUE);
+    solutionArchive.add(sol);
+    rectangleArchive.add(new Rectangle(
+        new Point(sol.getPatientCost(), sol.getEquityCost()),
+        new Point((int) (Variables.TRADEOFF * sol.getPatientCost()), Variables.WE_MIN)));
+    System.out.println(new Date() + ": Found first solution");
+    printArchiveInfo();
+
+    while (!rectangleArchive.isEmpty()) {
+      int c = rectangleArchive.peek().c;
+      System.out.println(new Date() + ": Looking for a solution with c = " + c);
+      sol = optimizePatientCost(getNearestSolution(c), c);
+      updateArchives(sol, c);
+      printArchiveInfo();
+    }
+  }
+
 
   public void addSolution(Solution sol) {
     solutionArchive.add(sol);
@@ -272,7 +287,7 @@ public class Solver {
     //  If the solution is out of bounds of the original rectangle, remove dominated rectangles.
     //  If it is dominated, remove its lower rectangle
 
-    if (isDominated(s) || s == null) {
+    if (s == null || isDominated(s.getPatientCost(), s.getEquityCost())) {
       Rectangle r = rectangleArchive.poll();
       assert r != null;
       r.setLr(new Point(r.getRight(), c));
@@ -288,11 +303,11 @@ public class Solver {
           rectangleArchive.offer(new Rectangle(horizontalHit.getUl(), updatedPoint));
       }
 
-      Rectangle verticalHit = findRectangleOnY(loadCost);
+      Rectangle verticalHit = findRectangleOnY(equityCost);
       if (verticalHit != null) {
         int left = Math.max(patientCost, verticalHit.getLeft());
-        Point updatedPoint = new Point(left, loadCost);
-        if (loadCost - verticalHit.getBottom() > Variables.DELTA)
+        Point updatedPoint = new Point(left, equityCost);
+        if (equityCost - verticalHit.getBottom() > Variables.DELTA)
           rectangleArchive.offer(new Rectangle(updatedPoint, verticalHit.getLr()));
       }
 
@@ -314,7 +329,7 @@ public class Solver {
   public void printArchiveInfo() {
     StringBuilder sb = new StringBuilder();
     sb.append("Current solution\t( ");
-    sb.append(patientCost).append(",").append(loadCost).append(" )\n");
+    sb.append(patientCost).append(",").append(equityCost).append(" )\n");
 
     sb.append("Area archive\t\t{ ");
     for (Rectangle r : rectangleArchive)
@@ -339,14 +354,23 @@ public class Solver {
     System.out.println(sb);
   }
 
-  public boolean isDominated(Solution sol) {
-    if (sol == null) return true;
+  public boolean isDominated(int pc, int ec) {
     for (Solution s : solutionArchive)
-      if (s.strictlyDominates(sol))
-        return true;
-      else if (s.getPatientCost() < sol.getPatientCost() && s.getEquityCost() > sol.getEquityCost())
-        return false;
+      if (s.strictlyDominates(pc, ec)) return true;
+      else if (s.getPatientCost() < pc) return false;
     return false;
+  }
+
+  public boolean isEfficient(int pc, int ec) {
+    if (solutionArchive.isEmpty()) return true;
+
+    for (int i = 1; i < solutionArchive.size(); i++)
+      if (solutionArchive.get(i).getEquityCost() >= ec &&
+          solutionArchive.get(i - 1).getEquityCost() < ec)
+        return pc < solutionArchive.get(i).getPatientCost();
+
+    return solutionArchive.get(0).getEquityCost() > ec ||
+        solutionArchive.get(solutionArchive.size() - 1).getPatientCost() > pc;
   }
 
   public Rectangle findRectangleOnX(int pc) {
@@ -361,61 +385,77 @@ public class Solver {
     return null;
   }
 
-  public void adjustLoadCost() {
-    loadCost = schedule.getTotalDailyLoadCost()
-        + schedule.getTotalDepartmentLoadCost()
-        + schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
+  public Solution getNearestSolution(int c) {
+    if (solutionArchive.isEmpty()) return null;
+    if (solutionArchive.size() == 1 || solutionArchive.get(0).getEquityCost() > c)
+      return solutionArchive.get(0);
+    for (int i = 1; i < solutionArchive.size(); i++)
+      if (solutionArchive.get(i).getEquityCost() >= c &&
+          solutionArchive.get(i - 1).getEquityCost() <= c)
+        return (solutionArchive.get(i).getEquityCost() - c >
+            c - solutionArchive.get(i - 1).getEquityCost())
+            ? solutionArchive.get(i - 1)
+            : solutionArchive.get(i);
+    return solutionArchive.get(solutionArchive.size() - 1);
   }
 
 
-  public void optimizePatientCost() {
-    double stop = System.currentTimeMillis() + Variables.TIME_LIMIT;
+  public Solution optimizePatientCost(Solution sol, int c) {
+    loadInitialSchedule(sol);
+    double penaltyCoefficient = sol == null
+        ? Variables.PENALTY_COEFFICIENT
+        : sol.getPenaltyCoefficient();
     double temp = Variables.T_START;
-    while (temp > Variables.T_STOP && System.currentTimeMillis() < stop) {
-      for (int i = 0; i < Variables.T_ITERATIONS; i++) {
-        executeNewMove();
-        int savings = lastMove.get("patient_savings");
-        if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
-        else undoLastMove();
-        generatedMoves.add(lastMove);
-      }
-      temp *= Variables.ALPHA;
-      adjustLoadCost();
-    }
-  }
-
-  public Solution optimizePatientCost(int c) {
     int repairTries = 0;
-    loadInitialSchedule();
-    double penaltyCoefficient = Variables.PENALTY_COEFFICIENT;
-    double temp = Variables.T_START;
+
     while (temp > Variables.T_STOP) {
       for (int i = 0; i < Variables.T_ITERATIONS; i++) {
         executeNewMove();
         double savings = lastMove.get("patient_savings") + penaltyCoefficient *
-            (Math.max(c, loadCost) - Math.max(c, loadCost - lastMove.get("load_savings")));
+            (Math.max(c, equityCost) - Math.max(c, equityCost - lastMove.get("load_savings")));
         if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
       }
+
       temp *= Variables.ALPHA;
-      adjustLoadCost();
-      if (loadCost >= 0.95 * c) penaltyCoefficient *= 1.2;
-      else if (loadCost <= 1.05 * c) penaltyCoefficient *= 0.85;
-      if (temp <= Variables.T_STOP && loadCost > c && repairTries < 2) {
+      adjustEquityCost();
+      if (equityCost >= 0.95 * c) penaltyCoefficient *= 1.2;
+      else if (equityCost <= 1.05 * c) penaltyCoefficient *= 0.85;
+
+      if (isEfficient(patientCost, equityCost))
+        addSolution(new Solution(schedule, patientCost, equityCost, temp, penaltyCoefficient));
+
+      if (temp <= Variables.T_STOP && equityCost > c && repairTries < 2) {
         penaltyCoefficient *= 10;
         temp /= Variables.ALPHA;
         repairTries++;
         System.out.println("Repairing solution...");
       }
     }
-    if (loadCost > c) return null;
+
+    if (equityCost > c) return null;
     penaltyCoefficient /= Math.pow(10, repairTries);
-    return new Solution(schedule, patientCost, loadCost, temp, penaltyCoefficient);
+    return new Solution(schedule, patientCost, equityCost, temp, penaltyCoefficient);
   }
 
-  public void loadInitialSchedule() {
-    schedule = new Schedule();
-    initSchedule();
+  public void loadInitialSchedule(Solution sol) {
+    if (sol == null) {
+      schedule = new Schedule();
+      initSchedule();
+    } else {
+      schedule = sol.copySchedule();
+      patientCost = sol.getPatientCost();
+      equityCost = sol.getEquityCost();
+      sol.loadPatientConfiguration();
+    }
+    System.out.println("Loaded solution \t( " + patientCost + ", " + equityCost + " )");
+    schedule.validate();
+  }
+
+  public void adjustEquityCost() {
+    equityCost = schedule.getTotalDailyEquityCost()
+        + schedule.getTotalDepartmentEquityCost()
+        + schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
   }
 
 
@@ -423,7 +463,7 @@ public class Solver {
   public void acceptMove() {
     lastMove.put("accepted", 1);
     patientCost -= lastMove.get("patient_savings");
-    loadCost -= lastMove.get("load_savings");
+    equityCost -= lastMove.get("load_savings");
   }
 
   public Map<String, Integer> generateMove() {
@@ -465,6 +505,12 @@ public class Solver {
     Patient firstPatient = PatientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapRoomPatient(firstPatient);
     if (secondPatient == null) return generateMove();
+
+    if (!firstPatient.hasFeasibleRoom(secondPatient.getLastRoom()) ||
+        !secondPatient.hasFeasibleRoom(firstPatient.getLastRoom())) {
+      System.out.println("No overlapping feasible room was selected");
+    }
+
     move.put("type", 1);
     move.put("first_patient", firstPatient.getId());
     move.put("second_patient", secondPatient.getId());
@@ -494,6 +540,12 @@ public class Solver {
     Patient firstPatient = PatientList.getRandomPatient();
     Patient secondPatient = schedule.getSwapAdmissionPatient(firstPatient);
     if (secondPatient == null) return generateMove();
+
+    if (!firstPatient.hasFeasibleRoom(secondPatient.getLastRoom()) ||
+        !secondPatient.hasFeasibleRoom(firstPatient.getLastRoom())) {
+      System.out.println("No overlapping feasible room was selected");
+    }
+
     move.put("type", 3);
     move.put("first_patient", firstPatient.getId());
     move.put("second_patient", secondPatient.getId());
@@ -523,7 +575,8 @@ public class Solver {
     int patientSavings = patient.getCurrentRoomCost() - patient.getRoomCost(room);
 
     for (int day = patient.getAdmission(); day < patient.getDischarge(); day++) {
-      if (schedule.hasSingleDynamicGenderViolation(patient.getLastRoom(), day, patient.getGender()))
+      if (schedule.hasSingleDynamicGenderViolation(patient.getLastRoom(), day,
+          patient.getGender()))
         patientSavings += Variables.GENDER_PEN;
       schedule.cancelPatient(patient, day);
     }
@@ -549,9 +602,9 @@ public class Solver {
 
     double savings = 0;
     for (int dep : departments) {
-      savings += schedule.getDepartmentLoadCost(dep);
-      schedule.calculateDepartmentLoadCost(dep);
-      savings -= schedule.getDepartmentLoadCost(dep);
+      savings += schedule.getDepartmentEquityCost(dep);
+      schedule.calculateDepartmentEquityCost(dep);
+      savings -= schedule.getDepartmentEquityCost(dep);
     }
     return savings;
   }
@@ -559,9 +612,9 @@ public class Solver {
   public double getDailyLoadSavings(Set<Integer> days) {
     double savings = 0;
     for (int day : days) {
-      savings += schedule.getDailyLoadCost(day);
-      schedule.calculateDailyLoadCost(day);
-      savings -= schedule.getDailyLoadCost(day);
+      savings += schedule.getDailyEquityCost(day);
+      schedule.calculateDailyEquityCost(day);
+      savings -= schedule.getDailyEquityCost(day);
     }
     return savings;
   }
@@ -574,8 +627,8 @@ public class Solver {
     lastMove.put("total_patient_cost", patientCost);
     lastMove.put("patient_cost", patientCost - capacityViolationCost);
     lastMove.put("patient_savings", patientSavings);
-    lastMove.put("total_load_cost", loadCost);
-    lastMove.put("load_cost", loadCost - capacityViolationCost);
+    lastMove.put("total_load_cost", equityCost);
+    lastMove.put("load_cost", equityCost - capacityViolationCost);
     lastMove.put("load_savings", (int) loadSavings);
   }
 
@@ -682,12 +735,12 @@ public class Solver {
   }
 
   public void recalculateLoadCosts(Set<Integer> days) {
-    for (int day : days) schedule.calculateDailyLoadCost(day);
+    for (int day : days) schedule.calculateDailyEquityCost(day);
     int fDep = lastMove.get("first_department");
     int sDep = lastMove.getOrDefault("second_department", -1);
-    schedule.calculateDepartmentLoadCost(fDep);
+    schedule.calculateDepartmentEquityCost(fDep);
     if (fDep != sDep && sDep != -1)
-      schedule.calculateDepartmentLoadCost(sDep);
+      schedule.calculateDepartmentEquityCost(sDep);
   }
 
   public void undoChangeRoom() {

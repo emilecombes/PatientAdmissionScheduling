@@ -5,15 +5,9 @@ import java.util.*;
 public class Solution implements Comparable<Solution> {
   private final int patientCost, equityCost;
   private final double temperature, penaltyCoefficient;
-  private final Set<Integer>[][] schedule;
-  private final Map<Integer, List<Map<String, Integer>>> dynamicGenderCount;
+  private final Schedule schedule;
   private final Map<Patient, Integer> delays;
   private final Map<Patient, Room> assignedRooms;
-  private final double[][] loadMatrix;
-  private final double[] averageDailyLoads;
-  private final double[] dailyLoadCosts;
-  private final double[] averageDepartmentLoads;
-  private final double[] departmentLoadCosts;
 
   public Solution(Schedule schedule, int patientCost, int equityCost, double temperature,
                   double penaltyCoefficient) {
@@ -21,14 +15,7 @@ public class Solution implements Comparable<Solution> {
     this.equityCost = equityCost;
     this.temperature = temperature;
     this.penaltyCoefficient = penaltyCoefficient;
-    this.schedule = schedule.copySchedule();
-    this.dynamicGenderCount = schedule.copyDynamicGenderViolations();
-    this.loadMatrix = schedule.getLoadMatrix();
-    this.averageDailyLoads = schedule.getAverageDailyLoads();
-    this.dailyLoadCosts = schedule.getDailyLoadCosts();
-    this.averageDepartmentLoads = schedule.getAverageDepartmentLoads();
-    this.departmentLoadCosts = schedule.getDepartmentLoadCosts();
-
+    this.schedule = schedule.getCopy();
     this.assignedRooms = new HashMap<>();
     this.delays = new HashMap<>();
     for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
@@ -39,6 +26,10 @@ public class Solution implements Comparable<Solution> {
     }
   }
 
+  public Schedule copySchedule() {
+    return schedule.getCopy();
+  }
+
   public int getPatientCost() {
     return patientCost;
   }
@@ -47,48 +38,28 @@ public class Solution implements Comparable<Solution> {
     return equityCost;
   }
 
+  public double getPenaltyCoefficient() {
+    return penaltyCoefficient;
+  }
+
   public double getTemperature() {
     return temperature;
   }
 
-  public int getDelay(Patient pat) {
-    return delays.get(pat);
+  public boolean strictlyDominates(Solution s) {
+    return strictlyDominates(s.getPatientCost(), s.getEquityCost());
   }
 
-  public Room getRoom(Patient pat) {
-    return assignedRooms.get(pat);
+  public boolean strictlyDominates(int pc, int ec) {
+    return equityCost <= ec && patientCost <= pc && !(equityCost == ec && patientCost == pc);
   }
 
-  public Set<Integer>[][] getSchedule() {
-    return schedule;
-  }
-
-  public Map<Integer, List<Map<String, Integer>>> getDynamicGenderCount() {
-    return dynamicGenderCount;
-  }
-
-  public double[][] getLoadMatrix() {
-    return loadMatrix;
-  }
-
-  public double[] getAverageDailyLoads() {
-    return averageDailyLoads;
-  }
-
-  public double[] getDailyLoadCosts() {
-    return dailyLoadCosts;
-  }
-
-  public double[] getAverageDepartmentLoads() {
-    return averageDepartmentLoads;
-  }
-
-  public double[] getDepartmentLoadCosts() {
-    return departmentLoadCosts;
-  }
-
-  public boolean strictlyDominates(Solution c) {
-    return equityCost < c.getEquityCost() && patientCost < c.getPatientCost();
+  public void loadPatientConfiguration() {
+    for(int i = 0; i < PatientList.getNumberOfPatients(); i++) {
+      Patient p = PatientList.getPatient(i);
+      p.setDelay(delays.get(p));
+      p.assignRoom(assignedRooms.get(p));
+    }
   }
 
   @Override

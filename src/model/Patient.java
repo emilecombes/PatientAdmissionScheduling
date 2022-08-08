@@ -14,7 +14,7 @@ public class Patient {
   private List<Integer> feasibleRoomList;
   private final Map<Integer, Integer> roomCosts;
   private final Map<String, Map<Integer, Integer>> specificRoomCosts;
-  private final LinkedHashMap<Integer, Integer> assignedRooms;
+  private LinkedHashMap<Integer, Integer> assignedRooms;
   private int admission, discharge, delay, bed;
 
   public Patient(int id, String name, String gender, String treatment, int ad, int dd, int ma,
@@ -236,6 +236,12 @@ public class Patient {
 
   public boolean hasFeasibleRoom(int room) {
     return feasibleRooms.contains(room);
+  }
+
+  public void assignRoom(Room r) {
+    assignedRooms = new LinkedHashMap<>();
+    for(int i = admission; i < discharge; i++)
+      assignRoom(r.getId(), i);
   }
 
   public void assignRoom(int room, int day) {
