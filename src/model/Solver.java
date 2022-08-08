@@ -396,7 +396,9 @@ public class Solver {
             c - solutionArchive.get(i - 1).getEquityCost())
             ? solutionArchive.get(i - 1)
             : solutionArchive.get(i);
-    return solutionArchive.get(solutionArchive.size() - 1);
+    // TODO: Remove
+    System.out.println("This should be unreachable...");
+    return null;
   }
 
 

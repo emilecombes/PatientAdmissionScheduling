@@ -304,11 +304,10 @@ public class Schedule {
       for (int j = 0; j < DateConverter.getTotalHorizon(); j++)
         copy[i][j] = new HashSet<>();
 
-    for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
-      Patient patient = PatientList.getPatient(i);
-      for (int j = patient.getAdmission(); j < patient.getDischarge(); j++)
-        copy[patient.getRoom(j)][j].add(patient.getId());
-    }
+    for (int i = 0; i < DepartmentList.getNumberOfRooms(); i++)
+      for ( int j = 0; j < DateConverter.getTotalHorizon(); j++)
+        for(int k : schedule[i][j])
+          copy[i][j].add(k);
 
     return copy;
   }

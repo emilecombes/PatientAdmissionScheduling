@@ -9,9 +9,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Removed limit of 5 solutions">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Progress on ihbs, rooms in patient aren't the same as patients in schedule after loading a solution">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Patient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Patient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Schedule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Schedule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solution.java" afterDir="false" />
@@ -96,7 +95,7 @@
       <workItem from="1659782844969" duration="1868000" />
       <workItem from="1659948583531" duration="418000" />
       <workItem from="1659949024086" duration="16250000" />
-      <workItem from="1659967453030" duration="4770000" />
+      <workItem from="1659967453030" duration="10518000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -189,7 +188,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659948993090</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Progress on ihbs, rooms in patient aren't the same as patients in schedule after loading a solution">
+      <created>1659972291753</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1659972291753</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -220,25 +226,26 @@
     <MESSAGE value="Fixed priority queue mistake" />
     <MESSAGE value="Removed logging executed moves" />
     <MESSAGE value="Removed limit of 5 solutions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed limit of 5 solutions" />
+    <MESSAGE value="Progress on ihbs, rooms in patient aren't the same as patients in schedule after loading a solution" />
+    <option name="LAST_COMMIT_MESSAGE" value="Progress on ihbs, rooms in patient aren't the same as patients in schedule after loading a solution" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/model/Schedule.java</url>
-          <line>62</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/model/Solver.java</url>
-          <line>510</line>
+          <line>512</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/model/Solver.java</url>
-          <line>545</line>
+          <line>547</line>
           <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/model/Schedule.java</url>
+          <line>62</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

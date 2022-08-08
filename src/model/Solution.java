@@ -1,5 +1,7 @@
 package model;
 
+import util.DateConverter;
+
 import java.util.*;
 
 public class Solution implements Comparable<Solution> {
@@ -55,7 +57,7 @@ public class Solution implements Comparable<Solution> {
   }
 
   public void loadPatientConfiguration() {
-    for(int i = 0; i < PatientList.getNumberOfPatients(); i++) {
+    for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
       Patient p = PatientList.getPatient(i);
       p.setDelay(delays.get(p));
       p.assignRoom(assignedRooms.get(p));

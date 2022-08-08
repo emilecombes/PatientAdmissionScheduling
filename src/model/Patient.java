@@ -257,4 +257,8 @@ public class Patient {
     discharge += days;
     delay += days;
   }
+
+  public String getConfig() {
+    return "(" + id + "," + admission + "," + getLastRoom() + ")";
+  }
 }
