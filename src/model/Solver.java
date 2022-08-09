@@ -206,7 +206,7 @@ public class Solver {
     pen = sol.getPenaltyCoefficient();
     sol.loadPatientConfiguration();
     randomizeSchedule();
-    repairSchedule();
+    if(equityCost > c) repairSchedule();
   }
 
   public void initRectangleArchive() {
@@ -256,18 +256,20 @@ public class Solver {
       acceptMove();
     }
     adjustEquityCost();
-    writeCurrentSolution("randomized_solution");
   }
 
   public void repairSchedule() {
+    // TODO: This doesn't seem to work properly
     int tries = 0;
     while (equityCost > c && tries < 2) {
       pen *= 10;
+      System.out.println("Repairing solution. p = " + pen);
       performSA(Variables.REP_ITERATIONS);
       tries++;
     }
     pen /= Math.pow(10, tries);
-    System.out.println("Repair tries: " + tries);
+    if(equityCost > c)
+      System.out.println("Repair failed. c = " + c + ", ec = " + equityCost);
   }
 
 
@@ -283,19 +285,24 @@ public class Solver {
       optimizeSubproblem();
       if (equityCost > c || isDominated(patientCost, equityCost)) r.setBottom(c);
       else {
+        System.out.println("Archive size before updating: " + rectangleArchive.size());
         Rectangle rx = findRectangleOnX(patientCost);
         if (rx != null) {
           Point newLR = new Point(patientCost, Math.max(rx.getBottom(), c));
           if (rx.getTop() - newLR.y > Variables.DELTA)
             rectangleArchive.offer(new Rectangle(rx.getUl(), newLR));
+          System.out.println("RX will be removed " + rx.getLeft());
         }
         Rectangle ry = findRectangleOnY(equityCost);
         if (ry != null) {
           Point newUL = new Point(Math.max(ry.getLeft(), patientCost), equityCost);
           if (ry.getTop() - newUL.y > Variables.DELTA)
             rectangleArchive.offer(new Rectangle(newUL, ry.getLr()));
+          System.out.println("RY will be removed " + ry.getLeft());
         }
+        System.out.println("Archive size before removing: " + rectangleArchive.size());
         removeAndUpdateRectangleArchive(rx, ry);
+        System.out.println("Archive size after removing: " + rectangleArchive.size());
       }
       writeArchives();
     }
@@ -311,6 +318,8 @@ public class Solver {
         if (r.getBottom() >= equityCost && r.getLeft() >= patientCost)
           dominatedRectangles.add(r);
       rectangleArchive.removeAll(dominatedRectangles);
+      if (!dominatedRectangles.isEmpty())
+        System.out.println(dominatedRectangles.size() + " rectangles were dominated");
     }
   }
 
@@ -326,13 +335,14 @@ public class Solver {
   public void optimizeSubproblem() {
     Solution sol = getNearestSolution();
     loadSolution(sol);
-//    if (equityCost > c && solutionArchive.indexOf(sol) != 0) {
-//      sol = solutionArchive.get(solutionArchive.indexOf(sol) - 1);
-//      loadSolution(sol);
-//    }
+    if (equityCost > c && solutionArchive.indexOf(sol) != 0) {
+      sol = solutionArchive.get(solutionArchive.indexOf(sol) - 1);
+      loadSolution(sol);
+    }
     writeHarvestedSolution(sol);
     writeCurrentSolution("initial_solution");
     performSA(Variables.SUB_ITERATIONS);
+    if(equityCost > c) repairSchedule();
   }
 
   public void performSA(int iter) {

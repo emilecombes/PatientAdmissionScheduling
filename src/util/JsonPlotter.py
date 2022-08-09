@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 import plotly.express as px
 
 def main():
-    file = open('solutions/json/test_instance_25_6.json') 
+    file = open('solutions/json/test_instance_25_9.json') 
     data = json.load(file)
     for iteration in data['iterations']:
         patient_costs = []
@@ -28,7 +28,6 @@ def main():
             sol = iteration['initial_solution']
             ax.scatter(int(sol['patient_cost']), 
                     int(sol['equity_cost']),c='orange')
-
         sol = iteration['final_solution']
         ax.scatter(int(sol['patient_cost']), 
                 int(sol['equity_cost']), c='green')

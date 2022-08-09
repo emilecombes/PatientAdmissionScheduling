@@ -31,7 +31,7 @@ public class Main {
     Variables.T_START = 533;
     Variables.T_STOP = 0.71;
     Variables.ALPHA = 0.99;
-    Variables.INITIAL_TOTAL_ITERATIONS = (int) Math.pow(10, 7) * Variables.INSTANCE_SCALE;
+    Variables.INITIAL_TOTAL_ITERATIONS = (int) Math.pow(10, 6) * Variables.INSTANCE_SCALE;
     Variables.SUBPROBLEM_TOTAL_ITERATIONS = (int) Math.pow(10, 5) * Variables.INSTANCE_SCALE;
     Variables.REPAIR_TOTAL_ITERATIONS = (int) Math.pow(10, 5) * Variables.INSTANCE_SCALE;
     Variables.RND_ITERATIONS = (int) Math.pow(10, 2) * Variables.INSTANCE_SCALE;
@@ -51,7 +51,7 @@ public class Main {
     Variables.WE_MIN = 0;
     Variables.DELTA = 5;
     Variables.PENALTY_COEFFICIENT = 1;
-    Variables.PENALTY_ADJUSTMENT = 0.95;
+    Variables.PENALTY_ADJUSTMENT = 0.5;
     Variables.TRADEOFF = 2;
 
     Solver solver = new Solver();
