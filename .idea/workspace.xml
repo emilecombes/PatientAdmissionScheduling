@@ -9,12 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Added repair procedure when loading initial solution">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Fixed json writer oopsies">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/JSONParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/JSONParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/JsonPlotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/JsonPlotter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Variables.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +61,7 @@
     "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "profiler.jvm"
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -105,7 +105,7 @@
       <workItem from="1659949024086" duration="16250000" />
       <workItem from="1659967453030" duration="33486000" />
       <workItem from="1660037213316" duration="7000" />
-      <workItem from="1660040380554" duration="1465000" />
+      <workItem from="1660040380554" duration="4203000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -247,7 +247,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660008770872</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Fixed json writer oopsies">
+      <created>1660041870731</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1660041870731</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -285,7 +292,8 @@
     <MESSAGE value="Parse output to json file" />
     <MESSAGE value="Added python plotter approximation set" />
     <MESSAGE value="Added repair procedure when loading initial solution" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added repair procedure when loading initial solution" />
+    <MESSAGE value="Fixed json writer oopsies" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed json writer oopsies" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -293,5 +301,9 @@
         <watch expression="Variables.ITERATIONS" language="JAVA" />
       </configuration>
     </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

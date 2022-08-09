@@ -11,12 +11,13 @@ public class Main {
     Variables.START_TIME = System.currentTimeMillis();
     Variables.RESET = false;
     Variables.EXTEND = 14;
-    Variables.TIME_LIMIT = 20000;
+    Variables.TIME_LIMIT = 180000;
     Variables.PC_MAX = (int) Math.pow(10, 5);
     Variables.WE_MIN = 0;
     Variables.DELTA = 50;
     Variables.PENALTY_COEFFICIENT = 1;
-    Variables.TRADEOFF = 2;
+    Variables.MIN_TRADEOFF = 2;
+    Variables.RANDOMIZATION = Integer.parseInt(System.getProperty("randomization"));
     Variables.RANDOMIZATION_ITERATIONS = 1000;
     Variables.ITERATIONS = (int) Math.pow(10, 6);
 
@@ -31,17 +32,9 @@ public class Main {
     String[] path_and_file = System.getProperty("instance").split("/Instances/");
     Variables.INSTANCE = path_and_file[1].split("\\.")[0];
     Variables.PATH = path_and_file[0];
-    if (Variables.INSTANCE.contains("dept4")) {
-      Variables.TIME_LIMIT *= 2;
-      Variables.ITERATIONS *= 2;
-    } else if (Variables.INSTANCE.contains("dept6")) {
-      Variables.TIME_LIMIT *= 3;
-      Variables.ITERATIONS *= 3;
-    }
-    if (Variables.INSTANCE.contains("long")) {
-      Variables.TIME_LIMIT *= 2;
-      Variables.ITERATIONS *= 2;
-    }
+    if (Variables.INSTANCE.contains("dept4")) Variables.ITERATIONS *= 2;
+    else if (Variables.INSTANCE.contains("dept6")) Variables.ITERATIONS *= 3;
+    if (Variables.INSTANCE.contains("long")) Variables.ITERATIONS *= 2;
 
     Variables.T_START = 533;
     Variables.T_STOP = 0.71;

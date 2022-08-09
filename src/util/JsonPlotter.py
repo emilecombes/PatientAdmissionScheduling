@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 import plotly.express as px
 
 def main():
-    file = open('solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept2_short01.json') 
+    file = open('solutions/json/test_instance_25.json') 
     data = json.load(file)
     for iteration in data['iterations']:
         patient_costs = []

@@ -17,6 +17,7 @@ public class Variables {
       PC_MAX,
       DELTA,
       PENALTY_COEFFICIENT,
+      RANDOMIZATION,
       RANDOMIZATION_ITERATIONS,
       REPAIR_ITERATIONS,
       REPAIR_TEMPERATURE;
@@ -30,6 +31,6 @@ public class Variables {
   public static double T_START,
       T_STOP,
       ALPHA,
-      TRADEOFF;
+      MIN_TRADEOFF;
   public static String PATH, INSTANCE;
 }

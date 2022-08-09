@@ -225,9 +225,13 @@ public class Solver {
     writeStart(-1);
     Solution sol = optimizePatientCost(null, Integer.MAX_VALUE);
     solutionArchive.add(sol);
+
+    Variables.PC_MAX = (int) Math.max(
+        Variables.MIN_TRADEOFF * sol.getPatientCost(),
+        solutionArchive.get(0).getPatientCost());
     rectangleArchive.add(new Rectangle(
         new Point(sol.getPatientCost(), sol.getEquityCost()),
-        new Point((int) (Variables.TRADEOFF * sol.getPatientCost()), Variables.WE_MIN)));
+        new Point(Variables.PC_MAX, Variables.WE_MIN)));
     writeArchives();
 
     while (!rectangleArchive.isEmpty()) {
@@ -297,7 +301,6 @@ public class Solver {
     rectangleArchive.removeAll(dominatedRectangles);
   }
 
-
   public boolean isDominated(int pc, int ec) {
     for (Solution s : solutionArchive)
       if (s.strictlyDominates(pc, ec)) return true;
@@ -355,10 +358,11 @@ public class Solver {
 
     while (equityCost > c && repairTries < 2) {
       repairTries++;
-      penaltyCoefficient *= Math.pow(10, repairTries);
+      penaltyCoefficient *= 10;
       repairSolution(c, penaltyCoefficient);
     }
     if(equityCost > c) return null;
+    penaltyCoefficient /= Math.pow(10, repairTries);
     repairTries = 0;
 
     while (temp > Variables.T_STOP) {
