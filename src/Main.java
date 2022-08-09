@@ -1,11 +1,6 @@
 import model.*;
 import util.*;
 
-import java.io.IOException;
-import java.security.Permission;
-import java.util.PriorityQueue;
-import java.util.Queue;
-
 public class Main {
   public static void main(String[] args) {
     String[] path_and_file = System.getProperty("instance").split("/Instances/");
@@ -57,7 +52,8 @@ public class Main {
     Variables.WE_MIN = 0;
     Variables.DELTA = 5;
     Variables.PENALTY_COEFFICIENT = 1;
-    Variables.MIN_TRADEOFF = 2;
+    Variables.PENALTY_ADJUSTMENT = 0.95;
+    Variables.TRADEOFF = 2;
 
     Solver solver = new Solver();
     solver.preProcessing();

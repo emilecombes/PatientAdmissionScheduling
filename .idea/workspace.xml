@@ -9,13 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Changed some variables">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Set the variables for good initial solutions i think">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Solution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solution.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Rectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Rectangle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/JsonPlotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/JsonPlotter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Variables.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/XMLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/XMLParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +106,7 @@
       <workItem from="1659949024086" duration="16250000" />
       <workItem from="1659967453030" duration="33486000" />
       <workItem from="1660037213316" duration="7000" />
-      <workItem from="1660040380554" duration="9447000" />
+      <workItem from="1660040380554" duration="18228000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -262,7 +262,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660050076251</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Set the variables for good initial solutions i think">
+      <created>1660056325592</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1660056325592</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -302,7 +309,8 @@
     <MESSAGE value="Added repair procedure when loading initial solution" />
     <MESSAGE value="Fixed json writer oopsies" />
     <MESSAGE value="Changed some variables" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed some variables" />
+    <MESSAGE value="Set the variables for good initial solutions i think" />
+    <option name="LAST_COMMIT_MESSAGE" value="Set the variables for good initial solutions i think" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

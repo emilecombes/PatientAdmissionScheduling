@@ -20,8 +20,8 @@ public class Rectangle implements Comparable<Rectangle> {
     c = (int) Math.round(getBottom() + 0.5 * (getTop() - getBottom()));
   }
 
-  public void setLr(Point p) {
-    lr = p;
+  public void setBottom(int b) {
+    lr = new Point(lr.x, b);
     calculateArea();
     calculateC();
   }
