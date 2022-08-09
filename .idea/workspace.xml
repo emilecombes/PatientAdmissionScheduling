@@ -9,13 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Cleaning up the code">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Cleaned up code and fixed everything :')">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/DateConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/DateConverter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/JsonPlotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/JsonPlotter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/XMLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/XMLParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +103,7 @@
       <workItem from="1659949024086" duration="16250000" />
       <workItem from="1659967453030" duration="33486000" />
       <workItem from="1660037213316" duration="7000" />
-      <workItem from="1660040380554" duration="24089000" />
+      <workItem from="1660040380554" duration="25256000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -276,7 +273,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660068039313</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Cleaned up code and fixed everything :')">
+      <created>1660075147783</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1660075147783</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -318,7 +322,8 @@
     <MESSAGE value="Changed some variables" />
     <MESSAGE value="Set the variables for good initial solutions i think" />
     <MESSAGE value="Cleaning up the code" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleaning up the code" />
+    <MESSAGE value="Cleaned up code and fixed everything :')" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up code and fixed everything :')" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

@@ -33,13 +33,12 @@ public class Main {
     Variables.ALPHA = 0.99;
     Variables.INITIAL_TOTAL_ITERATIONS = (int) Math.pow(10, 7) * Variables.INSTANCE_SCALE;
     Variables.SUBPROBLEM_TOTAL_ITERATIONS = (int) Math.pow(10, 5) * Variables.INSTANCE_SCALE;
-    Variables.RANDOMIZATION_TOTAL_ITERATIONS = (int) Math.pow(10, 2) * Variables.INSTANCE_SCALE;
     Variables.REPAIR_TOTAL_ITERATIONS = (int) Math.pow(10, 5) * Variables.INSTANCE_SCALE;
+    Variables.RND_ITERATIONS = (int) Math.pow(10, 2) * Variables.INSTANCE_SCALE;
 
     double s = Math.log10(Variables.ALPHA) / Math.log10(Variables.T_STOP / Variables.T_START);
     Variables.INIT_ITERATIONS = (int) (s * Variables.INITIAL_TOTAL_ITERATIONS);
     Variables.SUB_ITERATIONS = (int) (s * Variables.SUBPROBLEM_TOTAL_ITERATIONS);
-    Variables.RND_ITERATIONS = (int) (s * Variables.RANDOMIZATION_TOTAL_ITERATIONS);
     Variables.REP_ITERATIONS = (int) (s * Variables.REPAIR_TOTAL_ITERATIONS);
 
     Variables.EXHAUSTIVE = false;
