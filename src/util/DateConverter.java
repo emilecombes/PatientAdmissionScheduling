@@ -3,13 +3,12 @@ package util;
 import java.util.*;
 
 public class DateConverter {
-  private static int numDays, extend;
+  private static int numDays;
   private static List<String> dateStrings;
   private static Map<String, Integer> dateIndices;
 
-  public DateConverter(String startDay, int numDays, int extend) {
+  public DateConverter(String startDay, int numDays) {
     DateConverter.numDays = numDays;
-    DateConverter.extend = extend;
     dateStrings = new ArrayList<>();
     dateIndices = new HashMap<>();
     String[] d = startDay.split("-");
@@ -17,7 +16,7 @@ public class DateConverter {
         Integer.parseInt(d[0]), Integer.parseInt(d[1]) - 1, Integer.parseInt(d[2])
     );
 
-    for (int i = 0; i <= numDays + extend; i++) {
+    for (int i = 0; i <= numDays; i++) {
       String dateString = buildDateString(date);
       dateStrings.add(dateString);
       dateIndices.put(dateString, i);
@@ -49,15 +48,7 @@ public class DateConverter {
     return (dateIndices.get(date) == null) ? -1 : dateIndices.get(date);
   }
 
-  public static int getNumDays(){
-    return numDays;
-  }
-
-  public static int getExtend(){
-    return extend;
-  }
-
   public static int getTotalHorizon(){
-    return numDays + extend;
+    return numDays;
   }
 }

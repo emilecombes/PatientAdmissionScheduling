@@ -9,7 +9,8 @@ import java.util.*;
 public class Solver {
   // SOLUTION
   private Schedule schedule;
-  private int patientCost, equityCost;
+  private int patientCost, equityCost, c;
+  private double pen;
   private List<Solution> solutionArchive;
   private Queue<Rectangle> rectangleArchive;
   // MOVES
@@ -18,7 +19,6 @@ public class Solver {
   private final JSONParser jsonParser;
 
   public Solver() {
-    schedule = new Schedule();
     generatedMoves = new ArrayList<>();
     jsonParser = new JSONParser();
   }
@@ -57,7 +57,7 @@ public class Solver {
   public HashMap<String, String> getPlanningHorizonInfo() {
     HashMap<String, String> horizon = new HashMap<>();
     horizon.put("start_day", DateConverter.getDateString(0));
-    horizon.put("num_days", String.valueOf(DateConverter.getNumDays()));
+    horizon.put("num_days", String.valueOf(DateConverter.getTotalHorizon()));
     horizon.put("current_day", DateConverter.getDateString(0));
     return horizon;
   }
@@ -183,6 +183,7 @@ public class Solver {
 
   // Initializing
   public void initSchedule() {
+    schedule = new Schedule();
     patientCost = 0;
     equityCost = 0;
     insertInitialPatients();
@@ -196,6 +197,16 @@ public class Solver {
     equityCost += schedule.getTotalDepartmentEquityCost();
     equityCost += schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
     patientCost += schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
+  }
+
+  public void loadSolution(Solution sol) {
+    schedule = sol.copySchedule();
+    patientCost = sol.getPatientCost();
+    equityCost = sol.getEquityCost();
+    pen = sol.getPenaltyCoefficient();
+    sol.loadPatientConfiguration();
+    randomizeSchedule();
+    repairSchedule();
   }
 
   public void initRectangleArchive() {
@@ -225,6 +236,39 @@ public class Solver {
     }
   }
 
+  public Solution getNearestSolution() {
+    if (solutionArchive.isEmpty()) return null;
+    if (solutionArchive.size() == 1 || solutionArchive.get(0).getEquityCost() > c)
+      return solutionArchive.get(0);
+    for (int i = 1; i < solutionArchive.size(); i++)
+      if (solutionArchive.get(i).getEquityCost() >= c &&
+          solutionArchive.get(i - 1).getEquityCost() <= c)
+        return (solutionArchive.get(i).getEquityCost() - c >
+            c - solutionArchive.get(i - 1).getEquityCost())
+            ? solutionArchive.get(i - 1)
+            : solutionArchive.get(i);
+    return solutionArchive.get(solutionArchive.size() - 1);
+  }
+
+  public void randomizeSchedule() {
+    for (int i = 0; i < Variables.RND_ITERATIONS; i++) {
+      executeNewMove();
+      acceptMove();
+    }
+    adjustEquityCost();
+    writeCurrentSolution("randomized_solution");
+  }
+
+  public void repairSchedule() {
+    int tries = 0;
+    while (equityCost > c && tries < 2) {
+      pen *= 10;
+      performSA(Variables.REP_ITERATIONS);
+      tries++;
+    }
+    pen /= Math.pow(10, tries);
+  }
+
   //////////////////////////////////////////
   //////////////////////////////////////////
   //////////////////////////////////////////
@@ -234,16 +278,16 @@ public class Solver {
   //////////////////////////////////////////
   // Local search
   public void hbs() {
-    solutionArchive = new LinkedList<>();
-    optimize(Integer.MAX_VALUE);
-    initRectangleArchive();
-    while (!rectangleArchive.isEmpty()) {
+    writeStart(-1);
+    exploreSearchSpace();
+    writeArchives();
+    while (!rectangleArchive.isEmpty() && rectangleArchive.size() < 6) {
       Rectangle r = rectangleArchive.peek();
-      int c = r.c;
-      optimize(c);
-      if (equityCost > c || isDominated(patientCost, equityCost)) {
-        r.setBottom(c);
-      } else {
+      c = r.c;
+      writeStart(c);
+      optimizeSubproblem();
+      if (equityCost > c || isDominated(patientCost, equityCost)) r.setBottom(c);
+      else {
         Rectangle rx = findRectangleOnX(patientCost);
         if (rx != null) {
           Point newLR = new Point(patientCost, Math.max(rx.getBottom(), c));
@@ -254,11 +298,13 @@ public class Solver {
         if (ry != null) {
           Point newUL = new Point(Math.max(ry.getLeft(), patientCost), equityCost);
           if (ry.getTop() - newUL.y > Variables.DELTA)
-            rectangleArchive.offer(new Rectangle(ry.getUl(), newUL));
+            rectangleArchive.offer(new Rectangle(newUL, ry.getLr()));
         }
         removeAndUpdateRectangleArchive(rx, ry);
       }
+      writeArchives();
     }
+    writeEnd();
   }
 
   public void removeAndUpdateRectangleArchive(Rectangle x, Rectangle y) {
@@ -273,22 +319,28 @@ public class Solver {
     }
   }
 
-  public void loadNearestSchedule(int c) {
-    // Does randomization and repair as well, if ec < c when finished, no feasible starting
-    // solution could be selected.
-    if (solutionArchive.isEmpty()) initSchedule();
-
-  }
-
   public void exploreSearchSpace() {
-    performSA(Variables.INIT_ITERATIONS, Integer.MAX_VALUE, Variables.PENALTY_COEFFICIENT);
+    solutionArchive = new LinkedList<>();
+    initSchedule();
+    c = Integer.MAX_VALUE;
+    pen = Variables.PENALTY_COEFFICIENT;
+    performSA(Variables.INIT_ITERATIONS);
+    initRectangleArchive();
   }
 
-  public void optimize(int c) {
-    loadNearestSchedule(c);
+  public void optimizeSubproblem() {
+    Solution sol = getNearestSolution();
+    loadSolution(sol);
+//    if (equityCost > c && solutionArchive.indexOf(sol) != 0) {
+//      sol = solutionArchive.get(solutionArchive.indexOf(sol) - 1);
+//      loadSolution(sol);
+//    }
+    writeHarvestedSolution(sol);
+    writeCurrentSolution("initial_solution");
+    performSA(Variables.SUB_ITERATIONS);
   }
 
-  public void performSA(int iter, int c, double pen) {
+  public void performSA(int iter) {
     double temp = Variables.T_START;
     while (temp > Variables.T_STOP) {
       for (int i = 0; i < iter; i++) {
@@ -307,25 +359,6 @@ public class Solver {
     }
   }
 
-  public void randomizeSchedule() {
-    for(int i = 0; i < Variables.RND_ITERATIONS; i++){
-      executeNewMove();
-      acceptMove();
-    }
-    adjustEquityCost();
-    writeCurrentSolution("randomized_solution");
-  }
-
-  public void repairSchedule(int c, double pen) {
-    // TODO: When calling sa from here, solutions will be saved with the wrong pen values.
-    int tries = 0;
-    while (equityCost > c && tries < 2) {
-      pen *= 10;
-      performSA(Variables.REP_ITERATIONS, c, pen);
-      tries++;
-    }
-  }
-
   public void addSolution(Solution sol) {
     solutionArchive.add(sol);
     Collections.sort(solutionArchive);
@@ -333,88 +366,6 @@ public class Solver {
     for (Solution s : solutionArchive)
       if (sol.strictlyDominates(s)) dominatedSolutions.add(s);
     solutionArchive.removeAll(dominatedSolutions);
-  }
-
-  //////////////////////////////////////////
-  //////////////////////////////////////////
-  //////////////////////////////////////////
-  //////////////////////////////////////////
-  //////////////////////////////////////////
-  //////////////////////////////////////////
-  //////////////////////////////////////////
-  public void iteratedHBS() {
-    solutionArchive = new LinkedList<>();
-    rectangleArchive = new PriorityQueue<>();
-
-    writeStart(-1);
-    Solution sol = optimizePatientCost(null, Integer.MAX_VALUE);
-    solutionArchive.add(sol);
-
-    Variables.PC_MAX = (int) Math.max(
-        Variables.TRADEOFF * sol.getPatientCost(),
-        solutionArchive.get(0).getPatientCost());
-    rectangleArchive.add(new Rectangle(
-        new Point(sol.getPatientCost(), sol.getEquityCost()),
-        new Point(Variables.PC_MAX, Variables.WE_MIN)));
-    writeArchives();
-
-    while (!rectangleArchive.isEmpty()) {
-      int c = rectangleArchive.peek().c;
-      writeStart(c);
-      sol = optimizePatientCost(getNearestSolution(c), c);
-      updateArchives(sol, c);
-      writeArchives();
-    }
-    writeEnd();
-  }
-
-
-
-  public void updateArchives(Solution s, int c) {
-    // TODO: If current solution is non-dominated, add it to approximation set, remove dominated
-    //  solutions and split its rectangle.
-    //  If the solution is out of bounds of the original rectangle, remove dominated rectangles.
-    //  If it is dominated, remove its lower rectangle
-
-    if (s == null || isDominated(s.getPatientCost(), s.getEquityCost())) {
-      Rectangle r = rectangleArchive.poll();
-      assert r != null;
-      if (c - r.getBottom() > Variables.DELTA) {
-        r.setLr(new Point(r.getRight(), c));
-        rectangleArchive.offer(r);
-      }
-    } else {
-      addSolution(s);
-
-      Rectangle horizontalHit = findRectangleOnX(patientCost);
-      if (horizontalHit != null) {
-        int top = Math.max(horizontalHit.getBottom(), c);
-        Point updatedPoint = new Point(patientCost, top);
-        if (horizontalHit.getTop() - top > Variables.DELTA)
-          rectangleArchive.offer(new Rectangle(horizontalHit.getUl(), updatedPoint));
-      }
-
-      Rectangle verticalHit = findRectangleOnY(equityCost);
-      if (verticalHit != null) {
-        int left = Math.max(patientCost, verticalHit.getLeft());
-        Point updatedPoint = new Point(left, equityCost);
-        if (equityCost - verticalHit.getBottom() > Variables.DELTA)
-          rectangleArchive.offer(new Rectangle(updatedPoint, verticalHit.getLr()));
-      }
-
-      boolean inBounds = horizontalHit == rectangleArchive.peek() && horizontalHit == verticalHit;
-      rectangleArchive.remove(horizontalHit);
-      rectangleArchive.remove(verticalHit);
-      if (!inBounds) removeRectanglesDominatedBy(s);
-    }
-  }
-
-  public void removeRectanglesDominatedBy(Solution s) {
-    List<Rectangle> dominatedRectangles = new ArrayList<>();
-    for (Rectangle r : rectangleArchive)
-      if (r.isDominatedBy(s))
-        dominatedRectangles.add(r);
-    rectangleArchive.removeAll(dominatedRectangles);
   }
 
   public boolean isDominated(int pc, int ec) {
@@ -446,90 +397,6 @@ public class Solver {
     for (Rectangle r : rectangleArchive)
       if (r.getTop() >= we && r.getBottom() <= we) return r;
     return null;
-  }
-
-  public Solution getNearestSolution(int c) {
-    if (solutionArchive.isEmpty()) return null;
-    if (solutionArchive.size() == 1 || solutionArchive.get(0).getEquityCost() > c)
-      return solutionArchive.get(0);
-    for (int i = 1; i < solutionArchive.size(); i++)
-      if (solutionArchive.get(i).getEquityCost() >= c &&
-          solutionArchive.get(i - 1).getEquityCost() <= c)
-        return (solutionArchive.get(i).getEquityCost() - c >
-            c - solutionArchive.get(i - 1).getEquityCost())
-            ? solutionArchive.get(i - 1)
-            : solutionArchive.get(i);
-    return solutionArchive.get(solutionArchive.size() - 1);
-  }
-
-  public Solution optimizePatientCost(Solution sol, int c) {
-    loadInitialSchedule(sol);
-    randomizeSchedule();
-    double penaltyCoefficient = sol == null
-        ? Variables.PENALTY_COEFFICIENT
-        : sol.getPenaltyCoefficient();
-    double temp = Variables.T_START;
-    int repairTries = 0;
-
-    while (equityCost > c && repairTries < 2) {
-      repairTries++;
-      penaltyCoefficient *= 10;
-      repairSolution(c, penaltyCoefficient);
-    }
-    if (equityCost > c) return null;
-    penaltyCoefficient /= Math.pow(10, repairTries);
-    repairTries = 0;
-
-    while (temp > Variables.T_STOP) {
-      for (int i = 0; i < Variables.INIT_ITERATIONS; i++) {
-        executeNewMove();
-        double savings = lastMove.get("patient_savings") + penaltyCoefficient *
-            (Math.max(c, equityCost) - Math.max(c, equityCost - lastMove.get("load_savings")));
-        if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
-        else undoLastMove();
-      }
-      temp *= Variables.ALPHA;
-      adjustEquityCost();
-      if (equityCost >= 0.95 * c) penaltyCoefficient *= 1.2;
-      else if (equityCost <= 1.05 * c) penaltyCoefficient *= 0.85;
-      if (isEfficient(patientCost, equityCost))
-        addSolution(new Solution(schedule, patientCost, equityCost, penaltyCoefficient));
-    }
-
-    while (equityCost > c && repairTries < 2) {
-      repairTries++;
-      penaltyCoefficient *= Math.pow(10, repairTries);
-      repairSolution(c, penaltyCoefficient);
-    }
-
-    if (equityCost > c) return null;
-    penaltyCoefficient /= Math.pow(10, repairTries);
-    return new Solution(schedule, patientCost, equityCost, penaltyCoefficient);
-  }
-
-  public void repairSolution(int c, double penaltyCoefficient) {
-    for (int i = 0; i < Variables.REP_ITERATIONS; i++) {
-      executeNewMove();
-      double savings = lastMove.get("patient_savings") + penaltyCoefficient *
-          (Math.max(c, equityCost) - Math.max(c, equityCost - lastMove.get("load_savings")));
-      if (savings > 0 || Math.random() < Math.exp(savings / Variables.REPAIR_TOTAL_ITERATIONS))
-        acceptMove();
-      else undoLastMove();
-    }
-    adjustEquityCost();
-  }
-
-  public void loadInitialSchedule(Solution sol) {
-    if (sol == null) {
-      schedule = new Schedule();
-      initSchedule();
-    } else {
-      schedule = sol.copySchedule();
-      patientCost = sol.getPatientCost();
-      equityCost = sol.getEquityCost();
-      sol.loadPatientConfiguration();
-    }
-    writeCurrentSolution("initial_solution");
   }
 
   public void adjustEquityCost() {
@@ -858,10 +725,17 @@ public class Solver {
     jsonParser.write(sb.toString());
   }
 
+  public void writeHarvestedSolution(Solution sol) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("\"harvested_solution\":{\"patient_cost\":\"").append(sol.getPatientCost());
+    sb.append("\", ").append("\"equity_cost\":\"").append(sol.getEquityCost()).append("\"},\n");
+    jsonParser.write(sb.toString());
+  }
+
   public void writeCurrentSolution(String key) {
     StringBuilder sb = new StringBuilder();
     sb.append("\"").append(key).append("\":{\"patient_cost\":\"").append(patientCost);
-    sb.append("\", ").append("\"equity_cost\":\"").append(equityCost).append("\"},");
+    sb.append("\", ").append("\"equity_cost\":\"").append(equityCost).append("\"},\n");
     jsonParser.write(sb.toString());
   }
 

@@ -9,8 +9,7 @@ from matplotlib import pyplot as plt
 import plotly.express as px
 
 def main():
-    # file = open('solutions/json/test_instance_25.json') 
-    file = open('solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept2_long00.json') 
+    file = open('solutions/json/test_instance_25_6.json') 
     data = json.load(file)
     for iteration in data['iterations']:
         patient_costs = []
@@ -21,12 +20,18 @@ def main():
         fig, ax = plt.subplots()
         ax.scatter(patient_costs, equity_costs, c='black')
 
-        sol = iteration['initial_solution']
-        ax.scatter(int(sol['patient_cost']), 
-                int(sol['equity_cost']),c='orange')
+        if 'harvested_solution' in iteration:
+            sol = iteration['harvested_solution']
+            ax.scatter(int(sol['patient_cost']),
+                    int(sol['equity_cost']),c='red')
+        if 'initial_solution' in iteration:
+            sol = iteration['initial_solution']
+            ax.scatter(int(sol['patient_cost']), 
+                    int(sol['equity_cost']),c='orange')
 
         sol = iteration['final_solution']
-        ax.scatter(int(sol['patient_cost']), int(sol['equity_cost']), c='green')
+        ax.scatter(int(sol['patient_cost']), 
+                int(sol['equity_cost']), c='green')
 
         for rect in iteration['rectangle_archive']:
             x = []

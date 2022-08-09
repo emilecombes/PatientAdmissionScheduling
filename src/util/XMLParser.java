@@ -32,11 +32,11 @@ public class XMLParser {
   public void buildDateConverter() {
     Element descriptor = (Element) document.getElementsByTagName("descriptor").item(0);
     Node horizon = descriptor.getElementsByTagName("Horizon").item(0);
-    int nDays = Variables.EXTEND * Integer.parseInt(
+    int nDays = (int) (Variables.EXTEND * Integer.parseInt(
         horizon.getAttributes().getNamedItem("num_days").getTextContent()
-    );
+    ));
     String startDay = horizon.getAttributes().getNamedItem("start_day").getTextContent();
-    new DateConverter(startDay, nDays, Variables.EXTEND);
+    new DateConverter(startDay, nDays);
   }
 
   public void buildDepartmentList() {

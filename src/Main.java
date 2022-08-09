@@ -57,7 +57,7 @@ public class Main {
 
     Solver solver = new Solver();
     solver.preProcessing();
-    solver.iteratedHBS();
+    solver.hbs();
 
 //    System.out.println("Validator: ./or_pas_validator Instances/" + instance + ".xml ." +
 //        "./solutions/xml/" + instance + "_sol.xml");
