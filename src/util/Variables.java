@@ -16,7 +16,10 @@ public class Variables {
       WE_MIN,
       PC_MAX,
       DELTA,
-      PENALTY_COEFFICIENT;
+      PENALTY_COEFFICIENT,
+      RANDOMIZATION_ITERATIONS,
+      REPAIR_ITERATIONS,
+      REPAIR_TEMPERATURE;
   public static int ROOM_PROP_PEN,
       PREF_CAP_PEN,
       SPECIALITY_PEN,
@@ -27,7 +30,6 @@ public class Variables {
   public static double T_START,
       T_STOP,
       ALPHA,
-      TRADEOFF,
-      RANDOMIZATION_ITERATIONS;
+      TRADEOFF;
   public static String PATH, INSTANCE;
 }

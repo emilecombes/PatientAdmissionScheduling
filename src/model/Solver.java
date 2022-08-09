@@ -353,6 +353,14 @@ public class Solver {
     double temp = Variables.T_START;
     int repairTries = 0;
 
+    while (equityCost > c && repairTries < 2) {
+      repairTries++;
+      penaltyCoefficient *= Math.pow(10, repairTries);
+      repairSolution(c, penaltyCoefficient);
+    }
+    if(equityCost > c) return null;
+    repairTries = 0;
+
     while (temp > Variables.T_STOP) {
       for (int i = 0; i < Variables.T_ITERATIONS; i++) {
         executeNewMove();
@@ -361,25 +369,34 @@ public class Solver {
         if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
       }
-
       temp *= Variables.ALPHA;
       adjustEquityCost();
       if (equityCost >= 0.95 * c) penaltyCoefficient *= 1.2;
       else if (equityCost <= 1.05 * c) penaltyCoefficient *= 0.85;
-
       if (isEfficient(patientCost, equityCost))
         addSolution(new Solution(schedule, patientCost, equityCost, temp, penaltyCoefficient));
+    }
 
-      if (temp <= Variables.T_STOP && equityCost > c && repairTries < 2) {
-        penaltyCoefficient *= 10;
-        temp /= Variables.ALPHA;
-        repairTries++;
-      }
+    while (equityCost > c && repairTries < 2) {
+      repairTries++;
+      penaltyCoefficient *= Math.pow(10, repairTries);
+      repairSolution(c, penaltyCoefficient);
     }
 
     if (equityCost > c) return null;
     penaltyCoefficient /= Math.pow(10, repairTries);
     return new Solution(schedule, patientCost, equityCost, temp, penaltyCoefficient);
+  }
+
+  public void repairSolution(int c, double penaltyCoefficient) {
+    for (int i = 0; i < Variables.REPAIR_ITERATIONS; i++) {
+      executeNewMove();
+      double savings = lastMove.get("patient_savings") + penaltyCoefficient *
+          (Math.max(c, equityCost) - Math.max(c, equityCost - lastMove.get("load_savings")));
+      if (savings > 0 || Math.random() < Math.exp(savings / Variables.REPAIR_TEMPERATURE)) acceptMove();
+      else undoLastMove();
+    }
+    adjustEquityCost();
   }
 
   public void loadInitialSchedule(Solution sol) {

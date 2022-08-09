@@ -9,10 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Parse output to json file">
-      <change afterPath="$PROJECT_DIR$/src/util/JsonPlotter.py" afterDir="false" />
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Added python plotter approximation set">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/JsonPlotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/JsonPlotter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Variables.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo.md" beforeDir="false" afterPath="$PROJECT_DIR$/todo.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +103,7 @@
       <workItem from="1659782844969" duration="1868000" />
       <workItem from="1659948583531" duration="418000" />
       <workItem from="1659949024086" duration="16250000" />
-      <workItem from="1659967453030" duration="27301000" />
+      <workItem from="1659967453030" duration="32819000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -228,7 +231,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659992672618</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Added python plotter approximation set">
+      <created>1659997763097</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1659997763097</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -264,7 +274,8 @@
     <MESSAGE value="Fixed workload matrix in solution" />
     <MESSAGE value="Added schedule randomization" />
     <MESSAGE value="Parse output to json file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Parse output to json file" />
+    <MESSAGE value="Added python plotter approximation set" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added python plotter approximation set" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

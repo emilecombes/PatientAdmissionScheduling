@@ -9,28 +9,31 @@ from matplotlib import pyplot as plt
 import plotly.express as px
 
 def main():
-    instance = 'or_pas_dept2_short00'
-    file = open('solutions/json/or_pas_dept2_short00.json') 
+    file = open('solutions/json/or_pas_dept2_short01.json') 
     data = json.load(file)
-    iteration = data['iterations'][2]
+    for iteration in data['iterations']:
+        patient_costs = []
+        equity_costs = []
+        for sol in iteration['solution_archive']:
+            patient_costs.append(int(sol['patient_cost']))
+            equity_costs.append(int(sol['equity_cost']))
+        fig, ax = plt.subplots()
+        ax.scatter(patient_costs, equity_costs, c='black')
 
-    patient_costs = []
-    equity_costs = []
-    for sol in iteration['solution_archive']:
-        patient_costs.append(int(sol['patient_cost']))
-        equity_costs.append(int(sol['equity_cost']))
-    fig, ax = plt.subplots()
-    ax.scatter(patient_costs, equity_costs)
-    sol = iteration['final_solution']
-    ax.scatter(int(sol['patient_cost']), int(sol['equity_cost']), c='green')
+        sol = iteration['initial_solution']
+        ax.scatter(int(sol['patient_cost']), 
+                int(sol['equity_cost']),c='orange')
 
-    for rect in iteration['area_archive']:
-        x = []
-        x.append(int(rect['x_1']))
-        x.append(int(rect['x_2']))
-        ax.fill_between(x, int(rect['y_2']), int(rect['y_1']), alpha=.5,
-                linewidth=.8)
-    plt.show()
+        sol = iteration['final_solution']
+        ax.scatter(int(sol['patient_cost']), int(sol['equity_cost']), c='green')
+
+        for rect in iteration['rectangle_archive']:
+            x = []
+            x.append(int(rect['x_1']))
+            x.append(int(rect['x_2']))
+            ax.fill_between(x, int(rect['y_2']), int(rect['y_1']), alpha=.5,
+                    linewidth=.8)
+        plt.show()
     file.close()
 
 

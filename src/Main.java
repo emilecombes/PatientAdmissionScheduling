@@ -48,6 +48,8 @@ public class Main {
     Variables.ALPHA = 0.99;
     Variables.T_ITERATIONS = (int) (Variables.ITERATIONS * Math.log10(Variables.ALPHA) /
         Math.log10(Variables.T_STOP / Variables.T_START));
+    Variables.REPAIR_ITERATIONS = 200;
+    Variables.REPAIR_TEMPERATURE = 50;
 
     Variables.EXHAUSTIVE = false;
     Variables.PCR = 28;

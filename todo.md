@@ -1,5 +1,8 @@
 # TODO's
 
+[] Repair procedure when initial solution isn't feasible.
+[] Correct JSON output
+
 ## Global
 [x] Efficient swap patient
 [] Add overstay risk costs
@@ -8,7 +11,7 @@
 
 ## Analytics
 [] Add aborted while generating moves to map
-[] Add time to find new solution
+[x] Add time to find new solution
 [] (later) Method to compare schedules
 
 ## Production
@@ -19,11 +22,11 @@
 [x] Bash script
 
 ## Box splitting
-[] Copy Schedule
-[] Reset Schedule
+[x] Copy Schedule
+[x] Reset Schedule
 [x] Create optPatientComfort()
 [] Create optWorkloadEquity(epsilon)
-[] Maintain approximation set
+[x] Maintain approximation set
 
 
 ## Tomorrow
