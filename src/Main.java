@@ -18,6 +18,7 @@ public class Main {
     Variables.PENALTY_COEFFICIENT = 1;
     Variables.TRADEOFF = 2;
     Variables.RANDOMIZATION_ITERATIONS = 1000;
+    Variables.ITERATIONS = (int) Math.pow(10, 6);
 
     Variables.ROOM_PROP_PEN = 20;
     Variables.PREF_CAP_PEN = 10;
@@ -30,7 +31,6 @@ public class Main {
     String[] path_and_file = System.getProperty("instance").split("/Instances/");
     Variables.INSTANCE = path_and_file[1].split("\\.")[0];
     Variables.PATH = path_and_file[0];
-    Variables.ITERATIONS = 1000000;
     if (Variables.INSTANCE.contains("dept4")) {
       Variables.TIME_LIMIT *= 2;
       Variables.ITERATIONS *= 2;

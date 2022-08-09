@@ -45,5 +45,13 @@ public class JSONParser {
       e.printStackTrace();
     }
   }
+
+  public void closeWriter() {
+    try {
+      fileWriter.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }
 

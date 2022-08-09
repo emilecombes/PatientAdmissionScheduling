@@ -9,13 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Added python plotter approximation set">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Added repair procedure when loading initial solution">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/JSONParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/JSONParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/JsonPlotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/JsonPlotter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Variables.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo.md" beforeDir="false" afterPath="$PROJECT_DIR$/todo.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +56,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/emilecombes/Projects/IdeaProjects/PAS/tuning",
+    "last_opened_file_path": "/Users/emilecombes/Projects/IdeaProjects/PAS/Instances",
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
@@ -67,6 +66,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Instances" />
       <recent name="$PROJECT_DIR$/tuning" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -79,7 +79,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="PAS" />
-      <option name="VM_PARAMETERS" value="-Dinstance=$PROJECT_DIR$/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx12g" />
+      <option name="VM_PARAMETERS" value="-Dinstance=$PROJECT_DIR$/Instances/test_instance_25.xml -Xms256m -Xmx4g" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -103,7 +103,9 @@
       <workItem from="1659782844969" duration="1868000" />
       <workItem from="1659948583531" duration="418000" />
       <workItem from="1659949024086" duration="16250000" />
-      <workItem from="1659967453030" duration="32819000" />
+      <workItem from="1659967453030" duration="33486000" />
+      <workItem from="1660037213316" duration="7000" />
+      <workItem from="1660040380554" duration="1465000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -238,7 +240,14 @@
       <option name="project" value="LOCAL" />
       <updated>1659997763097</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Added repair procedure when loading initial solution">
+      <created>1660008770872</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1660008770872</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -275,7 +284,8 @@
     <MESSAGE value="Added schedule randomization" />
     <MESSAGE value="Parse output to json file" />
     <MESSAGE value="Added python plotter approximation set" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added python plotter approximation set" />
+    <MESSAGE value="Added repair procedure when loading initial solution" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added repair procedure when loading initial solution" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

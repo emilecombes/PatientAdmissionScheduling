@@ -766,19 +766,20 @@ public class Solver {
       sb.append("\",\"y_2\":\"").append(r.getTop());
       sb.append("\"},");
     }
-    sb.deleteCharAt(sb.length() - 1);
+    if (!rectangleArchive.isEmpty()) sb.deleteCharAt(sb.length() - 1);
 
     sb.append("],\n\"solution_archive\":[");
     for (Solution s : solutionArchive) {
       sb.append("{\"patient_cost\":\"").append(s.getPatientCost()).append("\",");
       sb.append("\"equity_cost\":\"").append(s.getEquityCost()).append("\"},");
     }
-    sb.deleteCharAt(sb.length() - 1);
-    sb.append("]\n},");
+    if (!solutionArchive.isEmpty()) sb.deleteCharAt(sb.length() - 1);
+    sb.append("]\n}");
     jsonParser.write(sb.toString());
   }
 
   public void writeEnd() {
     jsonParser.write("]\n}");
+    jsonParser.closeWriter();
   }
 }
