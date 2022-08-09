@@ -15,7 +15,7 @@ public class Solver {
   // MOVES
   private final List<Map<String, Integer>> generatedMoves;
   private Map<String, Integer> lastMove;
-  private JSONParser jsonParser;
+  private final JSONParser jsonParser;
 
   public Solver() {
     schedule = new Schedule();
@@ -378,7 +378,7 @@ public class Solver {
       if (equityCost >= 0.95 * c) penaltyCoefficient *= 1.2;
       else if (equityCost <= 1.05 * c) penaltyCoefficient *= 0.85;
       if (isEfficient(patientCost, equityCost))
-        addSolution(new Solution(schedule, patientCost, equityCost, temp, penaltyCoefficient));
+        addSolution(new Solution(schedule, patientCost, equityCost, penaltyCoefficient));
     }
 
     while (equityCost > c && repairTries < 2) {
@@ -389,7 +389,7 @@ public class Solver {
 
     if (equityCost > c) return null;
     penaltyCoefficient /= Math.pow(10, repairTries);
-    return new Solution(schedule, patientCost, equityCost, temp, penaltyCoefficient);
+    return new Solution(schedule, patientCost, equityCost, penaltyCoefficient);
   }
 
   public void repairSolution(int c, double penaltyCoefficient) {
@@ -778,7 +778,7 @@ public class Solver {
       sb.append("\"equity_cost\":\"").append(s.getEquityCost()).append("\"},");
     }
     if (!solutionArchive.isEmpty()) sb.deleteCharAt(sb.length() - 1);
-    sb.append("]\n}");
+    sb.append("]\n},");
     jsonParser.write(sb.toString());
   }
 

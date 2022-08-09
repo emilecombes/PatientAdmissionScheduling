@@ -7,19 +7,18 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class Main {
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
+    String[] path_and_file = System.getProperty("instance").split("/Instances/");
+    Variables.PATH = path_and_file[0];
+    Variables.INSTANCE = path_and_file[1].split("\\.")[0];
+    Variables.INSTANCE_SCALE = 1;
+    if (Variables.INSTANCE.contains("dept4")) Variables.INSTANCE_SCALE *= 2;
+    else if (Variables.INSTANCE.contains("dept6")) Variables.INSTANCE_SCALE *= 3;
+    if (Variables.INSTANCE.contains("long")) Variables.INSTANCE_SCALE *= 2;
+
     Variables.START_TIME = System.currentTimeMillis();
-    Variables.RESET = false;
-    Variables.EXTEND = 14;
-    Variables.TIME_LIMIT = 180000;
-    Variables.PC_MAX = (int) Math.pow(10, 5);
-    Variables.WE_MIN = 0;
-    Variables.DELTA = 50;
-    Variables.PENALTY_COEFFICIENT = 1;
-    Variables.MIN_TRADEOFF = 2;
-    Variables.RANDOMIZATION = Integer.parseInt(System.getProperty("randomization"));
-    Variables.RANDOMIZATION_ITERATIONS = 1000;
-    Variables.ITERATIONS = (int) Math.pow(10, 6);
+    Variables.EXTEND = 2;
+    Variables.TIME_LIMIT = -1;
 
     Variables.ROOM_PROP_PEN = 20;
     Variables.PREF_CAP_PEN = 10;
@@ -29,32 +28,36 @@ public class Main {
     Variables.TRANSFER_PEN = 100;
     Variables.CAP_VIOL_PEN = 1000;
 
-    String[] path_and_file = System.getProperty("instance").split("/Instances/");
-    Variables.INSTANCE = path_and_file[1].split("\\.")[0];
-    Variables.PATH = path_and_file[0];
-    if (Variables.INSTANCE.contains("dept4")) Variables.ITERATIONS *= 2;
-    else if (Variables.INSTANCE.contains("dept6")) Variables.ITERATIONS *= 3;
-    if (Variables.INSTANCE.contains("long")) Variables.ITERATIONS *= 2;
-
-    Variables.T_START = 533;
-    Variables.T_STOP = 0.71;
-    Variables.ALPHA = 0.99;
-    Variables.T_ITERATIONS = (int) (Variables.ITERATIONS * Math.log10(Variables.ALPHA) /
-        Math.log10(Variables.T_STOP / Variables.T_START));
-    Variables.REPAIR_ITERATIONS = 200;
-    Variables.REPAIR_TEMPERATURE = 50;
-
-    Variables.EXHAUSTIVE = false;
-    Variables.PCR = 28;
-    Variables.PSR = 28;
-    Variables.PSHA = 14;
-    Variables.PSWA = 100 - Variables.PCR - Variables.PSR - Variables.PSHA;
-    Variables.SWAP_LOOPS = 25;
-
     XMLParser xmlParser = new XMLParser();
     xmlParser.buildDateConverter();
     xmlParser.buildDepartmentList();
     xmlParser.buildPatientList();
+
+    Variables.T_START = 533;
+    Variables.T_STOP = 0.71;
+    Variables.ALPHA = 0.99;
+    Variables.INITIAL_TOTAL_ITERATIONS = (int) Math.pow(10, 7) * Variables.INSTANCE_SCALE;
+    Variables.SUBPROBLEM_TOTAL_ITERATIONS = (int) Math.pow(10, 5) * Variables.INSTANCE_SCALE;
+    Variables.RANDOMIZATION_TOTAL_ITERATIONS = (int) Math.pow(10, 2) * Variables.INSTANCE_SCALE;
+    Variables.REPAIR_TOTAL_ITERATIONS = (int) Math.pow(10, 5) * Variables.INSTANCE_SCALE;
+
+    double s = Math.log10(Variables.ALPHA) / Math.log10(Variables.T_STOP / Variables.T_START);
+    Variables.INIT_ITERATIONS = (int) (s * Variables.INITIAL_TOTAL_ITERATIONS);
+    Variables.SUB_ITERATIONS = (int) (s * Variables.SUBPROBLEM_TOTAL_ITERATIONS);
+    Variables.RND_ITERATIONS = (int) (s * Variables.RANDOMIZATION_TOTAL_ITERATIONS);
+    Variables.REP_ITERATIONS = (int) (s * Variables.REPAIR_TOTAL_ITERATIONS);
+
+    Variables.EXHAUSTIVE = false;
+    Variables.SWAP_LOOPS = 25;
+    Variables.PCR = 28;
+    Variables.PSR = 28;
+    Variables.PSHA = 14;
+    Variables.PSWA = 100 - Variables.PCR - Variables.PSR - Variables.PSHA;
+
+    Variables.WE_MIN = 0;
+    Variables.DELTA = 5;
+    Variables.PENALTY_COEFFICIENT = 1;
+    Variables.MIN_TRADEOFF = 2;
 
     Solver solver = new Solver();
     solver.preProcessing();

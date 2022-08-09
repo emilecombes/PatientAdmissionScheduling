@@ -2,35 +2,20 @@ package util;
 
 public class Variables {
   public static long START_TIME;
-  public static boolean EXHAUSTIVE,
-      RESET;
-  public static int EXTEND,
-      SWAP_LOOPS,
-      TIME_LIMIT,
-      ITERATIONS,
-      T_ITERATIONS,
-      PCR,
-      PSR,
-      PSHA,
-      PSWA,
-      WE_MIN,
-      PC_MAX,
-      DELTA,
-      PENALTY_COEFFICIENT,
-      RANDOMIZATION,
-      RANDOMIZATION_ITERATIONS,
-      REPAIR_ITERATIONS,
-      REPAIR_TEMPERATURE;
-  public static int ROOM_PROP_PEN,
-      PREF_CAP_PEN,
-      SPECIALITY_PEN,
-      GENDER_PEN,
-      TRANSFER_PEN,
-      DELAY_PEN,
-      CAP_VIOL_PEN;
-  public static double T_START,
-      T_STOP,
-      ALPHA,
-      MIN_TRADEOFF;
+  public static boolean EXHAUSTIVE;
+  public static int TIME_LIMIT, INSTANCE_SCALE,
+      INITIAL_TOTAL_ITERATIONS, INIT_ITERATIONS,
+      ROOM_PROP_PEN, PREF_CAP_PEN,
+      SPECIALITY_PEN, GENDER_PEN,
+      TRANSFER_PEN, DELAY_PEN,
+      CAP_VIOL_PEN,
+      PCR, PSR, PSHA, PSWA, SWAP_LOOPS,
+      WE_MIN, PC_MAX, DELTA,
+      RANDOMIZATION_TOTAL_ITERATIONS, RND_ITERATIONS,
+      SUBPROBLEM_TOTAL_ITERATIONS, SUB_ITERATIONS,
+      REPAIR_TOTAL_ITERATIONS, REP_ITERATIONS;
+  public static double EXTEND, RANDOMIZATION,
+      T_START, T_STOP, ALPHA,
+      MIN_TRADEOFF, PENALTY_COEFFICIENT;
   public static String PATH, INSTANCE;
 }
