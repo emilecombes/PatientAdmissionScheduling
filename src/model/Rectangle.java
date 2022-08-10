@@ -1,29 +1,34 @@
 package model;
 
+import util.Variables;
+
 public class Rectangle implements Comparable<Rectangle> {
   private Point ul, lr;
-  int c;
+  private int c, dl, il;
   float area;
 
   public Rectangle(Point ul, Point lr) {
     this.ul = ul;
     this.lr = lr;
     calculateArea();
-    calculateC();
+    calculateProperties();
   }
 
   public void calculateArea() {
     area = (lr.x - ul.x) * (ul.y - lr.y);
   }
 
-  public void calculateC() {
+  public void calculateProperties() {
     c = (int) Math.round(getBottom() + 0.5 * (getTop() - getBottom()));
+    int height = getTop() - getBottom();
+    il = (int) (c - Variables.PENALTY_UPDATE_OFFSET * (c - getBottom()));
+    dl = il - (int) (Variables.CONSTANT_PENALTY_ZONE * height);
   }
 
   public void setBottom(int b) {
     lr = new Point(lr.x, b);
     calculateArea();
-    calculateC();
+    calculateProperties();
   }
 
   public Point getUl() {
@@ -50,12 +55,26 @@ public class Rectangle implements Comparable<Rectangle> {
     return ul.x;
   }
 
-  public boolean isDominatedBy(Solution s) {
-    return s.getPatientCost() <= getLeft() && s.getEquityCost() <= getBottom();
+  public int getC() {
+    return c;
+  }
+
+  public int getDecreaseLimit() {
+    return dl;
+  }
+
+  public int getIncreaseLimit() {
+    return il;
   }
 
   @Override
   public int compareTo(Rectangle other) {
     return (int) ((other.area - area) / 1000);
+  }
+
+  public String toString() {
+    return "{\"area\":\"" + area +
+        "\",\"x_1\":\"" + getLeft() + "\",\"x_2\":\"" + getRight() +
+        "\",\"y_1\":\"" + getBottom() + "\",\"y_2\":\"" + getTop() + "\"},";
   }
 }

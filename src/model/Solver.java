@@ -10,7 +10,7 @@ public class Solver {
   // SOLUTION
   private Schedule schedule;
   private int patientCost, equityCost, c;
-  private double pen;
+  private double pen, decrease, increase;
   private List<Solution> solutionArchive;
   private Queue<Rectangle> rectangleArchive;
   // MOVES
@@ -206,7 +206,7 @@ public class Solver {
     pen = sol.getPenaltyCoefficient();
     sol.loadPatientConfiguration();
     randomizeSchedule();
-    if(equityCost > c) repairSchedule();
+    if (equityCost > c) repairSchedule();
   }
 
   public void initRectangleArchive() {
@@ -250,27 +250,7 @@ public class Solver {
     return solutionArchive.get(solutionArchive.size() - 1);
   }
 
-  public void randomizeSchedule() {
-    for (int i = 0; i < Variables.RND_ITERATIONS; i++) {
-      executeNewMove();
-      acceptMove();
-    }
-    adjustEquityCost();
-  }
 
-  public void repairSchedule() {
-    // TODO: This doesn't seem to work properly
-    int tries = 0;
-    while (equityCost > c && tries < 2) {
-      pen *= 10;
-      System.out.println("Repairing solution. p = " + pen);
-      performSA(Variables.REP_ITERATIONS);
-      tries++;
-    }
-    pen /= Math.pow(10, tries);
-    if(equityCost > c)
-      System.out.println("Repair failed. c = " + c + ", ec = " + equityCost);
-  }
 
 
   // Local search
@@ -278,38 +258,34 @@ public class Solver {
     writeStart(-1);
     exploreSearchSpace();
     writeArchives();
-    while (!rectangleArchive.isEmpty() && rectangleArchive.size() < 6) {
+    while (!rectangleArchive.isEmpty() && rectangleArchive.size() < Variables.MAX_RECTANGLES) {
       Rectangle r = rectangleArchive.peek();
-      c = r.c;
+      c = r.getC();
+      decrease = r.getDecreaseLimit();
+      increase = r.getIncreaseLimit();
       writeStart(c);
       optimizeSubproblem();
       if (equityCost > c || isDominated(patientCost, equityCost)) r.setBottom(c);
       else {
-        System.out.println("Archive size before updating: " + rectangleArchive.size());
         Rectangle rx = findRectangleOnX(patientCost);
         if (rx != null) {
           Point newLR = new Point(patientCost, Math.max(rx.getBottom(), c));
           if (rx.getTop() - newLR.y > Variables.DELTA)
             rectangleArchive.offer(new Rectangle(rx.getUl(), newLR));
-          System.out.println("RX will be removed " + rx.getLeft());
         }
         Rectangle ry = findRectangleOnY(equityCost);
         if (ry != null) {
           Point newUL = new Point(Math.max(ry.getLeft(), patientCost), equityCost);
           if (ry.getTop() - newUL.y > Variables.DELTA)
             rectangleArchive.offer(new Rectangle(newUL, ry.getLr()));
-          System.out.println("RY will be removed " + ry.getLeft());
         }
-        System.out.println("Archive size before removing: " + rectangleArchive.size());
         removeAndUpdateRectangleArchive(rx, ry);
-        System.out.println("Archive size after removing: " + rectangleArchive.size());
       }
       writeArchives();
     }
     writeEnd();
   }
 
-  // TODO: rectangle updating mistake
   public void removeAndUpdateRectangleArchive(Rectangle x, Rectangle y) {
     boolean inBounds = x == y && x == rectangleArchive.poll();
     if (!inBounds) {
@@ -323,7 +299,6 @@ public class Solver {
     }
   }
 
-  // TODO: EHBS
   public void exploreSearchSpace() {
     solutionArchive = new LinkedList<>();
     initSchedule();
@@ -335,7 +310,7 @@ public class Solver {
   }
 
   public void resetPenaltyCoefficients() {
-    for(Solution s : solutionArchive)
+    for (Solution s : solutionArchive)
       s.setPenaltyCoefficient(Variables.PENALTY_COEFFICIENT);
   }
 
@@ -350,10 +325,33 @@ public class Solver {
     writeHarvestedSolution(sol);
     writeCurrentSolution("initial_solution");
     performSA(Variables.SUB_ITERATIONS);
-    if(equityCost > c) repairSchedule();
+    if (equityCost > c) repairSchedule();
+  }
+
+  public void randomizeSchedule() {
+    for (int i = 0; i < Variables.RND_ITERATIONS; i++) {
+      executeNewMove();
+      acceptMove();
+    }
+    adjustEquityCost();
+  }
+
+  public void repairSchedule() {
+    // TODO: This doesn't seem to work properly
+    int tries = 0;
+    while (equityCost > c && tries < 2) {
+      pen *= Variables.REPAIR_INCREASE;
+      System.out.println("Repairing solution. p = " + pen);
+      performSA(Variables.REP_ITERATIONS);
+      tries++;
+    }
+    pen /= Math.pow(Variables.REPAIR_INCREASE, tries);
+    if (equityCost > c)
+      System.out.println("Repair failed. c = " + c + ", ec = " + equityCost);
   }
 
   public void performSA(int iter) {
+    int update = 0;
     double temp = Variables.T_START;
     while (temp > Variables.T_STOP) {
       for (int i = 0; i < iter; i++) {
@@ -362,14 +360,18 @@ public class Solver {
             (Math.max(c, equityCost) - Math.max(c, equityCost - lastMove.get("load_savings")));
         if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
+        if (update++ % Variables.UPDATE_ITERATIONS == 0) updateSolution();
       }
       temp *= Variables.ALPHA;
-      adjustEquityCost();
-      if (equityCost >= Variables.PENALTY_ADJUSTMENT * c) pen *= 1.2;
-      else pen *= 0.85;
       if (isEfficient(patientCost, equityCost))
         addSolution(new Solution(schedule, patientCost, equityCost, pen));
     }
+  }
+
+  public void updateSolution() {
+    adjustEquityCost();
+    if (equityCost >= increase) pen *= Variables.PENALTY_INCREASE;
+    else if (equityCost <= decrease) pen *= Variables.PENALTY_DECREASE;
   }
 
   public void addSolution(Solution sol) {
@@ -739,38 +741,29 @@ public class Solver {
   }
 
   public void writeHarvestedSolution(Solution sol) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("\"harvested_solution\":{\"patient_cost\":\"").append(sol.getPatientCost());
-    sb.append("\", ").append("\"equity_cost\":\"").append(sol.getEquityCost()).append("\"},\n");
-    jsonParser.write(sb.toString());
+    jsonParser.write("\"harvested_solution\":" + sol);
   }
 
   public void writeCurrentSolution(String key) {
     StringBuilder sb = new StringBuilder();
     sb.append("\"").append(key).append("\":{\"patient_cost\":\"").append(patientCost);
-    sb.append("\", ").append("\"equity_cost\":\"").append(equityCost).append("\"},\n");
+    sb.append("\",").append("\"equity_cost\":\"").append(equityCost).append("\",");
+    sb.append("\",").append("\"penalty_coefficient\":\"").append(pen).append("\"},\n");
     jsonParser.write(sb.toString());
   }
 
+  // TODO: toJson in Rectangle & Solution
   public void writeArchives() {
     writeCurrentSolution("final_solution");
     StringBuilder sb = new StringBuilder();
     sb.append("\"rectangle_archive\":[");
-    for (Rectangle r : rectangleArchive) {
-      sb.append("{\"area\":\"").append(r.area);
-      sb.append("\",\"x_1\":\"").append(r.getLeft());
-      sb.append("\",\"x_2\":\"").append(r.getRight());
-      sb.append("\",\"y_1\":\"").append(r.getBottom());
-      sb.append("\",\"y_2\":\"").append(r.getTop());
-      sb.append("\"},");
-    }
+    for (Rectangle r : rectangleArchive)
+      sb.append(r.toString());
     if (!rectangleArchive.isEmpty()) sb.deleteCharAt(sb.length() - 1);
 
     sb.append("],\n\"solution_archive\":[");
-    for (Solution s : solutionArchive) {
-      sb.append("{\"patient_cost\":\"").append(s.getPatientCost()).append("\",");
-      sb.append("\"equity_cost\":\"").append(s.getEquityCost()).append("\"},");
-    }
+    for (Solution s : solutionArchive)
+      sb.append(s.toString());
     if (!solutionArchive.isEmpty()) sb.deleteCharAt(sb.length() - 1);
     sb.append("]\n},");
     jsonParser.write(sb.toString());
