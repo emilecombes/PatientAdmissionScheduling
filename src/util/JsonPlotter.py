@@ -9,9 +9,9 @@ from matplotlib import pyplot as plt
 import plotly.express as px
 
 def main():
-    file = open('solutions/json/test_instance_25_9.json') 
+    file = open('solutions/json/temp/or_pas_dept2_short01.json') 
     data = json.load(file)
-    for iteration in data['iterations']:
+    for iteration in data['iterations'][0:50]:
         patient_costs = []
         equity_costs = []
         for sol in iteration['solution_archive']:

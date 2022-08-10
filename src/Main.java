@@ -31,10 +31,10 @@ public class Main {
     Variables.T_START = 533;
     Variables.T_STOP = 0.71;
     Variables.ALPHA = 0.99;
-    Variables.INITIAL_TOTAL_ITERATIONS = (int) Math.pow(10, 6) * Variables.INSTANCE_SCALE;
+    Variables.INITIAL_TOTAL_ITERATIONS = (int) Math.pow(10, 7) * Variables.INSTANCE_SCALE;
     Variables.SUBPROBLEM_TOTAL_ITERATIONS = (int) Math.pow(10, 5) * Variables.INSTANCE_SCALE;
     Variables.REPAIR_TOTAL_ITERATIONS = (int) Math.pow(10, 5) * Variables.INSTANCE_SCALE;
-    Variables.RND_ITERATIONS = (int) Math.pow(10, 2) * Variables.INSTANCE_SCALE;
+    Variables.RND_ITERATIONS = (int) Math.pow(10, 3) * Variables.INSTANCE_SCALE;
 
     double s = Math.log10(Variables.ALPHA) / Math.log10(Variables.T_STOP / Variables.T_START);
     Variables.INIT_ITERATIONS = (int) (s * Variables.INITIAL_TOTAL_ITERATIONS);

@@ -9,10 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Changed the randomization">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Trying to figure out what happens to the rectangle archive">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/JsonPlotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/JsonPlotter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -104,7 +103,7 @@
       <workItem from="1659949024086" duration="16250000" />
       <workItem from="1659967453030" duration="33486000" />
       <workItem from="1660037213316" duration="7000" />
-      <workItem from="1660040380554" duration="29859000" />
+      <workItem from="1660040380554" duration="33561000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -288,7 +287,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660076296619</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Trying to figure out what happens to the rectangle archive">
+      <created>1660080795623</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1660080795623</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -306,7 +312,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Tuning hyperparamers with shorter and individual execution times" />
     <MESSAGE value="Fixed tuning mistake" />
     <MESSAGE value="Again, there was a mistake" />
     <MESSAGE value="Added simple HBS pseudocode" />
@@ -331,7 +336,8 @@
     <MESSAGE value="Cleaning up the code" />
     <MESSAGE value="Cleaned up code and fixed everything :')" />
     <MESSAGE value="Changed the randomization" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed the randomization" />
+    <MESSAGE value="Trying to figure out what happens to the rectangle archive" />
+    <option name="LAST_COMMIT_MESSAGE" value="Trying to figure out what happens to the rectangle archive" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
