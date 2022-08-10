@@ -206,7 +206,7 @@ public class Solver {
     pen = sol.getPenaltyCoefficient();
     sol.loadPatientConfiguration();
     randomizeSchedule();
-    if (equityCost > c) repairSchedule();
+    if (equityCost > c) repairSchedule(Variables.T_START, Variables.SUB_ITERATIONS);
   }
 
   public void initRectangleArchive() {
@@ -249,8 +249,6 @@ public class Solver {
             : solutionArchive.get(i);
     return solutionArchive.get(solutionArchive.size() - 1);
   }
-
-
 
 
   // Local search
@@ -304,17 +302,13 @@ public class Solver {
     initSchedule();
     c = Integer.MAX_VALUE;
     pen = Variables.PENALTY_COEFFICIENT;
+    increase = Integer.MAX_VALUE;
+    decrease = 0;
     performSA(Variables.INIT_ITERATIONS);
+    writeCurrentSolution("final_solution");
     initRectangleArchive();
-    resetPenaltyCoefficients();
   }
 
-  public void resetPenaltyCoefficients() {
-    for (Solution s : solutionArchive)
-      s.setPenaltyCoefficient(Variables.PENALTY_COEFFICIENT);
-  }
-
-  // TODO: index = -2 mistake
   public void optimizeSubproblem() {
     Solution sol = getNearestSolution();
     loadSolution(sol);
@@ -325,7 +319,8 @@ public class Solver {
     writeHarvestedSolution(sol);
     writeCurrentSolution("initial_solution");
     performSA(Variables.SUB_ITERATIONS);
-    if (equityCost > c) repairSchedule();
+    writeCurrentSolution("natural_solution");
+    writeCurrentSolution("final_solution");
   }
 
   public void randomizeSchedule() {
@@ -336,22 +331,22 @@ public class Solver {
     adjustEquityCost();
   }
 
-  public void repairSchedule() {
-    // TODO: This doesn't seem to work properly
-    int tries = 0;
-    while (equityCost > c && tries < 2) {
-      pen *= Variables.REPAIR_INCREASE;
-      System.out.println("Repairing solution. p = " + pen);
-      performSA(Variables.REP_ITERATIONS);
+  public void repairSchedule(double temp, int iter) {
+    int tries = 1;
+    while (equityCost > c && tries <= 2) {
+      for (int i = 0; i < iter; i++) {
+        executeNewMove();
+        double savings = lastMove.get("patient_savings") +
+            pen * Math.pow(Variables.REPAIR_INCREASE, tries) *
+            (Math.max(c, equityCost) - Math.max(c, equityCost - lastMove.get("load_savings")));
+        if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
+        else undoLastMove();
+      }
       tries++;
     }
-    pen /= Math.pow(Variables.REPAIR_INCREASE, tries);
-    if (equityCost > c)
-      System.out.println("Repair failed. c = " + c + ", ec = " + equityCost);
   }
 
   public void performSA(int iter) {
-    int update = 0;
     double temp = Variables.T_START;
     while (temp > Variables.T_STOP) {
       for (int i = 0; i < iter; i++) {
@@ -360,16 +355,18 @@ public class Solver {
             (Math.max(c, equityCost) - Math.max(c, equityCost - lastMove.get("load_savings")));
         if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
-        if (update++ % Variables.UPDATE_ITERATIONS == 0) updateSolution();
       }
-      temp *= Variables.ALPHA;
+      updatePenalty();
+      adjustEquityCost();
       if (isEfficient(patientCost, equityCost))
         addSolution(new Solution(schedule, patientCost, equityCost, pen));
+      if (equityCost <= c) temp *= Variables.ALPHA;
+      else repairSchedule(temp, iter);
     }
   }
 
-  public void updateSolution() {
-    adjustEquityCost();
+
+  public void updatePenalty() {
     if (equityCost >= increase) pen *= Variables.PENALTY_INCREASE;
     else if (equityCost <= decrease) pen *= Variables.PENALTY_DECREASE;
   }
@@ -392,14 +389,19 @@ public class Solver {
 
   public boolean isEfficient(int pc, int ec) {
     if (solutionArchive.isEmpty()) return true;
+    if (solutionArchive.get(0).getEquityCost() > ec) return true;
+    if (solutionArchive.get(0).getEquityCost() == ec)
+      return solutionArchive.get(0).getPatientCost() > pc;
 
-    for (int i = 1; i < solutionArchive.size(); i++)
-      if (solutionArchive.get(i).getEquityCost() >= ec &&
-          solutionArchive.get(i - 1).getEquityCost() < ec)
-        return pc < solutionArchive.get(i).getPatientCost();
+    for (int i = 1; i < solutionArchive.size(); i++) {
+      Solution lowerEquityCost = solutionArchive.get(i - 1);
+      Solution higherEquityCost = solutionArchive.get(i);
+      if (higherEquityCost.getEquityCost() >= ec && lowerEquityCost.getEquityCost() < ec)
+        return pc <= higherEquityCost.getPatientCost() &&
+            !(higherEquityCost.getEquityCost() == ec && higherEquityCost.getPatientCost() == pc);
+    }
 
-    return solutionArchive.get(0).getEquityCost() > ec ||
-        solutionArchive.get(solutionArchive.size() - 1).getPatientCost() > pc;
+    return solutionArchive.get(solutionArchive.size() - 1).getPatientCost() > pc;
   }
 
   public Rectangle findRectangleOnX(int pc) {
@@ -747,14 +749,12 @@ public class Solver {
   public void writeCurrentSolution(String key) {
     StringBuilder sb = new StringBuilder();
     sb.append("\"").append(key).append("\":{\"patient_cost\":\"").append(patientCost);
-    sb.append("\",").append("\"equity_cost\":\"").append(equityCost).append("\",");
+    sb.append("\",").append("\"equity_cost\":\"").append(equityCost);
     sb.append("\",").append("\"penalty_coefficient\":\"").append(pen).append("\"},\n");
     jsonParser.write(sb.toString());
   }
 
-  // TODO: toJson in Rectangle & Solution
   public void writeArchives() {
-    writeCurrentSolution("final_solution");
     StringBuilder sb = new StringBuilder();
     sb.append("\"rectangle_archive\":[");
     for (Rectangle r : rectangleArchive)

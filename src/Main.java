@@ -54,7 +54,7 @@ public class Main {
     Variables.DELTA = 5;
     Variables.PENALTY_COEFFICIENT = 1;
     Variables.CONSTANT_PENALTY_ZONE = 0.05;
-    Variables.PENALTY_UPDATE_OFFSET = 0;
+    Variables.PENALTY_UPDATE_OFFSET = 0.05;
     Variables.PENALTY_INCREASE = 1.2;
     Variables.PENALTY_DECREASE = 0.85;
     Variables.REPAIR_INCREASE = 10;
