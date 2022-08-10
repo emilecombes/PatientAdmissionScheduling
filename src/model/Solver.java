@@ -309,10 +309,10 @@ public class Solver {
     writeEnd();
   }
 
+  // TODO: rectangle updating mistake
   public void removeAndUpdateRectangleArchive(Rectangle x, Rectangle y) {
-    boolean inBounds = x == y && x == rectangleArchive.peek();
-    if (inBounds) rectangleArchive.poll();
-    else {
+    boolean inBounds = x == y && x == rectangleArchive.poll();
+    if (!inBounds) {
       List<Rectangle> dominatedRectangles = new ArrayList<>();
       for (Rectangle r : rectangleArchive)
         if (r.getBottom() >= equityCost && r.getLeft() >= patientCost)
@@ -323,6 +323,7 @@ public class Solver {
     }
   }
 
+  // TODO: EHBS
   public void exploreSearchSpace() {
     solutionArchive = new LinkedList<>();
     initSchedule();
@@ -330,8 +331,15 @@ public class Solver {
     pen = Variables.PENALTY_COEFFICIENT;
     performSA(Variables.INIT_ITERATIONS);
     initRectangleArchive();
+    resetPenaltyCoefficients();
   }
 
+  public void resetPenaltyCoefficients() {
+    for(Solution s : solutionArchive)
+      s.setPenaltyCoefficient(Variables.PENALTY_COEFFICIENT);
+  }
+
+  // TODO: index = -2 mistake
   public void optimizeSubproblem() {
     Solution sol = getNearestSolution();
     loadSolution(sol);

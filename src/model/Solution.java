@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Solution implements Comparable<Solution> {
   private final int patientCost, equityCost;
-  private final double penaltyCoefficient;
+  private double penaltyCoefficient;
   private final Schedule schedule;
   private final Map<Patient, Integer> delays;
   private final Map<Patient, Room> assignedRooms;
@@ -28,6 +28,10 @@ public class Solution implements Comparable<Solution> {
 
   public Schedule copySchedule() {
     return schedule.getCopy();
+  }
+
+  public void setPenaltyCoefficient(double p) {
+    penaltyCoefficient = p;
   }
 
   public int getPatientCost() {
