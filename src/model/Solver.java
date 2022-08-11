@@ -6,6 +6,10 @@ import util.Variables;
 
 import java.util.*;
 
+// TODO: Randomization should be proportional to solution temperature
+// TODO: Cost-optimal solutions shouldn't have p=1
+// TODO: If R contains known solutions, searching for a solution there shouldn't yield null
+
 public class Solver {
   // SOLUTION
   private Schedule schedule;
@@ -250,6 +254,14 @@ public class Solver {
     return solutionArchive.get(solutionArchive.size() - 1);
   }
 
+  public Solution getNearestFeasibleSolution() {
+    if (solutionArchive.size() == 1) return solutionArchive.get(0);
+    for (int i = 1; i < solutionArchive.size(); i++)
+      if (solutionArchive.get(i).getEquityCost() > c && solutionArchive.get(i-1).getEquityCost() <= c)
+        return solutionArchive.get(i-1);
+    return null;
+  }
+
 
   // Local search
   public void hbs() {
@@ -314,8 +326,8 @@ public class Solver {
   public void optimizeSubproblem() {
     Solution sol = getNearestSolution();
     loadSolution(sol);
-    if (equityCost > c && solutionArchive.indexOf(sol) != 0) {
-      sol = solutionArchive.get(solutionArchive.indexOf(sol) - 1);
+    if(equityCost > c && sol.getEquityCost() > c && solutionArchive.indexOf(sol) != 0) {
+      sol = getNearestFeasibleSolution();
       loadSolution(sol);
     }
     writeHarvestedSolution(sol);
@@ -745,7 +757,7 @@ public class Solver {
   }
 
   public void writeHarvestedSolution(Solution sol) {
-    jsonParser.write("\"harvested_solution\":" + sol);
+    jsonParser.write("\"harvested_solution\":" + sol + "\n");
   }
 
   public void writeCurrentSolution(String key) {
@@ -759,12 +771,12 @@ public class Solver {
     StringBuilder sb = new StringBuilder();
     sb.append("\"rectangle_archive\":[");
     for (Rectangle r : rectangleArchive)
-      sb.append(r.toString());
+      sb.append(r.toString()).append("\n");
     if (!rectangleArchive.isEmpty()) sb.deleteCharAt(sb.length() - 1);
 
     sb.append("],\n\"solution_archive\":[");
     for (Solution s : solutionArchive)
-      sb.append(s.toString());
+      sb.append(s.toString()).append("\n");
     if (!solutionArchive.isEmpty()) sb.deleteCharAt(sb.length() - 1);
     sb.append("]\n},");
     jsonParser.write(sb.toString());

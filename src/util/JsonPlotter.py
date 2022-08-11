@@ -25,6 +25,12 @@ def main():
             ax.scatter(int(sol['patient_cost']),
                     int(sol['equity_cost']),c='red')
 
+        if 'natural_solution' in iteration:
+            sol = iteration['natural_solution']
+            ax.scatter(int(sol['patient_cost']),
+                    int(sol['equity_cost']),c='purple')
+
+
         sol = iteration['final_solution']
         ax.scatter(int(sol['patient_cost']), 
                 int(sol['equity_cost']), c='green')
@@ -33,7 +39,7 @@ def main():
             x = []
             x.append(int(rect['x_1']))
             x.append(int(rect['x_2']))
-            ax.fill_between(x, int(rect['y_2']), int(rect['y_1']), alpha=.5,
+            ax.fill_between(x, int(rect['y_2']), int(rect['y_1']), alpha=.4,
                     linewidth=.8)
         plt.show()
     file.close()
