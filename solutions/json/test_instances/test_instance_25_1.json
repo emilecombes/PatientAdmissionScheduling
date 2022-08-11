@@ -1,0 +1,548 @@
+{
+  "iterations": [
+    {
+      "time": "Tue Aug 09 12:55:45 CEST 2022",
+      "initial_solution": {
+        "patient_cost": "3140",
+        "equity_cost": "1772"
+      },
+      "randomized_solution": {
+        "patient_cost": "4270",
+        "equity_cost": "688"
+      },
+      "final_solution": {
+        "patient_cost": "535",
+        "equity_cost": "783"
+      },
+      "rectangle_archive": [
+        {
+          "area": "418905.0",
+          "x_1": "535",
+          "x_2": "1070",
+          "y_1": "0",
+          "y_2": "783"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "3680",
+          "equity_cost": "218"
+        },
+        {
+          "patient_cost": "1085",
+          "equity_cost": "223"
+        },
+        {
+          "patient_cost": "885",
+          "equity_cost": "348"
+        },
+        {
+          "patient_cost": "695",
+          "equity_cost": "393"
+        },
+        {
+          "patient_cost": "615",
+          "equity_cost": "478"
+        },
+        {
+          "patient_cost": "555",
+          "equity_cost": "643"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 12:55:53 CEST 2022",
+      "c": "392",
+      "initial_solution": {
+        "patient_cost": "695",
+        "equity_cost": "393"
+      },
+      "randomized_solution": {
+        "patient_cost": "4135",
+        "equity_cost": "400"
+      },
+      "final_solution": {
+        "patient_cost": "600",
+        "equity_cost": "389"
+      },
+      "rectangle_archive": [
+        {
+          "area": "182830.0",
+          "x_1": "600",
+          "x_2": "1070",
+          "y_1": "0",
+          "y_2": "389"
+        },
+        {
+          "area": "25415.0",
+          "x_1": "535",
+          "x_2": "600",
+          "y_1": "392",
+          "y_2": "783"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "2785",
+          "equity_cost": "200"
+        },
+        {
+          "patient_cost": "1085",
+          "equity_cost": "223"
+        },
+        {
+          "patient_cost": "880",
+          "equity_cost": "284"
+        },
+        {
+          "patient_cost": "605",
+          "equity_cost": "382"
+        },
+        {
+          "patient_cost": "600",
+          "equity_cost": "389"
+        },
+        {
+          "patient_cost": "595",
+          "equity_cost": "427"
+        },
+        {
+          "patient_cost": "555",
+          "equity_cost": "643"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 12:55:59 CEST 2022",
+      "c": "195",
+      "initial_solution": {
+        "patient_cost": "2785",
+        "equity_cost": "200"
+      },
+      "randomized_solution": {
+        "patient_cost": "4995",
+        "equity_cost": "1349"
+      },
+      "final_solution": {
+        "patient_cost": "2000",
+        "equity_cost": "602"
+      },
+      "rectangle_archive": [
+        {
+          "area": "91180.0",
+          "x_1": "600",
+          "x_2": "1070",
+          "y_1": "195",
+          "y_2": "389"
+        },
+        {
+          "area": "25415.0",
+          "x_1": "535",
+          "x_2": "600",
+          "y_1": "392",
+          "y_2": "783"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "2785",
+          "equity_cost": "200"
+        },
+        {
+          "patient_cost": "1085",
+          "equity_cost": "223"
+        },
+        {
+          "patient_cost": "880",
+          "equity_cost": "284"
+        },
+        {
+          "patient_cost": "605",
+          "equity_cost": "382"
+        },
+        {
+          "patient_cost": "600",
+          "equity_cost": "389"
+        },
+        {
+          "patient_cost": "595",
+          "equity_cost": "427"
+        },
+        {
+          "patient_cost": "555",
+          "equity_cost": "643"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 12:55:59 CEST 2022",
+      "c": "292",
+      "initial_solution": {
+        "patient_cost": "880",
+        "equity_cost": "284"
+      },
+      "randomized_solution": {
+        "patient_cost": "4025",
+        "equity_cost": "379"
+      },
+      "final_solution": {
+        "patient_cost": "2005",
+        "equity_cost": "320"
+      },
+      "rectangle_archive": [
+        {
+          "area": "45590.0",
+          "x_1": "600",
+          "x_2": "1070",
+          "y_1": "292",
+          "y_2": "389"
+        },
+        {
+          "area": "25415.0",
+          "x_1": "535",
+          "x_2": "600",
+          "y_1": "392",
+          "y_2": "783"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "2785",
+          "equity_cost": "200"
+        },
+        {
+          "patient_cost": "1085",
+          "equity_cost": "223"
+        },
+        {
+          "patient_cost": "880",
+          "equity_cost": "284"
+        },
+        {
+          "patient_cost": "605",
+          "equity_cost": "382"
+        },
+        {
+          "patient_cost": "600",
+          "equity_cost": "389"
+        },
+        {
+          "patient_cost": "595",
+          "equity_cost": "427"
+        },
+        {
+          "patient_cost": "555",
+          "equity_cost": "643"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 12:56:00 CEST 2022",
+      "c": "341",
+      "initial_solution": {
+        "patient_cost": "605",
+        "equity_cost": "382"
+      },
+      "randomized_solution": {
+        "patient_cost": "4755",
+        "equity_cost": "1306"
+      },
+      "final_solution": {
+        "patient_cost": "650",
+        "equity_cost": "341"
+      },
+      "rectangle_archive": [
+        {
+          "area": "25415.0",
+          "x_1": "535",
+          "x_2": "600",
+          "y_1": "392",
+          "y_2": "783"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "3860",
+          "equity_cost": "177"
+        },
+        {
+          "patient_cost": "1755",
+          "equity_cost": "181"
+        },
+        {
+          "patient_cost": "1085",
+          "equity_cost": "223"
+        },
+        {
+          "patient_cost": "740",
+          "equity_cost": "276"
+        },
+        {
+          "patient_cost": "650",
+          "equity_cost": "341"
+        },
+        {
+          "patient_cost": "605",
+          "equity_cost": "382"
+        },
+        {
+          "patient_cost": "600",
+          "equity_cost": "389"
+        },
+        {
+          "patient_cost": "595",
+          "equity_cost": "427"
+        },
+        {
+          "patient_cost": "555",
+          "equity_cost": "643"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 12:56:07 CEST 2022",
+      "c": "588",
+      "initial_solution": {
+        "patient_cost": "555",
+        "equity_cost": "643"
+      },
+      "randomized_solution": {
+        "patient_cost": "3165",
+        "equity_cost": "565"
+      },
+      "final_solution": {
+        "patient_cost": "1395",
+        "equity_cost": "457"
+      },
+      "rectangle_archive": [
+        {
+          "area": "12675.0",
+          "x_1": "535",
+          "x_2": "600",
+          "y_1": "588",
+          "y_2": "783"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "3385",
+          "equity_cost": "168"
+        },
+        {
+          "patient_cost": "1755",
+          "equity_cost": "181"
+        },
+        {
+          "patient_cost": "1085",
+          "equity_cost": "223"
+        },
+        {
+          "patient_cost": "740",
+          "equity_cost": "276"
+        },
+        {
+          "patient_cost": "650",
+          "equity_cost": "341"
+        },
+        {
+          "patient_cost": "605",
+          "equity_cost": "382"
+        },
+        {
+          "patient_cost": "600",
+          "equity_cost": "389"
+        },
+        {
+          "patient_cost": "595",
+          "equity_cost": "427"
+        },
+        {
+          "patient_cost": "545",
+          "equity_cost": "632"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 12:56:14 CEST 2022",
+      "c": "686",
+      "initial_solution": {
+        "patient_cost": "545",
+        "equity_cost": "632"
+      },
+      "randomized_solution": {
+        "patient_cost": "3920",
+        "equity_cost": "242"
+      },
+      "final_solution": {
+        "patient_cost": "1220",
+        "equity_cost": "643"
+      },
+      "rectangle_archive": [
+        {
+          "area": "6305.0",
+          "x_1": "535",
+          "x_2": "600",
+          "y_1": "686",
+          "y_2": "783"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "3385",
+          "equity_cost": "168"
+        },
+        {
+          "patient_cost": "1755",
+          "equity_cost": "181"
+        },
+        {
+          "patient_cost": "1085",
+          "equity_cost": "223"
+        },
+        {
+          "patient_cost": "740",
+          "equity_cost": "276"
+        },
+        {
+          "patient_cost": "650",
+          "equity_cost": "341"
+        },
+        {
+          "patient_cost": "605",
+          "equity_cost": "382"
+        },
+        {
+          "patient_cost": "600",
+          "equity_cost": "389"
+        },
+        {
+          "patient_cost": "595",
+          "equity_cost": "427"
+        },
+        {
+          "patient_cost": "545",
+          "equity_cost": "632"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 12:56:21 CEST 2022",
+      "c": "735",
+      "initial_solution": {
+        "patient_cost": "535",
+        "equity_cost": "783"
+      },
+      "randomized_solution": {
+        "patient_cost": "4965",
+        "equity_cost": "1537"
+      },
+      "final_solution": {
+        "patient_cost": "1765",
+        "equity_cost": "426"
+      },
+      "rectangle_archive": [],
+      "solution_archive": [
+        {
+          "patient_cost": "3385",
+          "equity_cost": "168"
+        },
+        {
+          "patient_cost": "1755",
+          "equity_cost": "181"
+        },
+        {
+          "patient_cost": "1085",
+          "equity_cost": "223"
+        },
+        {
+          "patient_cost": "740",
+          "equity_cost": "276"
+        },
+        {
+          "patient_cost": "650",
+          "equity_cost": "341"
+        },
+        {
+          "patient_cost": "605",
+          "equity_cost": "382"
+        },
+        {
+          "patient_cost": "600",
+          "equity_cost": "389"
+        },
+        {
+          "patient_cost": "595",
+          "equity_cost": "427"
+        },
+        {
+          "patient_cost": "545",
+          "equity_cost": "632"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        },
+        {
+          "patient_cost": "535",
+          "equity_cost": "783"
+        }
+      ]
+    }
+  ]
+}

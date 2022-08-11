@@ -1,0 +1,1351 @@
+{
+  "iterations": [
+    {
+      "time": "Tue Aug 09 03:29:47 CEST 2022",
+      "initial_solution": {
+        "patient_cost": "1078280",
+        "equity_cost": "1097899"
+      },
+      "randomized_solution": {
+        "patient_cost": "992010",
+        "equity_cost": "964102"
+      },
+      "final_solution": {
+        "patient_cost": "55400",
+        "equity_cost": "18739"
+      },
+      "rectangle_archive": [
+        {
+          "area": "1.03814061E9",
+          "x_1": "55400",
+          "x_2": "110800",
+          "y_1": "0",
+          "y_2": "18739"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "80515",
+          "equity_cost": "14144"
+        },
+        {
+          "patient_cost": "79465",
+          "equity_cost": "14293"
+        },
+        {
+          "patient_cost": "73485",
+          "equity_cost": "14350"
+        },
+        {
+          "patient_cost": "72155",
+          "equity_cost": "14454"
+        },
+        {
+          "patient_cost": "69840",
+          "equity_cost": "14949"
+        },
+        {
+          "patient_cost": "69685",
+          "equity_cost": "15128"
+        },
+        {
+          "patient_cost": "61485",
+          "equity_cost": "15494"
+        },
+        {
+          "patient_cost": "61330",
+          "equity_cost": "15770"
+        },
+        {
+          "patient_cost": "61295",
+          "equity_cost": "16123"
+        },
+        {
+          "patient_cost": "61240",
+          "equity_cost": "16243"
+        },
+        {
+          "patient_cost": "61205",
+          "equity_cost": "16297"
+        },
+        {
+          "patient_cost": "61020",
+          "equity_cost": "16382"
+        },
+        {
+          "patient_cost": "60755",
+          "equity_cost": "16632"
+        },
+        {
+          "patient_cost": "60635",
+          "equity_cost": "16685"
+        },
+        {
+          "patient_cost": "60335",
+          "equity_cost": "16729"
+        },
+        {
+          "patient_cost": "59545",
+          "equity_cost": "16819"
+        },
+        {
+          "patient_cost": "59400",
+          "equity_cost": "16884"
+        },
+        {
+          "patient_cost": "59300",
+          "equity_cost": "17152"
+        },
+        {
+          "patient_cost": "59250",
+          "equity_cost": "17322"
+        },
+        {
+          "patient_cost": "57950",
+          "equity_cost": "17329"
+        },
+        {
+          "patient_cost": "57915",
+          "equity_cost": "17363"
+        },
+        {
+          "patient_cost": "57425",
+          "equity_cost": "17494"
+        },
+        {
+          "patient_cost": "57395",
+          "equity_cost": "17549"
+        },
+        {
+          "patient_cost": "57380",
+          "equity_cost": "17706"
+        },
+        {
+          "patient_cost": "57330",
+          "equity_cost": "17957"
+        },
+        {
+          "patient_cost": "57150",
+          "equity_cost": "18003"
+        },
+        {
+          "patient_cost": "57000",
+          "equity_cost": "18185"
+        },
+        {
+          "patient_cost": "56790",
+          "equity_cost": "18193"
+        },
+        {
+          "patient_cost": "55845",
+          "equity_cost": "18194"
+        },
+        {
+          "patient_cost": "55825",
+          "equity_cost": "18360"
+        },
+        {
+          "patient_cost": "55705",
+          "equity_cost": "18403"
+        },
+        {
+          "patient_cost": "55475",
+          "equity_cost": "18466"
+        },
+        {
+          "patient_cost": "55465",
+          "equity_cost": "18528"
+        },
+        {
+          "patient_cost": "55455",
+          "equity_cost": "18529"
+        },
+        {
+          "patient_cost": "55415",
+          "equity_cost": "18554"
+        },
+        {
+          "patient_cost": "55410",
+          "equity_cost": "18606"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18710"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18739"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 03:30:29 CEST 2022",
+      "c": "9370",
+      "initial_solution": {
+        "patient_cost": "80515",
+        "equity_cost": "14144"
+      },
+      "randomized_solution": {
+        "patient_cost": "545785",
+        "equity_cost": "454288"
+      },
+      "final_solution": {
+        "patient_cost": "388880",
+        "equity_cost": "297614"
+      },
+      "rectangle_archive": [
+        {
+          "area": "5.19042592E8",
+          "x_1": "55400",
+          "x_2": "110800",
+          "y_1": "9370",
+          "y_2": "18739"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "80515",
+          "equity_cost": "14144"
+        },
+        {
+          "patient_cost": "79465",
+          "equity_cost": "14293"
+        },
+        {
+          "patient_cost": "73485",
+          "equity_cost": "14350"
+        },
+        {
+          "patient_cost": "72155",
+          "equity_cost": "14454"
+        },
+        {
+          "patient_cost": "69840",
+          "equity_cost": "14949"
+        },
+        {
+          "patient_cost": "69685",
+          "equity_cost": "15128"
+        },
+        {
+          "patient_cost": "61485",
+          "equity_cost": "15494"
+        },
+        {
+          "patient_cost": "61330",
+          "equity_cost": "15770"
+        },
+        {
+          "patient_cost": "61295",
+          "equity_cost": "16123"
+        },
+        {
+          "patient_cost": "61240",
+          "equity_cost": "16243"
+        },
+        {
+          "patient_cost": "61205",
+          "equity_cost": "16297"
+        },
+        {
+          "patient_cost": "61020",
+          "equity_cost": "16382"
+        },
+        {
+          "patient_cost": "60755",
+          "equity_cost": "16632"
+        },
+        {
+          "patient_cost": "60635",
+          "equity_cost": "16685"
+        },
+        {
+          "patient_cost": "60335",
+          "equity_cost": "16729"
+        },
+        {
+          "patient_cost": "59545",
+          "equity_cost": "16819"
+        },
+        {
+          "patient_cost": "59400",
+          "equity_cost": "16884"
+        },
+        {
+          "patient_cost": "59300",
+          "equity_cost": "17152"
+        },
+        {
+          "patient_cost": "59250",
+          "equity_cost": "17322"
+        },
+        {
+          "patient_cost": "57950",
+          "equity_cost": "17329"
+        },
+        {
+          "patient_cost": "57915",
+          "equity_cost": "17363"
+        },
+        {
+          "patient_cost": "57425",
+          "equity_cost": "17494"
+        },
+        {
+          "patient_cost": "57395",
+          "equity_cost": "17549"
+        },
+        {
+          "patient_cost": "57380",
+          "equity_cost": "17706"
+        },
+        {
+          "patient_cost": "57330",
+          "equity_cost": "17957"
+        },
+        {
+          "patient_cost": "57150",
+          "equity_cost": "18003"
+        },
+        {
+          "patient_cost": "57000",
+          "equity_cost": "18185"
+        },
+        {
+          "patient_cost": "56790",
+          "equity_cost": "18193"
+        },
+        {
+          "patient_cost": "55845",
+          "equity_cost": "18194"
+        },
+        {
+          "patient_cost": "55825",
+          "equity_cost": "18360"
+        },
+        {
+          "patient_cost": "55705",
+          "equity_cost": "18403"
+        },
+        {
+          "patient_cost": "55475",
+          "equity_cost": "18466"
+        },
+        {
+          "patient_cost": "55465",
+          "equity_cost": "18528"
+        },
+        {
+          "patient_cost": "55455",
+          "equity_cost": "18529"
+        },
+        {
+          "patient_cost": "55415",
+          "equity_cost": "18554"
+        },
+        {
+          "patient_cost": "55410",
+          "equity_cost": "18606"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18710"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18739"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 03:30:29 CEST 2022",
+      "c": "14055",
+      "initial_solution": {
+        "patient_cost": "80515",
+        "equity_cost": "14144"
+      },
+      "randomized_solution": {
+        "patient_cost": "601615",
+        "equity_cost": "513599"
+      },
+      "final_solution": {
+        "patient_cost": "419670",
+        "equity_cost": "328434"
+      },
+      "rectangle_archive": [
+        {
+          "area": "2.594936E8",
+          "x_1": "55400",
+          "x_2": "110800",
+          "y_1": "14055",
+          "y_2": "18739"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "80515",
+          "equity_cost": "14144"
+        },
+        {
+          "patient_cost": "79465",
+          "equity_cost": "14293"
+        },
+        {
+          "patient_cost": "73485",
+          "equity_cost": "14350"
+        },
+        {
+          "patient_cost": "72155",
+          "equity_cost": "14454"
+        },
+        {
+          "patient_cost": "69840",
+          "equity_cost": "14949"
+        },
+        {
+          "patient_cost": "69685",
+          "equity_cost": "15128"
+        },
+        {
+          "patient_cost": "61485",
+          "equity_cost": "15494"
+        },
+        {
+          "patient_cost": "61330",
+          "equity_cost": "15770"
+        },
+        {
+          "patient_cost": "61295",
+          "equity_cost": "16123"
+        },
+        {
+          "patient_cost": "61240",
+          "equity_cost": "16243"
+        },
+        {
+          "patient_cost": "61205",
+          "equity_cost": "16297"
+        },
+        {
+          "patient_cost": "61020",
+          "equity_cost": "16382"
+        },
+        {
+          "patient_cost": "60755",
+          "equity_cost": "16632"
+        },
+        {
+          "patient_cost": "60635",
+          "equity_cost": "16685"
+        },
+        {
+          "patient_cost": "60335",
+          "equity_cost": "16729"
+        },
+        {
+          "patient_cost": "59545",
+          "equity_cost": "16819"
+        },
+        {
+          "patient_cost": "59400",
+          "equity_cost": "16884"
+        },
+        {
+          "patient_cost": "59300",
+          "equity_cost": "17152"
+        },
+        {
+          "patient_cost": "59250",
+          "equity_cost": "17322"
+        },
+        {
+          "patient_cost": "57950",
+          "equity_cost": "17329"
+        },
+        {
+          "patient_cost": "57915",
+          "equity_cost": "17363"
+        },
+        {
+          "patient_cost": "57425",
+          "equity_cost": "17494"
+        },
+        {
+          "patient_cost": "57395",
+          "equity_cost": "17549"
+        },
+        {
+          "patient_cost": "57380",
+          "equity_cost": "17706"
+        },
+        {
+          "patient_cost": "57330",
+          "equity_cost": "17957"
+        },
+        {
+          "patient_cost": "57150",
+          "equity_cost": "18003"
+        },
+        {
+          "patient_cost": "57000",
+          "equity_cost": "18185"
+        },
+        {
+          "patient_cost": "56790",
+          "equity_cost": "18193"
+        },
+        {
+          "patient_cost": "55845",
+          "equity_cost": "18194"
+        },
+        {
+          "patient_cost": "55825",
+          "equity_cost": "18360"
+        },
+        {
+          "patient_cost": "55705",
+          "equity_cost": "18403"
+        },
+        {
+          "patient_cost": "55475",
+          "equity_cost": "18466"
+        },
+        {
+          "patient_cost": "55465",
+          "equity_cost": "18528"
+        },
+        {
+          "patient_cost": "55455",
+          "equity_cost": "18529"
+        },
+        {
+          "patient_cost": "55415",
+          "equity_cost": "18554"
+        },
+        {
+          "patient_cost": "55410",
+          "equity_cost": "18606"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18710"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18739"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 03:30:29 CEST 2022",
+      "c": "16397",
+      "initial_solution": {
+        "patient_cost": "61020",
+        "equity_cost": "16382"
+      },
+      "randomized_solution": {
+        "patient_cost": "561760",
+        "equity_cost": "481053"
+      },
+      "final_solution": {
+        "patient_cost": "446060",
+        "equity_cost": "366960"
+      },
+      "rectangle_archive": [
+        {
+          "area": "1.297468E8",
+          "x_1": "55400",
+          "x_2": "110800",
+          "y_1": "16397",
+          "y_2": "18739"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "80515",
+          "equity_cost": "14144"
+        },
+        {
+          "patient_cost": "79465",
+          "equity_cost": "14293"
+        },
+        {
+          "patient_cost": "73485",
+          "equity_cost": "14350"
+        },
+        {
+          "patient_cost": "72155",
+          "equity_cost": "14454"
+        },
+        {
+          "patient_cost": "69840",
+          "equity_cost": "14949"
+        },
+        {
+          "patient_cost": "69685",
+          "equity_cost": "15128"
+        },
+        {
+          "patient_cost": "61485",
+          "equity_cost": "15494"
+        },
+        {
+          "patient_cost": "61330",
+          "equity_cost": "15770"
+        },
+        {
+          "patient_cost": "61295",
+          "equity_cost": "16123"
+        },
+        {
+          "patient_cost": "61240",
+          "equity_cost": "16243"
+        },
+        {
+          "patient_cost": "61205",
+          "equity_cost": "16297"
+        },
+        {
+          "patient_cost": "61020",
+          "equity_cost": "16382"
+        },
+        {
+          "patient_cost": "60755",
+          "equity_cost": "16632"
+        },
+        {
+          "patient_cost": "60635",
+          "equity_cost": "16685"
+        },
+        {
+          "patient_cost": "60335",
+          "equity_cost": "16729"
+        },
+        {
+          "patient_cost": "59545",
+          "equity_cost": "16819"
+        },
+        {
+          "patient_cost": "59400",
+          "equity_cost": "16884"
+        },
+        {
+          "patient_cost": "59300",
+          "equity_cost": "17152"
+        },
+        {
+          "patient_cost": "59250",
+          "equity_cost": "17322"
+        },
+        {
+          "patient_cost": "57950",
+          "equity_cost": "17329"
+        },
+        {
+          "patient_cost": "57915",
+          "equity_cost": "17363"
+        },
+        {
+          "patient_cost": "57425",
+          "equity_cost": "17494"
+        },
+        {
+          "patient_cost": "57395",
+          "equity_cost": "17549"
+        },
+        {
+          "patient_cost": "57380",
+          "equity_cost": "17706"
+        },
+        {
+          "patient_cost": "57330",
+          "equity_cost": "17957"
+        },
+        {
+          "patient_cost": "57150",
+          "equity_cost": "18003"
+        },
+        {
+          "patient_cost": "57000",
+          "equity_cost": "18185"
+        },
+        {
+          "patient_cost": "56790",
+          "equity_cost": "18193"
+        },
+        {
+          "patient_cost": "55845",
+          "equity_cost": "18194"
+        },
+        {
+          "patient_cost": "55825",
+          "equity_cost": "18360"
+        },
+        {
+          "patient_cost": "55705",
+          "equity_cost": "18403"
+        },
+        {
+          "patient_cost": "55475",
+          "equity_cost": "18466"
+        },
+        {
+          "patient_cost": "55465",
+          "equity_cost": "18528"
+        },
+        {
+          "patient_cost": "55455",
+          "equity_cost": "18529"
+        },
+        {
+          "patient_cost": "55415",
+          "equity_cost": "18554"
+        },
+        {
+          "patient_cost": "55410",
+          "equity_cost": "18606"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18710"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18739"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 03:30:29 CEST 2022",
+      "c": "17568",
+      "initial_solution": {
+        "patient_cost": "57395",
+        "equity_cost": "17549"
+      },
+      "randomized_solution": {
+        "patient_cost": "615495",
+        "equity_cost": "544077"
+      },
+      "final_solution": {
+        "patient_cost": "432655",
+        "equity_cost": "357827"
+      },
+      "rectangle_archive": [
+        {
+          "area": "6.48734E7",
+          "x_1": "55400",
+          "x_2": "110800",
+          "y_1": "17568",
+          "y_2": "18739"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "80515",
+          "equity_cost": "14144"
+        },
+        {
+          "patient_cost": "79465",
+          "equity_cost": "14293"
+        },
+        {
+          "patient_cost": "73485",
+          "equity_cost": "14350"
+        },
+        {
+          "patient_cost": "72155",
+          "equity_cost": "14454"
+        },
+        {
+          "patient_cost": "69840",
+          "equity_cost": "14949"
+        },
+        {
+          "patient_cost": "69685",
+          "equity_cost": "15128"
+        },
+        {
+          "patient_cost": "61485",
+          "equity_cost": "15494"
+        },
+        {
+          "patient_cost": "61330",
+          "equity_cost": "15770"
+        },
+        {
+          "patient_cost": "61295",
+          "equity_cost": "16123"
+        },
+        {
+          "patient_cost": "61240",
+          "equity_cost": "16243"
+        },
+        {
+          "patient_cost": "61205",
+          "equity_cost": "16297"
+        },
+        {
+          "patient_cost": "61020",
+          "equity_cost": "16382"
+        },
+        {
+          "patient_cost": "60755",
+          "equity_cost": "16632"
+        },
+        {
+          "patient_cost": "60635",
+          "equity_cost": "16685"
+        },
+        {
+          "patient_cost": "60335",
+          "equity_cost": "16729"
+        },
+        {
+          "patient_cost": "59545",
+          "equity_cost": "16819"
+        },
+        {
+          "patient_cost": "59400",
+          "equity_cost": "16884"
+        },
+        {
+          "patient_cost": "59300",
+          "equity_cost": "17152"
+        },
+        {
+          "patient_cost": "59250",
+          "equity_cost": "17322"
+        },
+        {
+          "patient_cost": "57950",
+          "equity_cost": "17329"
+        },
+        {
+          "patient_cost": "57915",
+          "equity_cost": "17363"
+        },
+        {
+          "patient_cost": "57425",
+          "equity_cost": "17494"
+        },
+        {
+          "patient_cost": "57395",
+          "equity_cost": "17549"
+        },
+        {
+          "patient_cost": "57380",
+          "equity_cost": "17706"
+        },
+        {
+          "patient_cost": "57330",
+          "equity_cost": "17957"
+        },
+        {
+          "patient_cost": "57150",
+          "equity_cost": "18003"
+        },
+        {
+          "patient_cost": "57000",
+          "equity_cost": "18185"
+        },
+        {
+          "patient_cost": "56790",
+          "equity_cost": "18193"
+        },
+        {
+          "patient_cost": "55845",
+          "equity_cost": "18194"
+        },
+        {
+          "patient_cost": "55825",
+          "equity_cost": "18360"
+        },
+        {
+          "patient_cost": "55705",
+          "equity_cost": "18403"
+        },
+        {
+          "patient_cost": "55475",
+          "equity_cost": "18466"
+        },
+        {
+          "patient_cost": "55465",
+          "equity_cost": "18528"
+        },
+        {
+          "patient_cost": "55455",
+          "equity_cost": "18529"
+        },
+        {
+          "patient_cost": "55415",
+          "equity_cost": "18554"
+        },
+        {
+          "patient_cost": "55410",
+          "equity_cost": "18606"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18710"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18739"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 03:30:29 CEST 2022",
+      "c": "18154",
+      "initial_solution": {
+        "patient_cost": "57000",
+        "equity_cost": "18185"
+      },
+      "randomized_solution": {
+        "patient_cost": "594570",
+        "equity_cost": "516373"
+      },
+      "final_solution": {
+        "patient_cost": "454755",
+        "equity_cost": "376956"
+      },
+      "rectangle_archive": [
+        {
+          "area": "3.2409E7",
+          "x_1": "55400",
+          "x_2": "110800",
+          "y_1": "18154",
+          "y_2": "18739"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "80515",
+          "equity_cost": "14144"
+        },
+        {
+          "patient_cost": "79465",
+          "equity_cost": "14293"
+        },
+        {
+          "patient_cost": "73485",
+          "equity_cost": "14350"
+        },
+        {
+          "patient_cost": "72155",
+          "equity_cost": "14454"
+        },
+        {
+          "patient_cost": "69840",
+          "equity_cost": "14949"
+        },
+        {
+          "patient_cost": "69685",
+          "equity_cost": "15128"
+        },
+        {
+          "patient_cost": "61485",
+          "equity_cost": "15494"
+        },
+        {
+          "patient_cost": "61330",
+          "equity_cost": "15770"
+        },
+        {
+          "patient_cost": "61295",
+          "equity_cost": "16123"
+        },
+        {
+          "patient_cost": "61240",
+          "equity_cost": "16243"
+        },
+        {
+          "patient_cost": "61205",
+          "equity_cost": "16297"
+        },
+        {
+          "patient_cost": "61020",
+          "equity_cost": "16382"
+        },
+        {
+          "patient_cost": "60755",
+          "equity_cost": "16632"
+        },
+        {
+          "patient_cost": "60635",
+          "equity_cost": "16685"
+        },
+        {
+          "patient_cost": "60335",
+          "equity_cost": "16729"
+        },
+        {
+          "patient_cost": "59545",
+          "equity_cost": "16819"
+        },
+        {
+          "patient_cost": "59400",
+          "equity_cost": "16884"
+        },
+        {
+          "patient_cost": "59300",
+          "equity_cost": "17152"
+        },
+        {
+          "patient_cost": "59250",
+          "equity_cost": "17322"
+        },
+        {
+          "patient_cost": "57950",
+          "equity_cost": "17329"
+        },
+        {
+          "patient_cost": "57915",
+          "equity_cost": "17363"
+        },
+        {
+          "patient_cost": "57425",
+          "equity_cost": "17494"
+        },
+        {
+          "patient_cost": "57395",
+          "equity_cost": "17549"
+        },
+        {
+          "patient_cost": "57380",
+          "equity_cost": "17706"
+        },
+        {
+          "patient_cost": "57330",
+          "equity_cost": "17957"
+        },
+        {
+          "patient_cost": "57150",
+          "equity_cost": "18003"
+        },
+        {
+          "patient_cost": "57000",
+          "equity_cost": "18185"
+        },
+        {
+          "patient_cost": "56790",
+          "equity_cost": "18193"
+        },
+        {
+          "patient_cost": "55845",
+          "equity_cost": "18194"
+        },
+        {
+          "patient_cost": "55825",
+          "equity_cost": "18360"
+        },
+        {
+          "patient_cost": "55705",
+          "equity_cost": "18403"
+        },
+        {
+          "patient_cost": "55475",
+          "equity_cost": "18466"
+        },
+        {
+          "patient_cost": "55465",
+          "equity_cost": "18528"
+        },
+        {
+          "patient_cost": "55455",
+          "equity_cost": "18529"
+        },
+        {
+          "patient_cost": "55415",
+          "equity_cost": "18554"
+        },
+        {
+          "patient_cost": "55410",
+          "equity_cost": "18606"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18710"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18739"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 03:30:29 CEST 2022",
+      "c": "18447",
+      "initial_solution": {
+        "patient_cost": "55475",
+        "equity_cost": "18466"
+      },
+      "randomized_solution": {
+        "patient_cost": "616915",
+        "equity_cost": "540377"
+      },
+      "final_solution": {
+        "patient_cost": "453000",
+        "equity_cost": "375198"
+      },
+      "rectangle_archive": [
+        {
+          "area": "1.61768E7",
+          "x_1": "55400",
+          "x_2": "110800",
+          "y_1": "18447",
+          "y_2": "18739"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "80515",
+          "equity_cost": "14144"
+        },
+        {
+          "patient_cost": "79465",
+          "equity_cost": "14293"
+        },
+        {
+          "patient_cost": "73485",
+          "equity_cost": "14350"
+        },
+        {
+          "patient_cost": "72155",
+          "equity_cost": "14454"
+        },
+        {
+          "patient_cost": "69840",
+          "equity_cost": "14949"
+        },
+        {
+          "patient_cost": "69685",
+          "equity_cost": "15128"
+        },
+        {
+          "patient_cost": "61485",
+          "equity_cost": "15494"
+        },
+        {
+          "patient_cost": "61330",
+          "equity_cost": "15770"
+        },
+        {
+          "patient_cost": "61295",
+          "equity_cost": "16123"
+        },
+        {
+          "patient_cost": "61240",
+          "equity_cost": "16243"
+        },
+        {
+          "patient_cost": "61205",
+          "equity_cost": "16297"
+        },
+        {
+          "patient_cost": "61020",
+          "equity_cost": "16382"
+        },
+        {
+          "patient_cost": "60755",
+          "equity_cost": "16632"
+        },
+        {
+          "patient_cost": "60635",
+          "equity_cost": "16685"
+        },
+        {
+          "patient_cost": "60335",
+          "equity_cost": "16729"
+        },
+        {
+          "patient_cost": "59545",
+          "equity_cost": "16819"
+        },
+        {
+          "patient_cost": "59400",
+          "equity_cost": "16884"
+        },
+        {
+          "patient_cost": "59300",
+          "equity_cost": "17152"
+        },
+        {
+          "patient_cost": "59250",
+          "equity_cost": "17322"
+        },
+        {
+          "patient_cost": "57950",
+          "equity_cost": "17329"
+        },
+        {
+          "patient_cost": "57915",
+          "equity_cost": "17363"
+        },
+        {
+          "patient_cost": "57425",
+          "equity_cost": "17494"
+        },
+        {
+          "patient_cost": "57395",
+          "equity_cost": "17549"
+        },
+        {
+          "patient_cost": "57380",
+          "equity_cost": "17706"
+        },
+        {
+          "patient_cost": "57330",
+          "equity_cost": "17957"
+        },
+        {
+          "patient_cost": "57150",
+          "equity_cost": "18003"
+        },
+        {
+          "patient_cost": "57000",
+          "equity_cost": "18185"
+        },
+        {
+          "patient_cost": "56790",
+          "equity_cost": "18193"
+        },
+        {
+          "patient_cost": "55845",
+          "equity_cost": "18194"
+        },
+        {
+          "patient_cost": "55825",
+          "equity_cost": "18360"
+        },
+        {
+          "patient_cost": "55705",
+          "equity_cost": "18403"
+        },
+        {
+          "patient_cost": "55475",
+          "equity_cost": "18466"
+        },
+        {
+          "patient_cost": "55465",
+          "equity_cost": "18528"
+        },
+        {
+          "patient_cost": "55455",
+          "equity_cost": "18529"
+        },
+        {
+          "patient_cost": "55415",
+          "equity_cost": "18554"
+        },
+        {
+          "patient_cost": "55410",
+          "equity_cost": "18606"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18710"
+        },
+        {
+          "patient_cost": "55400",
+          "equity_cost": "18739"
+        }
+      ]
+    },
+    {
+      "time": "Tue Aug 09 03:30:29 CEST 2022",
+      "c": "18593",
+      "initial_solution": {
+        "patient_cost": "55410",
+        "equity_cost": "18606"
+      },
+      "randomized_solution": {
+        "patient_cost": "601560",
+        "equity_cost": "526418"
+      },
+      "final_solution": {
+        "patient_cost": "422755",
+        "equity_cost": "347734"
+      },
+      "rectangle_archive": [
+        {
+          "area": "8088400.0",
+          "x_1": "55400",
+          "x_2": "110800",
+          "y_1": "18593",
+          "y_2": "18739"
+        }
+      ],
+      "solution_archive": [
+        {
+          "patient_cost": "80515",
+          "equity_cost": "14144"
+        },
+        {
+          "patient_cost": "79465",
+          "equity_cost": "14293"
+        },
+        {
+          "patient_cost": "73485",
+          "equity_cost": "14350"
+        },
+        {
+          "patient_cost": "72155",
+          "equity_cost": "14454"
+        },
+        {
+          "patient_cost": "69840",
+          "equity_cost": "14949"
+        },
+        {
+          "patient_cost": "69685",
+          "equity_cost": "15128"
+        },
+        {
+          "patient_cost": "61485",
+          "equity_cost": "15494"
+        },
+        {
+          "patient_cost": "61330",
+          "equity_cost": "15770"
+        },
+        {
+          "patient_cost": "61295",
+          "equity_cost": "16123"
+        },
+        {
+          "patient_cost": "61240",
+          "equity_cost": "16243"
+        },
+        {
+          "patient_cost": "61205",
+          "equity_cost": "16297"
+        },
+        {
+          "patient_cost": "61020",
+          "equity_cost": "16382"
+        },
+        {
+          "patient_cost": "60755",
+          "equity_cost": "16632"
+        },
+        {
+          "patient_cost": "60635",
+          "equity_cost": "16685"
+        },
+        {
+          "patient_cost": "60335",
+          "equity_cost": "16729"
+        },
+        {
+          "patient_cost": "59545",
+          "equity_cost": "16819"
+        },
+        {
+          "patient_cost": "59400",
+          "equity_cost": "16884"
+        }
+      ]
+    }
+  ]
+}
