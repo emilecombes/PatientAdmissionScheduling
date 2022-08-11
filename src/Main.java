@@ -1,6 +1,8 @@
 import model.*;
 import util.*;
 
+import java.util.List;
+
 public class Main {
   public static void main(String[] args) {
     String[] path_and_file = System.getProperty("instance").split("/Instances/");
@@ -30,11 +32,11 @@ public class Main {
     xmlParser.buildDepartmentList();
     xmlParser.buildPatientList();
 
-    Variables.T_START = 10 *Integer.parseInt(System.getProperty("t_start"));
+    Variables.T_START = 10 * Integer.parseInt(System.getProperty("t_start"));
     Variables.T_STOP = Double.parseDouble(System.getProperty("t_stop"));
-    Variables.ALPHA = 0.99 + 0.01 * Double.parseDouble(System.getProperty("alpha"));
-    Variables.INITIAL_TOTAL_ITERATIONS = (int) (Math.pow(10, 7) * Variables.INSTANCE_SCALE);
-    Variables.SUBPROBLEM_TOTAL_ITERATIONS = (int) (Math.pow(10, 6) * Variables.INSTANCE_SCALE);
+    Variables.ALPHA = 0.9 + 0.01 * Double.parseDouble(System.getProperty("alpha"));
+    Variables.INITIAL_TOTAL_ITERATIONS = (int) (Math.pow(10, 4) * Variables.INSTANCE_SCALE);
+    Variables.SUBPROBLEM_TOTAL_ITERATIONS = (int) (Math.pow(10, 4) * Variables.INSTANCE_SCALE);
     Variables.REPAIR_TOTAL_ITERATIONS = (int) (Math.pow(10, 3) * Variables.INSTANCE_SCALE);
     Variables.RND_ITERATIONS = (int) (Math.pow(10, 3) * Variables.INSTANCE_SCALE);
 
@@ -51,6 +53,7 @@ public class Main {
     Variables.PSWA = 100;
 
     Variables.WE_MIN = 0;
+    Variables.PC_MAX = Integer.MAX_VALUE;
     Variables.DELTA = 5;
     Variables.PENALTY_COEFFICIENT = 1;
     Variables.CONSTANT_PENALTY_ZONE = 0.05;
@@ -59,11 +62,12 @@ public class Main {
     Variables.PENALTY_DECREASE = 0.85;
     Variables.REPAIR_INCREASE = 10;
     Variables.TRADEOFF = 2;
-    Variables.MAX_HBS_ITERATIONS = 10;
+    Variables.MAX_HBS_ITERATIONS = 1;
 
     Solver solver = new Solver();
     solver.preProcessing();
-    solver.tuningOptimizer();
+    List<Solution> solutions = solver.hbs();
+    for(Solution sol : solutions) xmlParser.writeSolution(sol);
 
 //    System.out.println("Validator: ./or_pas_validator Instances/" + instance + ".xml ." +
 //        "./solutions/xml/" + instance + "_sol.xml");

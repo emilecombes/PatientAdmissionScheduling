@@ -9,9 +9,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Tuning hyperparameters for a final time now">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Updating equity cost like a human">
+      <change afterPath="$PROJECT_DIR$/solutions/json/test.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Patient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Patient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Solution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solution.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/JsonPlotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/JsonPlotter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/XMLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/XMLParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +82,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="PAS" />
-      <option name="VM_PARAMETERS" value="-Dinstance=$PROJECT_DIR$/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx4g -Dalpha=0.99 -Dt_start=700 -Dt_stop=0.7 -Dpcr=30 -Dpsr=20 -Dpsha=20" />
+      <option name="VM_PARAMETERS" value="-Dinstance=$PROJECT_DIR$/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx4g -Dalpha=0.00 -Dt_start=53 -Dt_stop=0.71 -Dpcr=38 -Dpsr=28 -Dpsha=14" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -105,7 +111,7 @@
       <workItem from="1660040380554" duration="34458000" />
       <workItem from="1660142297620" duration="2549000" />
       <workItem from="1660145279498" duration="34328000" />
-      <workItem from="1660229658921" duration="2417000" />
+      <workItem from="1660229658921" duration="22477000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -345,7 +351,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660228951985</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Updating equity cost like a human">
+      <created>1660232567290</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1660232567290</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -363,7 +376,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Made hyperparameters internal" />
     <MESSAGE value="Fixed priority queue mistake" />
     <MESSAGE value="Removed logging executed moves" />
     <MESSAGE value="Removed limit of 5 solutions" />
@@ -388,7 +400,8 @@
     <MESSAGE value="Repairing schedules is now called correctly" />
     <MESSAGE value="Added solutions/json to git" />
     <MESSAGE value="Tuning hyperparameters for a final time now" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tuning hyperparameters for a final time now" />
+    <MESSAGE value="Updating equity cost like a human" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating equity cost like a human" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

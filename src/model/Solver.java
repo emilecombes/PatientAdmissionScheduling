@@ -28,44 +28,6 @@ public class Solver {
   }
 
   // Functions to remove
-  public Map<String, Integer> getCostInfo() {
-    Map<String, Integer> costs = new LinkedHashMap<>();
-    int roomCosts = 0;
-    int transfer = 0;
-    int totalDelay = 0;
-    for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
-      Patient patient = PatientList.getPatient(i);
-      if (patient.isInitial())
-        if (patient.getInitialRoom() != patient.getLastRoom())
-          transfer += Variables.TRANSFER_PEN;
-      roomCosts += patient.getTotalRoomCost();
-      totalDelay += patient.getDelay() * Variables.DELAY_PEN;
-    }
-    roomCosts -= transfer;
-    int gender = schedule.getDynamicGenderViolations() * Variables.GENDER_PEN;
-    int capacity = schedule.getCapacityViolations() * Variables.CAP_VIOL_PEN;
-    int load =
-        schedule.getTotalDailyEquityCost() + schedule.getTotalDepartmentEquityCost() + capacity;
-    costs.put("capacity_violations", capacity);
-    costs.put("transfer", transfer);
-    costs.put("patient_room", roomCosts);
-    costs.put("delay", totalDelay);
-    costs.put("gender", gender);
-    costs.put("total_patient", patientCost);
-    costs.put("patient", patientCost - capacity);
-    costs.put("total_load", load);
-    costs.put("load", load - capacity);
-    return costs;
-  }
-
-  public HashMap<String, String> getPlanningHorizonInfo() {
-    HashMap<String, String> horizon = new HashMap<>();
-    horizon.put("start_day", DateConverter.getDateString(0));
-    horizon.put("num_days", String.valueOf(DateConverter.getTotalHorizon()));
-    horizon.put("current_day", DateConverter.getDateString(0));
-    return horizon;
-  }
-
   public List<String> getMoveInfo() {
     List<String> moveInfo = new ArrayList<>();
     String[] columns =
@@ -265,7 +227,7 @@ public class Solver {
 
 
   // Local search
-  public void hbs() {
+  public List<Solution> hbs() {
     System.out.println("Start:\t\t\t" + new Date());
     writeStart(-1);
     exploreSearchSpace();
@@ -300,6 +262,7 @@ public class Solver {
       i++;
     }
     writeEnd();
+    return solutionArchive;
   }
 
   public void removeAndUpdateRectangleArchive(Rectangle x, Rectangle y) {
@@ -324,6 +287,24 @@ public class Solver {
     decrease = 0;
     performSA(Variables.INIT_ITERATIONS);
     writeCurrentSolution("final_solution");
+    initRectangleArchive();
+  }
+
+  public void explore(int scoutNumber) {
+    solutionArchive = new LinkedList<>();
+    rectangleArchive = new PriorityQueue<>();
+    c = 0;
+    increase = Integer.MAX_VALUE;
+    decrease = 0;
+    for (int i = 0; i < scoutNumber; i++) {
+      pen = Math.pow(2, i) - 1;
+      writeStart(i-1);
+      initSchedule();
+      performSA(Variables.INIT_ITERATIONS);
+      writeCurrentSolution("final_solution");
+      writeArchives();
+    }
+    writeEnd();
     initRectangleArchive();
   }
 
@@ -363,9 +344,6 @@ public class Solver {
       }
       tries++;
     }
-    if (equityCost > e)
-      System.out.println("Worse: new(" + patientCost + "," + equityCost + "), old(" + p + "," + e +
-          ")");
   }
 
   public void performSA(int iter) {
@@ -384,8 +362,8 @@ public class Solver {
       }
       updatePenalty();
       if (isEfficient(patientCost, (int) equityCost))
-        addSolution(new Solution(schedule, patientCost, (int) equityCost, pen));
-      if (equityCost > c) {
+        addSolution(new Solution(schedule, patientCost, equityCost, pen));
+      if (equityCost > c && c != 0) {
         repairSchedule(temp, iter);
         repairCalls++;
         if (subsequent) subsequentRepairs++;
@@ -401,7 +379,7 @@ public class Solver {
             ", Subsequent: " + maxSubsequentRepairs + ", c = " + c + ", p = " + pen);
   }
 
-  public void tuningOptimizer() {
+  public void tuning() {
     initSchedule();
     double temp = Variables.T_START;
     while (temp > Variables.T_STOP) {
@@ -414,7 +392,6 @@ public class Solver {
     }
     System.out.println(patientCost);
   }
-
 
   public void updatePenalty() {
     if (equityCost >= increase) pen *= Variables.PENALTY_INCREASE;

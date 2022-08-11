@@ -88,10 +88,6 @@ public class Patient {
     return getRoomCost(getLastRoom());
   }
 
-  public int getTotalRoomCost() {
-    return roomCosts.get(getLastRoom());
-  }
-
   public int getPreferredCap() {
     return preferredCap;
   }

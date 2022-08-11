@@ -1,21 +1,20 @@
 package model;
 
-import util.DateConverter;
-
 import java.util.*;
 
 public class Solution implements Comparable<Solution> {
-  private final int patientCost, equityCost;
+  private final int patientCost;
   private final long creationTime;
-  private double penaltyCoefficient;
+  private final double equityCost;
   private final Schedule schedule;
   private final Map<Patient, Integer> delays;
   private final Map<Patient, Room> assignedRooms;
+  private double penaltyCoefficient;
 
-  public Solution(Schedule schedule, int patientCost, int equityCost, double penaltyCoefficient) {
+  public Solution(Schedule schedule, int pc, double ec, double penaltyCoefficient) {
     this.creationTime = System.currentTimeMillis();
-    this.patientCost = patientCost;
-    this.equityCost = equityCost;
+    this.patientCost = pc;
+    this.equityCost = ec;
     this.penaltyCoefficient = penaltyCoefficient;
     this.schedule = schedule.getCopy();
     this.assignedRooms = new HashMap<>();
@@ -44,7 +43,7 @@ public class Solution implements Comparable<Solution> {
     return patientCost;
   }
 
-  public int getEquityCost() {
+  public double getEquityCost() {
     return equityCost;
   }
 
@@ -52,8 +51,24 @@ public class Solution implements Comparable<Solution> {
     return penaltyCoefficient;
   }
 
+  public int getDelay(Patient p) {
+    return delays.get(p);
+  }
+
+  public Room getAssignedRoom(Patient p) {
+    return assignedRooms.get(p);
+  }
+
+  public int getCapacityViolations() {
+    return schedule.getCapacityViolations();
+  }
+
+  public int getDynamicGenderViolations() {
+    return schedule.getDynamicGenderViolations();
+  }
+
   public boolean strictlyDominates(Solution s) {
-    return strictlyDominates(s.getPatientCost(), s.getEquityCost());
+    return strictlyDominates(s.getPatientCost(), (int) s.getEquityCost());
   }
 
   public boolean strictlyDominates(int pc, int ec) {
@@ -70,7 +85,7 @@ public class Solution implements Comparable<Solution> {
 
   @Override
   public int compareTo(Solution s) {
-    return equityCost - s.getEquityCost();
+    return (int) (equityCost - s.getEquityCost());
   }
 
   public String toString() {

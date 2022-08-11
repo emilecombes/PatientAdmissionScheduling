@@ -175,9 +175,14 @@ public class XMLParser {
     new PatientList(patients);
   }
 
-  public void writeSolution(Solver solver) {
-    String outputFile = Variables.PATH + "/solutions/xml/" + Variables.INSTANCE + "_sol.xml";
-
+  public void writeSolution(Solution sol) {
+    String outputFile = Variables.PATH + "/solutions/xml/" + Variables.INSTANCE + ".xml";
+    File file = new File(outputFile);
+    int n = 0;
+    while (file.exists()) {
+      outputFile = Variables.PATH + "/solutions/xml/" + Variables.INSTANCE + "_" + n + ".xml";
+      file = new File(outputFile);
+    }
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = null;
     try {
@@ -191,45 +196,115 @@ public class XMLParser {
     doc.appendChild(root);
 
     // Write planning horizon
-    HashMap<String, String> planningHorizon = solver.getPlanningHorizonInfo();
     Element planningHorizonElement = doc.createElement("planning_horizon");
+    Element startDay = doc.createElement("start_day");
+    startDay.setTextContent(DateConverter.getDateString(0));
+    planningHorizonElement.appendChild(startDay);
+    Element numDays = doc.createElement("num_days");
+    startDay.setTextContent(String.valueOf(DateConverter.getTotalHorizon()));
+    planningHorizonElement.appendChild(numDays);
+    Element currentDay = doc.createElement("current_day");
+    startDay.setTextContent(DateConverter.getDateString(0));
+    planningHorizonElement.appendChild(currentDay);
     root.appendChild(planningHorizonElement);
-    for (String key : planningHorizon.keySet()) {
-      Element element = doc.createElement(key);
-      element.setTextContent(planningHorizon.get(key));
-      planningHorizonElement.appendChild(element);
-    }
 
-    // Write patients scheduling
+    int dynamicGenderCosts = sol.getDynamicGenderViolations() * Variables.GENDER_PEN;
+    int capacityViolations = sol.getCapacityViolations();
+    int patientRoomCosts = 0;
+    int propertyViolations = 0;
+    int preferenceViolations = 0;
+    int specialityViolations = 0;
+    int genderViolations = 0;
+    int transferCosts = 0;
+    int delays = 0;
     Element patientsElement = doc.createElement("patients_scheduling");
     root.appendChild(patientsElement);
     for (int i = 0; i < PatientList.getNumberOfPatients(); i++) {
       Patient p = PatientList.getPatient(i);
+      Room r = sol.getAssignedRoom(p);
+      int delay = sol.getDelay(p);
+      delays += delay;
+      patientRoomCosts += p.getRoomCost(r.getId());
+      propertyViolations +=
+          p.getSpecificRoomCost(r.getId(), "room_property") / Variables.ROOM_PROP_PEN;
+      specialityViolations +=
+          p.getSpecificRoomCost(r.getId(), "speciality") / Variables.SPECIALITY_PEN;
+      preferenceViolations +=
+          p.getSpecificRoomCost(r.getId(), "capacity_preference") / Variables.PREF_CAP_PEN;
+      genderViolations += p.getSpecificRoomCost(r.getId(), "gender") / Variables.GENDER_PEN;
+      transferCosts += p.getSpecificRoomCost(r.getId(), "transfer");
+
       Element patientElement = doc.createElement("patient");
       patientElement.setAttribute("name", p.getName());
-      patientElement.setAttribute("delay", String.valueOf(p.getDelay()));
+      patientElement.setAttribute("delay", String.valueOf(delay));
       patientElement.setAttribute("status", p.getStatus());
 
-      for (int j = p.getAdmission(); j < p.getDischarge(); j++) {
+      for (int j = 0; j < p.getStayLength(); j++) {
         Element stayElement = doc.createElement("stay");
-        stayElement.setAttribute("day", DateConverter.getDateString(j));
-        stayElement.setAttribute("room", DepartmentList.getRoomName(p.getRoom(p.getAdmission())));
+        stayElement.setAttribute("day", DateConverter.getDateString(p.getOriginalAD() + delay + j));
+        stayElement.setAttribute("room", r.getName());
         patientElement.appendChild(stayElement);
       }
       patientsElement.appendChild(patientElement);
     }
 
+
     // Write costs
-    Map<String, Integer> costs = solver.getCostInfo();
     Element costsElement = doc.createElement("costs");
     root.appendChild(costsElement);
-    for (String key : costs.keySet()) {
-      Element element = doc.createElement(key);
-      if (key.equals("patient_room"))
-        element.setAttribute("objectives", String.valueOf(costs.get(key)));
-      else element.setTextContent(String.valueOf(costs.get(key)));
-      costsElement.appendChild(element);
-    }
+    costsElement.setAttribute("violations", String.valueOf(capacityViolations));
+    costsElement.setAttribute("time",
+        String.valueOf((sol.getCreationTime() - Variables.START_TIME) * 0.001));
+    costsElement.setAttribute("objectives",
+        String.valueOf(sol.getPatientCost() - Variables.CAP_VIOL_PEN * capacityViolations));
+
+    Element pr = doc.createElement("patient_room");
+    costsElement.appendChild(pr);
+    pr.setAttribute("value", String.valueOf(patientRoomCosts - transferCosts));
+
+    Element roomProperties = doc.createElement("properties");
+    pr.appendChild(roomProperties);
+    roomProperties.setAttribute("violations", String.valueOf(propertyViolations));
+    roomProperties.setAttribute("weight", String.valueOf(Variables.ROOM_PROP_PEN));
+
+    Element roomPreference = doc.createElement("preference");
+    pr.appendChild(roomPreference);
+    roomPreference.setAttribute("violations", String.valueOf(preferenceViolations));
+    roomPreference.setAttribute("weight", String.valueOf(Variables.PREF_CAP_PEN));
+
+    Element roomSpecialisms = doc.createElement("specialism");
+    pr.appendChild(roomSpecialisms);
+    roomSpecialisms.setAttribute("violations", String.valueOf(specialityViolations));
+    roomSpecialisms.setAttribute("weight", String.valueOf(Variables.SPECIALITY_PEN));
+
+    Element gender = doc.createElement("gender");
+    pr.appendChild(gender);
+    gender.setAttribute("violations", String.valueOf(genderViolations));
+    gender.setAttribute("weight", String.valueOf(Variables.GENDER_PEN));
+
+    Element dynamicGender = doc.createElement("gender");
+    costsElement.appendChild(dynamicGender);
+    dynamicGender.setTextContent(String.valueOf(dynamicGenderCosts));
+
+    Element transfer = doc.createElement("transfer");
+    costsElement.appendChild(transfer);
+    transfer.setTextContent(String.valueOf(transferCosts * Variables.TRANSFER_PEN));
+
+    Element delay = doc.createElement("delay");
+    costsElement.appendChild(delay);
+    delay.setTextContent(String.valueOf(delays * Variables.DELAY_PEN));
+
+    Element totalPatientCost = doc.createElement("patient_cost");
+    costsElement.appendChild(totalPatientCost);
+    totalPatientCost.setTextContent(String.valueOf(sol.getPatientCost()));
+
+    Element totalEquityCost = doc.createElement("equity_cost");
+    costsElement.appendChild(totalEquityCost);
+    totalEquityCost.setTextContent(String.valueOf((int) sol.getEquityCost()));
+
+    Element capViolations = doc.createElement("capacity_violations");
+    costsElement.appendChild(capViolations);
+    capViolations.setTextContent(String.valueOf(capacityViolations));
 
     // Write to file
     try (FileOutputStream output = new FileOutputStream(outputFile)) {

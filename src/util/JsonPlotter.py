@@ -16,24 +16,24 @@ def main():
         equity_costs = []
         for sol in iteration['solution_archive']:
             patient_costs.append(int(sol['patient_cost']))
-            equity_costs.append(int(sol['equity_cost']))
+            equity_costs.append(float(sol['equity_cost']))
         fig, ax = plt.subplots()
         ax.scatter(patient_costs, equity_costs, c='black')
 
         if 'harvested_solution' in iteration:
             sol = iteration['harvested_solution']
             ax.scatter(int(sol['patient_cost']),
-                    int(sol['equity_cost']),c='red')
+                    float(sol['equity_cost']),c='red')
 
         if 'natural_solution' in iteration:
             sol = iteration['natural_solution']
             ax.scatter(int(sol['patient_cost']),
-                    int(sol['equity_cost']),c='purple')
+                    float(sol['equity_cost']),c='purple')
 
 
         sol = iteration['final_solution']
         ax.scatter(int(sol['patient_cost']), 
-                int(sol['equity_cost']), c='green')
+                float(sol['equity_cost']), c='green')
 
         for rect in iteration['rectangle_archive']:
             x = []
