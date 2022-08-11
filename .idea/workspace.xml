@@ -9,7 +9,106 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Repairing schedules is now called correctly" />
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Added solutions/json to git">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/fixed-rects/or_pas_dept2_short00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/fixed-rects/or_pas_dept2_short01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/fixed-rects/or_pas_dept2_short02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/fixed-rects/or_pas_dept2_short03.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/fixed-rects/or_pas_dept2_short04.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_discarded_rectangles/or_pas_dept2_short00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_discarded_rectangles/or_pas_dept2_short00_1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_discarded_rectangles/or_pas_dept2_short00_2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_discarded_rectangles/or_pas_dept2_short00_3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_discarded_rectangles/or_pas_dept2_short01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_discarded_rectangles/or_pas_dept2_short02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_discarded_rectangles/or_pas_dept4_short00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept2_long00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept2_long01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept2_long02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept2_long03.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept2_long04.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept2_short00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept2_short01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept2_short02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept2_short03.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept2_short04.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept4_long00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept4_long01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept4_long02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept4_long03.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept4_long04.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept4_short00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept4_short01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept4_short02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept4_short03.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept4_short04.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept6_long00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept6_long01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept6_long02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept6_long03.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept6_long04.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept6_short00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept6_short01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept6_short02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept6_short03.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/ihbs_server_discarded_rects_with_repairing/or_pas_dept6_short04.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short00_1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short00_2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short00_3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short00_4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short00_5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short00_6.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short00_7.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short00_8.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short03.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/or_pas_dept2_short04.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/console.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept2_long00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept2_long01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept2_long02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept2_long03.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept2_long04.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept2_short00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept2_short01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept2_short02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept2_short03.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept2_short04.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept4_long00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept4_long01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept4_long02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept4_short00.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept4_short01.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/temp/or_pas_dept4_short02.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/test_instances/test_instance_25.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/test_instances/test_instance_25_1.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/test_instances/test_instance_25_10.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/test_instances/test_instance_25_11.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/test_instances/test_instance_25_2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/test_instances/test_instance_25_3.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/test_instances/test_instance_25_4.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/test_instances/test_instance_25_5.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/test_instances/test_instance_25_6.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/test_instances/test_instance_25_7.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/test_instances/test_instance_25_8.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/json/test_instances/test_instance_25_9.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/xml/or_pas_dept2_long00_sol.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/xml/or_pas_dept2_short00_sol.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/xml/or_pas_dept4_short01_sol.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/solutions/xml/sol.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/configurations.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/configurations.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/instances-list.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/instances-list.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/output.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/output-first-tune.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/output1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/output-E6iterations.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/parameters.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/parameters.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/pas.jar" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/pas.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tuning/target-runner" beforeDir="false" afterPath="$PROJECT_DIR$/tuning/target-runner" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -44,24 +143,24 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/emilecombes/Projects/IdeaProjects/PAS/Instances&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/emilecombes/Projects/IdeaProjects/PAS/tuning",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/Instances" />
       <recent name="$PROJECT_DIR$/tuning" />
+      <recent name="$PROJECT_DIR$/Instances" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/tuning" />
@@ -73,7 +172,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="PAS" />
-      <option name="VM_PARAMETERS" value="-Dinstance=$PROJECT_DIR$/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx4g" />
+      <option name="VM_PARAMETERS" value="-Dinstance=$PROJECT_DIR$/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx4g -Dalpha=0.99 -Dt_start=700 -Dt_stop=0.7 -Dpcr=30 -Dpsr=20 -Dpsha=20" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -101,7 +200,7 @@
       <workItem from="1660037213316" duration="7000" />
       <workItem from="1660040380554" duration="34458000" />
       <workItem from="1660142297620" duration="2549000" />
-      <workItem from="1660145279498" duration="28835000" />
+      <workItem from="1660145279498" duration="34193000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -327,7 +426,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660222707862</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Added solutions/json to git">
+      <created>1660222916543</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1660222916543</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -345,7 +451,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Forgot minor error" />
     <MESSAGE value="Finished simple HBS" />
     <MESSAGE value="Made hyperparameters internal" />
     <MESSAGE value="Fixed priority queue mistake" />
@@ -370,7 +475,8 @@
     <MESSAGE value="Repairing now after every sa iteration" />
     <MESSAGE value="Rectangle updating works correctly, penalty parameters of the solutions not on point for best PC solutions" />
     <MESSAGE value="Repairing schedules is now called correctly" />
-    <option name="LAST_COMMIT_MESSAGE" value="Repairing schedules is now called correctly" />
+    <MESSAGE value="Added solutions/json to git" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added solutions/json to git" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

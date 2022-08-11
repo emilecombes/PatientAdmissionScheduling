@@ -26,11 +26,9 @@
 ##    condition is satisfied, FALSE otherwise.
 
 # 1:            2:                  3: 4:      5:
-swap_loops      "-Dswap_loops="     i (20, 200)
-t_start         "-Dt_start="        i (400, 800)
-t_stop          "-Dt_stop="         c (0.1, 0.2, 0.5, 1, 2, 5)
-iterations      "-Diterations="     c (100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000)
-alpha           "-Dalpha="          c (0.99, 0.992, 0.995, 0.999, 0.9992, 0.9995, 0.9999)
-pcr             "-Dpcr="            i (20, 35)
-psr             "-Dpsr="            i (25, 50)
-psha            "-Dpsha="           i (1, 15)
+t_start         "-Dt_start="        i (40, 80)
+t_stop          "-Dt_stop="         r (0.01, 2.5)
+alpha           "-Dalpha="          r (0, 99)
+pcr             "-Dpcr="            i (20, 60)
+psr             "-Dpsr="            i (10, 60)
+psha            "-Dpsha="           i (1, 30)

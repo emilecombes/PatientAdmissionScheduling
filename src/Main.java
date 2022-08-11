@@ -30,9 +30,9 @@ public class Main {
     xmlParser.buildDepartmentList();
     xmlParser.buildPatientList();
 
-    Variables.T_START = 533;
-    Variables.T_STOP = 0.71;
-    Variables.ALPHA = 0.99;
+    Variables.T_START = 10 *Integer.parseInt(System.getProperty("t_start"));
+    Variables.T_STOP = Double.parseDouble(System.getProperty("t_stop"));
+    Variables.ALPHA = 0.99 + 0.01 * Double.parseDouble(System.getProperty("alpha"));
     Variables.INITIAL_TOTAL_ITERATIONS = (int) (Math.pow(10, 7) * Variables.INSTANCE_SCALE);
     Variables.SUBPROBLEM_TOTAL_ITERATIONS = (int) (Math.pow(10, 6) * Variables.INSTANCE_SCALE);
     Variables.REPAIR_TOTAL_ITERATIONS = (int) (Math.pow(10, 3) * Variables.INSTANCE_SCALE);
@@ -45,10 +45,10 @@ public class Main {
 
     Variables.EXHAUSTIVE = false;
     Variables.SWAP_LOOPS = 25;
-    Variables.PCR = 28;
-    Variables.PSR = 28;
-    Variables.PSHA = 14;
-    Variables.PSWA = 100 - Variables.PCR - Variables.PSR - Variables.PSHA;
+    Variables.PCR = Integer.parseInt(System.getProperty("pcr"));
+    Variables.PSR = Variables.PCR + Integer.parseInt(System.getProperty("psr"));
+    Variables.PSHA = Variables.PCR + Variables.PSR + Integer.parseInt(System.getProperty("psha"));
+    Variables.PSWA = 100;
 
     Variables.WE_MIN = 0;
     Variables.DELTA = 5;
@@ -63,7 +63,7 @@ public class Main {
 
     Solver solver = new Solver();
     solver.preProcessing();
-    solver.hbs();
+    solver.tuningOptimizer();
 
 //    System.out.println("Validator: ./or_pas_validator Instances/" + instance + ".xml ." +
 //        "./solutions/xml/" + instance + "_sol.xml");

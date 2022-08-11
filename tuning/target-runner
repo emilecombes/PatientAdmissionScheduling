@@ -4,7 +4,7 @@ error() {
 }
 
 EXE="pas.jar"
-FIXED_PARAMS="-Xms256m -Xmx25g"
+FIXED_PARAMS="-Xms256m -Xmx12g"
 
 CONFIG_ID=$1
 INSTANCE_ID=$2
