@@ -35,8 +35,8 @@ public class Main {
     Variables.T_START = 10 * Integer.parseInt(System.getProperty("t_start"));
     Variables.T_STOP = Double.parseDouble(System.getProperty("t_stop"));
     Variables.ALPHA = 0.9 + 0.01 * Double.parseDouble(System.getProperty("alpha"));
-    Variables.INITIAL_TOTAL_ITERATIONS = (int) (Math.pow(10, 4) * Variables.INSTANCE_SCALE);
-    Variables.SUBPROBLEM_TOTAL_ITERATIONS = (int) (Math.pow(10, 4) * Variables.INSTANCE_SCALE);
+    Variables.INITIAL_TOTAL_ITERATIONS = (int) (Math.pow(10, 7) * Variables.INSTANCE_SCALE);
+    Variables.SUBPROBLEM_TOTAL_ITERATIONS = (int) (Math.pow(10, 6) * Variables.INSTANCE_SCALE);
     Variables.REPAIR_TOTAL_ITERATIONS = (int) (Math.pow(10, 3) * Variables.INSTANCE_SCALE);
     Variables.RND_ITERATIONS = (int) (Math.pow(10, 3) * Variables.INSTANCE_SCALE);
 
@@ -62,7 +62,7 @@ public class Main {
     Variables.PENALTY_DECREASE = 0.85;
     Variables.REPAIR_INCREASE = 10;
     Variables.TRADEOFF = 2;
-    Variables.MAX_HBS_ITERATIONS = 1;
+    Variables.MAX_HBS_ITERATIONS = 25;
 
     Solver solver = new Solver();
     solver.preProcessing();
