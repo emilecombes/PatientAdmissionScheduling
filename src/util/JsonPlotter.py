@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 import plotly.express as px
 
 def main():
-    file = open('solutions/json/fixed-rects/or_pas_dept2_short00.json') 
+    file = open(sys.argv[1]) 
     data = json.load(file)
     for iteration in data['iterations'][0:50]:
         patient_costs = []
@@ -24,10 +24,7 @@ def main():
             sol = iteration['harvested_solution']
             ax.scatter(int(sol['patient_cost']),
                     int(sol['equity_cost']),c='red')
-        if 'initial_solution' in iteration:
-            sol = iteration['initial_solution']
-            ax.scatter(int(sol['patient_cost']), 
-                    int(sol['equity_cost']),c='orange')
+
         sol = iteration['final_solution']
         ax.scatter(int(sol['patient_cost']), 
                 int(sol['equity_cost']), c='green')

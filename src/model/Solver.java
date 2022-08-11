@@ -256,7 +256,8 @@ public class Solver {
     writeStart(-1);
     exploreSearchSpace();
     writeArchives();
-    while (!rectangleArchive.isEmpty() && rectangleArchive.size() < Variables.MAX_RECTANGLES) {
+    int i = 0;
+    while (!rectangleArchive.isEmpty() && i < Variables.MAX_HBS_ITERATIONS) {
       Rectangle r = rectangleArchive.peek();
       c = r.getC();
       decrease = r.getDecreaseLimit();
@@ -280,6 +281,7 @@ public class Solver {
         removeAndUpdateRectangleArchive(rx, ry);
       }
       writeArchives();
+      i++;
     }
     writeEnd();
   }
@@ -747,11 +749,10 @@ public class Solver {
   }
 
   public void writeCurrentSolution(String key) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("\"").append(key).append("\":{\"patient_cost\":\"").append(patientCost);
-    sb.append("\",").append("\"equity_cost\":\"").append(equityCost);
-    sb.append("\",").append("\"penalty_coefficient\":\"").append(pen).append("\"},\n");
-    jsonParser.write(sb.toString());
+    String sb = "\"" + key + "\":{\"patient_cost\":\"" + patientCost +
+        "\"," + "\"equity_cost\":\"" + equityCost +
+        "\"," + "\"penalty_coefficient\":\"" + pen + "\"},\n";
+    jsonParser.write(sb);
   }
 
   public void writeArchives() {

@@ -59,7 +59,7 @@ public class Main {
     Variables.PENALTY_DECREASE = 0.85;
     Variables.REPAIR_INCREASE = 10;
     Variables.TRADEOFF = 2;
-    Variables.MAX_RECTANGLES = 10;
+    Variables.MAX_HBS_ITERATIONS = 10;
 
     Solver solver = new Solver();
     solver.preProcessing();
