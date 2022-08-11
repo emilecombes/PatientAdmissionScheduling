@@ -257,17 +257,20 @@ public class Solver {
   public Solution getNearestFeasibleSolution() {
     if (solutionArchive.size() == 1) return solutionArchive.get(0);
     for (int i = 1; i < solutionArchive.size(); i++)
-      if (solutionArchive.get(i).getEquityCost() > c && solutionArchive.get(i-1).getEquityCost() <= c)
-        return solutionArchive.get(i-1);
+      if (solutionArchive.get(i).getEquityCost() > c &&
+          solutionArchive.get(i - 1).getEquityCost() <= c)
+        return solutionArchive.get(i - 1);
     return null;
   }
 
 
   // Local search
   public void hbs() {
+    System.out.println("Start:\t\t\t" + new Date());
     writeStart(-1);
     exploreSearchSpace();
     writeArchives();
+    System.out.println("Initial problem:" + new Date());
     int i = 0;
     while (!rectangleArchive.isEmpty() && i < Variables.MAX_HBS_ITERATIONS) {
       Rectangle r = rectangleArchive.peek();
@@ -276,6 +279,7 @@ public class Solver {
       increase = r.getIncreaseLimit();
       writeStart(c);
       optimizeSubproblem();
+      System.out.println("Subproblem:\t\t" + new Date());
       if (equityCost > c || isDominated(patientCost, equityCost)) r.setBottom(c);
       else {
         Rectangle rx = findRectangleOnX(patientCost);
@@ -326,7 +330,7 @@ public class Solver {
   public void optimizeSubproblem() {
     Solution sol = getNearestSolution();
     loadSolution(sol);
-    if(equityCost > c && sol.getEquityCost() > c && solutionArchive.indexOf(sol) != 0) {
+    if (equityCost > c && sol.getEquityCost() > c && solutionArchive.indexOf(sol) != 0) {
       sol = getNearestFeasibleSolution();
       loadSolution(sol);
     }
@@ -346,21 +350,30 @@ public class Solver {
   }
 
   public void repairSchedule(double temp, int iter) {
+    int e = equityCost;
+    int p = patientCost;
     int tries = 1;
     while (equityCost > c && tries <= 2) {
       for (int i = 0; i < iter; i++) {
         executeNewMove();
         double savings = lastMove.get("patient_savings") +
             pen * Math.pow(Variables.REPAIR_INCREASE, tries) *
-            (Math.max(c, equityCost) - Math.max(c, equityCost - lastMove.get("load_savings")));
+                (Math.max(c, equityCost) - Math.max(c, equityCost - lastMove.get("load_savings")));
         if (savings > 0 || Math.random() < Math.exp(savings / temp)) acceptMove();
         else undoLastMove();
       }
       tries++;
     }
+    if (equityCost > e)
+      System.out.println("Worse: new(" + patientCost + "," + equityCost + "), old(" + p + "," + e +
+          ")");
   }
 
   public void performSA(int iter) {
+    int repairCalls = 0;
+    int subsequentRepairs = 0;
+    int maxSubsequentRepairs = 0;
+    boolean subsequent = false;
     double temp = Variables.T_START;
     while (temp > Variables.T_STOP) {
       for (int i = 0; i < iter; i++) {
@@ -374,9 +387,20 @@ public class Solver {
       adjustEquityCost();
       if (isEfficient(patientCost, equityCost))
         addSolution(new Solution(schedule, patientCost, equityCost, pen));
-      if (equityCost <= c) temp *= Variables.ALPHA;
-      else repairSchedule(temp, iter);
+      if (equityCost > c) {
+        repairSchedule(temp, iter);
+        repairCalls++;
+        if (subsequent) subsequentRepairs++;
+        else subsequent = true;
+      } else {
+        maxSubsequentRepairs = Math.max(maxSubsequentRepairs, subsequentRepairs);
+        subsequent = false;
+      }
+      temp *= Variables.ALPHA;
     }
+    System.out.println(
+        "Repair calls: " + repairCalls + "/" + Variables.SUBPROBLEM_TOTAL_ITERATIONS / iter +
+            ", Subsequent: " + maxSubsequentRepairs + ", c = " + c + ", p = " + pen);
   }
 
 
@@ -386,6 +410,7 @@ public class Solver {
   }
 
   public void addSolution(Solution sol) {
+    // TODO: Remove dominated solutions at the end of an iteration
     solutionArchive.add(sol);
     Collections.sort(solutionArchive);
     List<Solution> dominatedSolutions = new ArrayList<>();
@@ -402,6 +427,7 @@ public class Solver {
   }
 
   public boolean isEfficient(int pc, int ec) {
+    // TODO: make this more efficient
     if (solutionArchive.isEmpty()) return true;
     if (solutionArchive.get(0).getEquityCost() > ec) return true;
     if (solutionArchive.get(0).getEquityCost() == ec)
@@ -757,7 +783,7 @@ public class Solver {
   }
 
   public void writeHarvestedSolution(Solution sol) {
-    jsonParser.write("\"harvested_solution\":" + sol + "\n");
+    jsonParser.write("\"harvested_solution\":" + sol + ",\n");
   }
 
   public void writeCurrentSolution(String key) {
@@ -771,13 +797,13 @@ public class Solver {
     StringBuilder sb = new StringBuilder();
     sb.append("\"rectangle_archive\":[");
     for (Rectangle r : rectangleArchive)
-      sb.append(r.toString()).append("\n");
-    if (!rectangleArchive.isEmpty()) sb.deleteCharAt(sb.length() - 1);
+      sb.append(r.toString()).append(",\n");
+    if (!rectangleArchive.isEmpty()) sb.deleteCharAt(sb.lastIndexOf(","));
 
     sb.append("],\n\"solution_archive\":[");
     for (Solution s : solutionArchive)
-      sb.append(s.toString()).append("\n");
-    if (!solutionArchive.isEmpty()) sb.deleteCharAt(sb.length() - 1);
+      sb.append(s.toString()).append(",\n");
+    if (!solutionArchive.isEmpty()) sb.deleteCharAt(sb.lastIndexOf(","));
     sb.append("]\n},");
     jsonParser.write(sb.toString());
   }

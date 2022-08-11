@@ -78,6 +78,6 @@ public class Solution implements Comparable<Solution> {
         "\",\"patient_cost\":\"" + getPatientCost() +
         "\",\"equity_cost\":\"" + getEquityCost() +
         "\",\"penalty_coefficient\":\"" + getPenaltyCoefficient() +
-        "\"},";
+        "\"}";
   }
 }

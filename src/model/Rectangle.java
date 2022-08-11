@@ -75,6 +75,6 @@ public class Rectangle implements Comparable<Rectangle> {
   public String toString() {
     return "{\"area\":\"" + area +
         "\",\"x_1\":\"" + getLeft() + "\",\"x_2\":\"" + getRight() +
-        "\",\"y_1\":\"" + getBottom() + "\",\"y_2\":\"" + getTop() + "\"},";
+        "\",\"y_1\":\"" + getBottom() + "\",\"y_2\":\"" + getTop() + "\"}";
   }
 }
