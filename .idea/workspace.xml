@@ -9,14 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Updating equity cost like a human">
-      <change afterPath="$PROJECT_DIR$/solutions/json/test.json" afterDir="false" />
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Changed parameters back to normal">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Patient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Patient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Solution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solution.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/JsonPlotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/JsonPlotter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/XMLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/XMLParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -82,7 +77,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="PAS" />
-      <option name="VM_PARAMETERS" value="-Dinstance=$PROJECT_DIR$/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx4g -Dalpha=0.00 -Dt_start=53 -Dt_stop=0.71 -Dpcr=38 -Dpsr=28 -Dpsha=14" />
+      <option name="VM_PARAMETERS" value="-Dinstance=$PROJECT_DIR$/Instances/or_pas_dept2_short00.xml -Xms256m -Xmx4g -Dalpha=0 -Dt_start=53 -Dt_stop=0.71 -Dpcr=38 -Dpsr=28 -Dpsha=14" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -111,7 +106,7 @@
       <workItem from="1660040380554" duration="34458000" />
       <workItem from="1660142297620" duration="2549000" />
       <workItem from="1660145279498" duration="34328000" />
-      <workItem from="1660229658921" duration="22477000" />
+      <workItem from="1660229658921" duration="28936000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -358,7 +353,21 @@
       <option name="project" value="LOCAL" />
       <updated>1660232567290</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="Writing xml solution from solution class">
+      <created>1660254438226</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1660254438226</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Changed parameters back to normal">
+      <created>1660254595533</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1660254595533</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -376,8 +385,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed priority queue mistake" />
-    <MESSAGE value="Removed logging executed moves" />
     <MESSAGE value="Removed limit of 5 solutions" />
     <MESSAGE value="Progress on ihbs, rooms in patient aren't the same as patients in schedule after loading a solution" />
     <MESSAGE value="Fixed load scheduling bug" />
@@ -401,7 +408,9 @@
     <MESSAGE value="Added solutions/json to git" />
     <MESSAGE value="Tuning hyperparameters for a final time now" />
     <MESSAGE value="Updating equity cost like a human" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updating equity cost like a human" />
+    <MESSAGE value="Writing xml solution from solution class" />
+    <MESSAGE value="Changed parameters back to normal" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed parameters back to normal" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

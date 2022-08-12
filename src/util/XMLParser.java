@@ -5,6 +5,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,17 +17,31 @@ import java.util.*;
 
 public class XMLParser {
   private Document document;
+  private DocumentBuilderFactory factory;
+  private DocumentBuilder builder;
 
   public XMLParser() {
     try {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder builder = factory.newDocumentBuilder();
+      factory = DocumentBuilderFactory.newInstance();
+      builder = factory.newDocumentBuilder();
       document = builder.parse(new File(
           Variables.PATH + "/Instances/" + Variables.INSTANCE + ".xml"));
       document.getDocumentElement().normalize();
     } catch (Exception e) {
       System.out.println("Something went wrong...");
     }
+  }
+
+  public void createNewDocument() throws IOException, SAXException {
+    String prefix = Variables.PATH + "/solutions/xml" + Variables.INSTANCE;
+    String postfix = ".xml";
+    File file = new File(prefix + postfix);
+    int n = 0;
+    while(file.exists()){
+      postfix = n + ".xml";
+      file = new File(prefix + postfix);
+    }
+    document = builder.parse(file);
   }
 
   public void buildDateConverter() {
@@ -182,6 +197,7 @@ public class XMLParser {
     while (file.exists()) {
       outputFile = Variables.PATH + "/solutions/xml/" + Variables.INSTANCE + "_" + n + ".xml";
       file = new File(outputFile);
+      n++;
     }
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = null;
@@ -201,10 +217,10 @@ public class XMLParser {
     startDay.setTextContent(DateConverter.getDateString(0));
     planningHorizonElement.appendChild(startDay);
     Element numDays = doc.createElement("num_days");
-    startDay.setTextContent(String.valueOf(DateConverter.getTotalHorizon()));
+    numDays.setTextContent(String.valueOf(DateConverter.getTotalHorizon()));
     planningHorizonElement.appendChild(numDays);
     Element currentDay = doc.createElement("current_day");
-    startDay.setTextContent(DateConverter.getDateString(0));
+    currentDay.setTextContent(DateConverter.getDateString(0));
     planningHorizonElement.appendChild(currentDay);
     root.appendChild(planningHorizonElement);
 
@@ -226,13 +242,15 @@ public class XMLParser {
       delays += delay;
       patientRoomCosts += p.getRoomCost(r.getId());
       propertyViolations +=
-          p.getSpecificRoomCost(r.getId(), "room_property") / Variables.ROOM_PROP_PEN;
+          p.getSpecificRoomCost(r.getId(), "room_property") * p.getStayLength() / Variables.ROOM_PROP_PEN;
       specialityViolations +=
-          p.getSpecificRoomCost(r.getId(), "speciality") / Variables.SPECIALITY_PEN;
+          p.getSpecificRoomCost(r.getId(), "speciality") * p.getStayLength() / Variables.SPECIALITY_PEN;
       preferenceViolations +=
-          p.getSpecificRoomCost(r.getId(), "capacity_preference") / Variables.PREF_CAP_PEN;
-      genderViolations += p.getSpecificRoomCost(r.getId(), "gender") / Variables.GENDER_PEN;
-      transferCosts += p.getSpecificRoomCost(r.getId(), "transfer");
+          p.getSpecificRoomCost(r.getId(), "capacity_preference") * p.getStayLength() / Variables.PREF_CAP_PEN;
+      genderViolations +=
+          p.getSpecificRoomCost(r.getId(), "gender") * p.getStayLength() / Variables.GENDER_PEN;
+      transferCosts +=
+          p.getSpecificRoomCost(r.getId(), "transfer");
 
       Element patientElement = doc.createElement("patient");
       patientElement.setAttribute("name", p.getName());
@@ -288,7 +306,7 @@ public class XMLParser {
 
     Element transfer = doc.createElement("transfer");
     costsElement.appendChild(transfer);
-    transfer.setTextContent(String.valueOf(transferCosts * Variables.TRANSFER_PEN));
+    transfer.setTextContent(String.valueOf(transferCosts));
 
     Element delay = doc.createElement("delay");
     costsElement.appendChild(delay);
