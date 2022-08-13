@@ -9,10 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Changed parameters back to normal">
+    <list default="true" id="d9a6d410-64de-4a53-a3dd-09466a6ae0dd" name="Changes" comment="Fixed solution xml output">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/meetings.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/XMLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/XMLParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Solver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo.md" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +108,8 @@
       <workItem from="1660040380554" duration="34458000" />
       <workItem from="1660142297620" duration="2549000" />
       <workItem from="1660145279498" duration="34328000" />
-      <workItem from="1660229658921" duration="28936000" />
+      <workItem from="1660229658921" duration="31386000" />
+      <workItem from="1660384418574" duration="1261000" />
     </task>
     <task id="LOCAL-00001" summary="Tuning hyperparameters on server">
       <created>1658851159117</created>
@@ -367,7 +370,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660254595533</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Fixed solution xml output">
+      <created>1660323189727</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1660323189727</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -385,7 +395,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Removed limit of 5 solutions" />
     <MESSAGE value="Progress on ihbs, rooms in patient aren't the same as patients in schedule after loading a solution" />
     <MESSAGE value="Fixed load scheduling bug" />
     <MESSAGE value="Fixed workload matrix in solution" />
@@ -410,7 +419,8 @@
     <MESSAGE value="Updating equity cost like a human" />
     <MESSAGE value="Writing xml solution from solution class" />
     <MESSAGE value="Changed parameters back to normal" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed parameters back to normal" />
+    <MESSAGE value="Fixed solution xml output" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed solution xml output" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

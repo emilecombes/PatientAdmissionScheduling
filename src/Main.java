@@ -32,10 +32,10 @@ public class Main {
     xmlParser.buildDepartmentList();
     xmlParser.buildPatientList();
 
-    Variables.T_START = 10 * Integer.parseInt(System.getProperty("t_start"));
-    Variables.T_STOP = Double.parseDouble(System.getProperty("t_stop"));
-    Variables.ALPHA = 0.99 + 0.0001 * Double.parseDouble(System.getProperty("alpha"));
-    Variables.INITIAL_TOTAL_ITERATIONS = (int) (Math.pow(10, 6) * Variables.INSTANCE_SCALE);
+    Variables.T_START = 531;
+    Variables.T_STOP = 0.71;
+    Variables.ALPHA = 0.99;
+    Variables.INITIAL_TOTAL_ITERATIONS = (int) (5 * Math.pow(10, 6) * Variables.INSTANCE_SCALE);
     Variables.SUBPROBLEM_TOTAL_ITERATIONS = (int) (Math.pow(10, 6) * Variables.INSTANCE_SCALE);
     Variables.REPAIR_TOTAL_ITERATIONS = (int) (Math.pow(10, 3) * Variables.INSTANCE_SCALE);
     Variables.RND_ITERATIONS = (int) (Math.pow(10, 3) * Variables.INSTANCE_SCALE);
@@ -47,9 +47,9 @@ public class Main {
 
     Variables.EXHAUSTIVE = false;
     Variables.SWAP_LOOPS = 25;
-    Variables.PCR = Integer.parseInt(System.getProperty("pcr"));
-    Variables.PSR = Variables.PCR + Integer.parseInt(System.getProperty("psr"));
-    Variables.PSHA = Variables.PCR + Variables.PSR + Integer.parseInt(System.getProperty("psha"));
+    Variables.PCR = 38;
+    Variables.PSR = 28;
+    Variables.PSHA = 14;
     Variables.PSWA = 100;
 
     Variables.WE_MIN = 0;
@@ -62,7 +62,7 @@ public class Main {
     Variables.PENALTY_DECREASE = 0.85;
     Variables.REPAIR_INCREASE = 10;
     Variables.TRADEOFF = 2;
-    Variables.MAX_HBS_ITERATIONS = 3;
+    Variables.MAX_HBS_ITERATIONS = 25;
 
     Solver solver = new Solver();
     solver.preProcessing();

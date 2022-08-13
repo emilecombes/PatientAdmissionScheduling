@@ -230,7 +230,7 @@ public class Solver {
   public List<Solution> hbs() {
     System.out.println("Start:\t\t\t" + new Date());
     writeStart(-1);
-    exploreSearchSpace();
+    explore(5);
     writeArchives();
     System.out.println("Initial problem:" + new Date());
     int i = 0;
